@@ -45,8 +45,10 @@ public class MySensorOntology extends Ontology {
 		oci.addSuperClass(Sensor.MY_URI);
 		
 		oci.addDatatypeProperty(MySensor.PROP_VALUE).setFunctional();
+		oci.addDatatypeProperty(MySensor.PROP_LOCALTION).setFunctional();
+		oci.addDatatypeProperty(MySensor.PROP_OPERATION_STATUS).setFunctional();
 		oci.addRestriction(MergedRestriction.getAllValuesRestriction(
-				MySensor.PROP_VALUE,new FloatRestriction(-80,true,30,true)));
+				MySensor.PROP_VALUE,new FloatRestriction(-80,true,100,true)));
 		// Load Sensor Service
 		
 		oci = createNewOntClassInfo(MySensorService.MY_URI, factory,factory.MYSENSORSERVICE);

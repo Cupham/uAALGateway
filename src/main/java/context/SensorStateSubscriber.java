@@ -40,7 +40,8 @@ public class SensorStateSubscriber extends ContextSubscriber {
 		System.out.println("Received a context event with {SUBJECT:" +event.getSubjectURI()+
 				"PREDICATE:"+event.getRDFPredicate()+ "}");
 		System.out.println("-----------------------------------------");
-		//System.out.println(event.toString());
+		System.out.println(event.toString());
+		System.out.println("-----------------------------------------");
 		System.out.println(event.getRDFObject().toString());
 
 	}

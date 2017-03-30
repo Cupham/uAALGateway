@@ -4,12 +4,13 @@
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echowand/net/Connection.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echowand/net/InetSubnet.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echowand/logic/RequestDispatcher.java
+/home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/utils/EchonetDataConverter.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echowand/net/InetNode.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echowand/object/RemoteObject.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echowand/service/result/SetResult.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echowand/net/InvalidDataException.java
-/home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echowand/service/result/CaptureResult.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echowand/service/ObserveResultProcessor.java
+/home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echowand/service/result/CaptureResult.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echowand/logic/TransactionListener.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echowand/service/LocalObjectServiceDelegate.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echowand/util/InstallationLocation.java
@@ -45,6 +46,7 @@
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echowand/info/PropertyConstraintOnOff.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echowand/net/TCPConnectionObserver.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echowand/object/LocalSetGetAtomic.java
+/home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/services/EchonetConnect.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echowand/service/LocalObjectCreatorResult.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echowand/common/Data.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echowand/util/ReadableConverterUpdate.java
@@ -52,6 +54,7 @@
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echowand/object/LocalObjectDefaultDelegate.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echowand/service/PropertyUpdater.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echowand/logic/Listener.java
+/home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echonet/objects/eTemperatureSensor.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echowand/net/CommonFrame.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echowand/info/TemperatureSensorInfo.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echowand/info/PropertyInfo.java
@@ -65,7 +68,6 @@
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echowand/service/PropertyUpdaterThread.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echowand/service/result/ResultBase.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echowand/common/ESV.java
-/home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/context/testPublisher.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echowand/net/InetSubnetTCPAcceptorThread.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echowand/object/LocalObjectDelegate.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echowand/object/InstanceListRequestExecutor.java
@@ -92,7 +94,7 @@
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echowand/service/result/GetResult.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echowand/service/LocalObjectUpdater.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echowand/util/ReadableConverter.java
-/home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/utils/EchonetConnect.java
+/home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echonet/objects/eProfileObject.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echowand/info/NodeProfileInfo.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echowand/common/EPC.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echowand/common/PropertyMap.java
@@ -102,6 +104,8 @@
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echowand/net/TCPConnectionReceiverThread.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echowand/logic/RequestProcessor.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echowand/util/Selector.java
+/home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/services/ScanEchonetDevice.java
+/home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echonet/objects/EchonetLiteDevice.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echowand/net/Payload.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echowand/net/InetSubnetUDPReceiverThread.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echowand/service/Core.java
@@ -124,6 +128,7 @@
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echowand/service/PropertyDelegate.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echowand/net/Inet4Subnet.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echowand/logic/Transaction.java
+/home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echonet/objects/eDataObject.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/sensors/MySensorService.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/ont/MySensorOntology.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echowand/service/CaptureSubnet.java

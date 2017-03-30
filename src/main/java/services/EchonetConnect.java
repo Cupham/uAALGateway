@@ -1,9 +1,12 @@
-package utils;
+package services;
 
 
 import java.net.NetworkInterface;
+import java.util.ArrayList;
 
 
+import echonet.objects.EchonetLiteDevice;
+import echonet.objects.eTemperatureSensor;
 import echowand.common.EOJ;
 import echowand.common.EPC;
 import echowand.net.Inet4Subnet;
@@ -14,10 +17,29 @@ import echowand.service.result.GetResult;
 
 
 public class EchonetConnect {
-	public static Service service = null;
+	private static Service service = null;
 	public static float getTemp() {
 		float rs = 0;
 		try {
+			
+			if(service == null) {
+				NetworkInterface nif = NetworkInterface.getByName("eno1");
+				Core core = new Core(Inet4Subnet.startSubnet(nif));
+				core.startService();
+				service = new Service(core);
+			}
+			ScanEchonetDevice deviceScanner = new ScanEchonetDevice(service);
+			ArrayList<EchonetLiteDevice> devList = deviceScanner.scanEDevices();
+			for(EchonetLiteDevice dev : devList) {
+				System.out.println(dev.getProfileObj().getDeviceName());
+				if(dev.getDataObjList().size() >=1) {
+					System.out.println(dev.getDataObjList().get(0).getClass().equals(eTemperatureSensor.class));
+					eTemperatureSensor sensor = (eTemperatureSensor) dev.getDataObjList().get(0);
+					System.out.println(sensor.ToString());
+				}
+				
+			}
+			/*
 			if(service == null) {
 				NetworkInterface nif = NetworkInterface.getByName("eno1");
 				Core core = new Core(Inet4Subnet.startSubnet(nif));
@@ -36,7 +58,7 @@ public class EchonetConnect {
 				for (int i=0; i <result.countData();i++) {
 					rs = (result.getData(i).data.get(0)) << 0xff00 | (0x00ff & result.getData(i).data.get(1));
 				}
-			}
+			}\*/
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

@@ -53,16 +53,6 @@
 			<artifactId>mw.bus.context.osgi</artifactId>
 			<version>3.0.0</version>
 		</dependency>
-		<dependency>
-			<groupId>org.universAAL.middleware</groupId>
-			<artifactId>mw.bus.context.osgi</artifactId>
-			<version>3.0.0</version>
-		</dependency>
-		<dependency>
-			<groupId>org.universAAL.middleware</groupId>
-			<artifactId>mw.bus.context.osgi</artifactId>
-			<version>3.0.0</version>
-		</dependency>
 </dependencies>
 	<build>
 		<plugins>
@@ -120,4 +110,8 @@
 			</releases>
 		</repository>
 	</repositories>
+<properties>
+   <maven.compiler.source>1.7</maven.compiler.source>
+   <maven.compiler.target>1.7</maven.compiler.target>
+</properties>	
 </project>
