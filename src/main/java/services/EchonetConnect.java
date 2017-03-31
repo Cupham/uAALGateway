@@ -4,6 +4,9 @@ package services;
 import java.net.NetworkInterface;
 import java.util.ArrayList;
 
+import org.apache.log4j.Logger;
+
+
 
 import echonet.objects.EchonetLiteDevice;
 import echonet.objects.eTemperatureSensor;
@@ -17,6 +20,7 @@ import echowand.service.result.GetResult;
 
 
 public class EchonetConnect {
+	final static Logger logger = Logger.getLogger(EchonetConnect.class);
 	private static Service service = null;
 	public static float getTemp() {
 		float rs = 0;
@@ -29,6 +33,7 @@ public class EchonetConnect {
 				service = new Service(core);
 			}
 			ScanEchonetDevice deviceScanner = new ScanEchonetDevice(service);
+			logger.debug("Logger debug");
 			ArrayList<EchonetLiteDevice> devList = deviceScanner.scanEDevices();
 			for(EchonetLiteDevice dev : devList) {
 				System.out.println(dev.getProfileObj().getDeviceName());
@@ -65,7 +70,7 @@ public class EchonetConnect {
 		return rs/10;
 	}
 	
-	public static void main(String[] args) {	
+	public static void main(String[] args) {
 		System.out.println(getTemp());
 		System.exit(0);
 	} 
