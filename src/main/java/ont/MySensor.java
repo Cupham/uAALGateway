@@ -1,6 +1,5 @@
-package sensors;
+package ont;
 
-import ont.MySensorOntology;
 
 import org.universAAL.ontology.device.Sensor;
 
@@ -16,6 +15,7 @@ public class MySensor extends Sensor{
 	}
 	public MySensor(String uri) {
 		super(uri);
+		changeProperty(MY_URI, uri);
 	}
 	public String getClassURI() {
 		return MY_URI;

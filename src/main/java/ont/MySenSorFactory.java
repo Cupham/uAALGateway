@@ -1,10 +1,8 @@
-package utils;
+package ont;
 
 import org.universAAL.middleware.rdf.Resource;
 import org.universAAL.middleware.rdf.ResourceFactory;
 
-import sensors.MySensor;
-import sensors.MySensorService;
 
 public class MySenSorFactory implements ResourceFactory{
 	

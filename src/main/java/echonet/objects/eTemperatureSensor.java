@@ -17,6 +17,12 @@ public class eTemperatureSensor extends eDataObject{
 		this.groupCode= (byte) 0x00;
 		this.classCode = (byte) 0x11;
 	}
+	public eTemperatureSensor(byte instanceCode) {
+		super();
+		this.groupCode= (byte) 0x00;
+		this.classCode = (byte) 0x11;
+		this.instanceCode = instanceCode;
+	}
 	
 	public eTemperatureSensor(byte groupCode, byte classCode) {
 		super();

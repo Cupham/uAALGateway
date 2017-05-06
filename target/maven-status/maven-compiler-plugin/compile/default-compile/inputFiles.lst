@@ -46,6 +46,7 @@
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echowand/info/PropertyConstraintOnOff.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echowand/net/TCPConnectionObserver.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echowand/object/LocalSetGetAtomic.java
+/home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/services/guiClient.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/services/EchonetConnect.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echowand/service/LocalObjectCreatorResult.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echowand/common/Data.java
@@ -92,8 +93,8 @@
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echowand/logic/TransactionManager.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echowand/service/ExtendedSubnet.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echowand/service/result/GetResult.java
-/home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echowand/service/LocalObjectUpdater.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echowand/util/ReadableConverter.java
+/home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echowand/service/LocalObjectUpdater.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echonet/objects/eProfileObject.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echowand/info/NodeProfileInfo.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echowand/common/EPC.java

@@ -24,8 +24,8 @@ public class Activator implements BundleActivator {
 	public void start(final BundleContext bcontext) throws Exception {
 		mContext = uAALBundleContainer.THE_CONTAINER.registerModule(new Object[] {bcontext});
 		OntologyManagement.getInstance().register(mContext, mySensorOnt);
-		System.out.println("Hello World!");
-		sub = new SensorStateSubscriber(mContext);
+		//System.out.println("I am subcriber");
+		//sub = new SensorStateSubscriber(mContext);
 		pub = new SensorPublisher(mContext);
 		pub.publishContextEvent();		
 	}

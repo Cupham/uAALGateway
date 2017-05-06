@@ -26,6 +26,7 @@ public class EchonetLiteDevice {
 	public boolean addDataObject(EOJ eoj, RemoteObject rObj) throws EchonetObjectException{
 		byte classGroupCode = eoj.getClassGroupCode();
 		byte classCode = eoj.getClassCode();
+		byte instanceCode = eoj.getInstanceCode();
 		eDataObject dataObj = null;
 		//init object class 
 		switch (classGroupCode) {
@@ -33,7 +34,7 @@ public class EchonetLiteDevice {
 		case (byte) (0x00): // Sensor-related Device Class Group
 			switch(classCode) {
 			case (byte) (0x11): //temperature sensor
-				dataObj = new eTemperatureSensor();
+				dataObj = new eTemperatureSensor(instanceCode);
 				break;
 			case (byte) (0x12): //humidity sensor
 				//TODO: implement humidity sensor class

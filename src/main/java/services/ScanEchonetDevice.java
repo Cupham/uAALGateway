@@ -51,21 +51,26 @@ public class ScanEchonetDevice {
 	
 	public ArrayList<EchonetLiteDevice> scanEDevices() throws SocketException, SubnetException,
 	TooManyObjectsException, InterruptedException, EchonetObjectException {
-
+		long startTime = System.currentTimeMillis();
 		ArrayList<EchonetLiteDevice> deviceList = new ArrayList<EchonetLiteDevice>();
 
 		UpdateRemoteInfoResult remoteResult = service.doUpdateRemoteInfo(3000);
 		remoteResult.join();
 
 		List<Node> nodes = service.getRemoteNodes(); // list device object
-		System.out.println("Get all ECHONET Lite device resources in the home network. (" + nodes.size() + "device(s).)");
-	
+		System.out.println("Get all ECHONET Lite device resources in the home network. (" + nodes.size() + 
+				" device(s).) " + "within" + (System.currentTimeMillis() - startTime) + " ms.");
+		
+		long startTime1 = System.currentTimeMillis();
+		System.out.println("   Translating ECHONET Lite Frame to uAAL Object...");
 		/********************************************
 		 * Parse device (node)
 		 ********************************************/
 		for (Node node : nodes) {
 			deviceList.add(getDeviceResources(this.service,node));
 		}
+		System.out.println("   Finish translating ECHONET Lite to uAAL Object within "+
+		(System.currentTimeMillis() - startTime1) + " ms.");
 		return deviceList;
 	}
 }

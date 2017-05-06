@@ -1,8 +1,8 @@
-package sensors;
+package ont;
 
-import ont.MySensorOntology;
 
 import org.universAAL.middleware.service.owl.Service;
+import org.universAAL.middleware.service.owls.profile.ServiceProfile;
 
 public class MySensorService extends Service{
 	

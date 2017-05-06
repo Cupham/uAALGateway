@@ -9,11 +9,9 @@ import org.universAAL.middleware.owl.Ontology;
 import org.universAAL.middleware.rdf.Resource;
 import org.universAAL.middleware.service.owl.Service;
 import org.universAAL.middleware.service.owl.ServiceBusOntology;
+import org.universAAL.ontology.DeviceFactory;
 import org.universAAL.ontology.device.Sensor;
 
-import sensors.MySensor;
-import sensors.MySensorService;
-import utils.MySenSorFactory;
 
 public class MySensorOntology extends Ontology {
 	
@@ -36,14 +34,12 @@ public class MySensorOntology extends Ontology {
 		r.setResourceLabel("MySensor");
 		addImport(DataRepOntology.NAMESPACE);
 		addImport(ServiceBusOntology.NAMESPACE);
-		
 		OntClassInfoSetup oci;
-		// Load Sensor
+		// Load Sensor\
 		oci = createNewOntClassInfo(MySensor.MY_URI,factory,factory.MYSENSOR);
 		oci.setResourceComment("The ontology for my own MySensor");
 		oci.setResourceLabel("MySensor");
 		oci.addSuperClass(Sensor.MY_URI);
-		
 		oci.addDatatypeProperty(MySensor.PROP_VALUE).setFunctional();
 		oci.addDatatypeProperty(MySensor.PROP_LOCALTION).setFunctional();
 		oci.addDatatypeProperty(MySensor.PROP_OPERATION_STATUS).setFunctional();

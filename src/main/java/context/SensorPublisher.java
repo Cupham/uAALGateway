@@ -8,6 +8,9 @@ import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.util.ArrayList;
 
+import ont.MySensor;
+
+import org.apache.log4j.Logger;
 import org.universAAL.middleware.container.ModuleContext;
 import org.universAAL.middleware.context.ContextEvent;
 import org.universAAL.middleware.context.ContextEventPattern;
@@ -15,6 +18,7 @@ import org.universAAL.middleware.context.ContextPublisher;
 import org.universAAL.middleware.context.DefaultContextPublisher;
 import org.universAAL.middleware.context.owl.ContextProvider;
 import org.universAAL.middleware.context.owl.ContextProviderType;
+import org.universAAL.ontology.phThing.Device;
 
 import echonet.objects.EchonetLiteDevice;
 import echonet.objects.eTemperatureSensor;
@@ -25,17 +29,23 @@ import echowand.object.EchonetObjectException;
 import echowand.service.Core;
 import echowand.service.Service;
 
-import sensors.MySensor;
 import services.EchonetConnect;
 import services.ScanEchonetDevice;
 
 public class SensorPublisher {
+	final static Logger logger = Logger.getLogger(SensorPublisher.class);
+	StringBuilder logs = new StringBuilder();
 	
 	private Core core;
 	private ContextPublisher mySensorContextPublisher;
 	private static Service service = null;
 
 	public SensorPublisher(ModuleContext context) {
+		/**
+		 * Calculate executation time.
+		 */
+		long startTime = System.currentTimeMillis();
+		StringBuilder logs = new StringBuilder();
 		try {
 			
 			if(service == null) {
@@ -51,74 +61,96 @@ public class SensorPublisher {
 				new ContextEventPattern()
 			});
 			mySensorContextPublisher = new DefaultContextPublisher(context, myContextProvider);
-			System.out.println("Init a publisher with ID: " + mySensorContextPublisher.getMyID());
-	
+			// Record log
+			logs.append("Init publisher with ID: ");
+			logs.append(mySensorContextPublisher.getMyID());
+			logs.append(" within: ");
+			logs.append(System.currentTimeMillis() - startTime);
+			logs.append(" ms.");
+			logger.info(logs);
+			System.out.println(logs.toString());
+			
 		} catch (Exception e) {
+			logger.error(e.toString());
 			e.printStackTrace();
 		}
 	}
 	
 	public void publishContextEvent() throws SocketException, SubnetException, TooManyObjectsException, InterruptedException, EchonetObjectException {
+		/**
+		 * Calculate executation time.
+		 */		
+		
 		// Get sensor from echonet network
 		ArrayList<MySensor> sensorList = new ArrayList<MySensor>();
-		int id = 1;
 		ScanEchonetDevice deviceScanner = new ScanEchonetDevice(service);
 		ArrayList<EchonetLiteDevice> devList = deviceScanner.scanEDevices();
+		long startTime = System.currentTimeMillis();
+		System.out.println("      Parsing uAAL Objects to RDF objects"); 
 		for(EchonetLiteDevice dev : devList) {
 			if(dev.getDataObjList().size() >=1) {
 				if(dev.getDataObjList().get(0).getClass().equals(eTemperatureSensor.class)) {
 					String ip = dev.getProfileObj().getDeviceIP();
 					String location = dev.getProfileObj().getInstallLocation();
+					if(location == null) {
+						location ="Unknown";
+					}
 					eTemperatureSensor tempSensor=(eTemperatureSensor) dev.getDataObjList().get(0);
 					boolean opStatus = tempSensor.isOperationStatus();
 					float temp = tempSensor.getTemperature();
-					MySensor sensor = new MySensor("http://ontology.universaal.org/MySenSorOntology.owl#mySensor"+id);
-					sensor.setMySensorLocation(location);
-					sensor.setMySensorOperationStatus(opStatus);
-					sensor.setMySensorValue(temp);					
+					MySensor sensor = new MySensor("http://ontology.universaal.org/MySenSorOntology.owl#"+ip);
+					sensor.changeProperty(MySensor.PROP_LOCALTION, location);
+					sensor.changeProperty(MySensor.PROP_OPERATION_STATUS,opStatus);
+					sensor.changeProperty(MySensor.PROP_VALUE,temp);					
 					sensorList.add(sensor);	
-					id++;
 				}
-			}
+			}		
 			
 		}
 		
-		/*
-		MySensor sensor = new MySensor("http://ontology.universaal.org/MySenSorOntology.owl#mysensor1");
-		//float temp = EchonetConnect.getTemp();
-		float temp = 5;
-		sensor.setMySensorValue(temp);
-		sensor.setMySensorLocation("Living Room");
-		sensor.setMySensorOperationStatus(true);
-		ContextEvent mySensorContextEvent = new ContextEvent(sensor.getURI());
-		mySensorContextEvent.setProperty(MySensor.PROP_LOCALTION, sensor);
+		System.out.println("      Finish parsing uAAL Objects to RDF objects within "+
+				(System.currentTimeMillis() - startTime) + " ms.");
 		
-		mySensorContextPublisher.publish(mySensorContextEvent);
-		System.out.println("Publisher ID: " + mySensorContextPublisher.getMyID() 
-				+" Published  an event with URI: "+mySensorContextEvent.getURI());
-		*/
-
+		System.out.println("Publishing ontologies to Context Bus ..."); 
+		long startTime1 = System.currentTimeMillis();
 		for (int i=0; i< sensorList.size();i++) {
-			ContextEvent mySensorContextEvent = new ContextEvent(sensorList.get(i),MySensor.PROP_VALUE);
+			MySensor sensor = sensorList.get(i);
+			ContextEvent mySensorContextEvent = new ContextEvent(sensor, MySensor.PROP_VALUE);
+			//ContextEvent mySensorContextEvent1 = new ContextEvent(sensor, MySensor.PROP_LOCALTION);
+			//ContextEvent mySensorContextEvent2 = new ContextEvent(sensor, MySensor.PROP_VALUE);
 			mySensorContextPublisher.publish(mySensorContextEvent);
-			//ContextEvent mySensorContextEvent = new ContextEvent(sensorList.get(i).getURI());
+			//mySensorContextPublisher.publish(mySensorContextEvent1);
+			//mySensorContextPublisher.publish(mySensorContextEvent2);
 			//mySensorContextEvent.setProperty(MySensor.PROP_LOCALTION,sensorList.get(i).getMySensorLocation());
 			//mySensorContextEvent.setProperty(MySensor.PROP_OPERATION_STATUS,sensorList.get(i).getMySensorOperationStatus());
 			//mySensorContextEvent.setProperty(MySensor.PROP_VALUE,sensorList.get(i).getMySensorValue());
-			System.out.println("Publisher ID: " + mySensorContextPublisher.getMyID() 
-					+" Published  an event with URI: "+mySensorContextEvent.toString());
+			System.out.println("   *********************");
+			System.out.println("   EVENT: "+ (i+1));
+			System.out.println("      SUBJECT: "+mySensorContextEvent.getSubjectURI()+"\n" + 
+						"      SUBJECT TYPE: " + mySensorContextEvent.getSubjectTypeURI() + "\n" +
+						"      RDFOBJECT: " + mySensorContextEvent.getRDFObject());
+			System.out.println("      PREDICATE:" + mySensorContextEvent.getRDFPredicate());
+			System.out.println("   *********************");
 		}
+		System.out.println("Finish publishing ontologies to Context Bus within "
+				+ (System.currentTimeMillis() - startTime1) + " ms."); 
+		// Record log
+		//logs.append("within: " + (System.currentTimeMillis() - startTime) + " ms.");
+		//logger.info(logs);
 
 	}
 
 	
 	public void close() {
-		System.out.println("Closing a publisher with ID: " + mySensorContextPublisher.getMyID());
+		long startTime =System.currentTimeMillis();
 		mySensorContextPublisher.close();
+		logger.info("Publisher ID: " + mySensorContextPublisher.getMyID() + 
+				"has been closed within: " + (System.currentTimeMillis()-startTime) + " ms.");
 	}
 
 	public void communicationChannelBroken() {
 		// TODO Auto-generated method stub
+		logger.error("Communication channel was broken");
 		System.out.println("There is a problem with connection!!");
 	}
 

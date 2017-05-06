@@ -4,7 +4,12 @@ package services;
 import java.net.NetworkInterface;
 import java.util.ArrayList;
 
+import ont.MySensor;
+
 import org.apache.log4j.Logger;
+import org.universAAL.ontology.device.TemperatureSensor;
+import org.universAAL.ontology.phThing.Device;
+
 
 
 
