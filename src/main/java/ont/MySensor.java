@@ -3,6 +3,11 @@ package ont;
 
 import org.universAAL.ontology.device.Sensor;
 
+import echonet.objects.EchonetLiteDevice;
+import echonet.objects.eDataObject;
+import echonet.objects.eProfileObject;
+import echonet.objects.eTemperatureSensor;
+
 public class MySensor extends Sensor{
 	
 	public static final String MY_URI = MySensorOntology.NAMESPACE + "MySensor";
@@ -48,6 +53,28 @@ public class MySensor extends Sensor{
 	}
 	public void setMySensorOperationStatus(boolean status) {
 		changeProperty(PROP_OPERATION_STATUS, status);
+	}
+	public boolean setData (EchonetLiteDevice obj) {
+		boolean changed = false;
+		eProfileObject profile = obj.getProfileObj();
+		for(eDataObject eData : obj.getDataObjList()) {
+			if(eData.getClass().equals(eTemperatureSensor.class)) {
+				eTemperatureSensor sensor = (eTemperatureSensor) eData;	
+				if(this.getMySensorOperationStatus() != sensor.isOperationStatus()) {
+					changeProperty(PROP_OPERATION_STATUS, sensor.isOperationStatus());
+					changed= true;
+				} else if (this.getMySensorValue() != sensor.getTemperature()) {
+					changeProperty(PROP_VALUE, sensor.getTemperature());
+					changed= true;
+				}else if (this.getMySensorLocation() != profile.getInstallLocation()) {
+					changeProperty(PROP_LOCALTION, profile.getInstallLocation());
+					changed= true;
+				} else {
+					changed = false;
+				}
+			}
+		}
+		return changed;
 	}
 	
 

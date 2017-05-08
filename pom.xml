@@ -63,6 +63,11 @@
 			<artifactId>mw.bus.context.osgi</artifactId>
 			<version>3.0.0</version>
 		</dependency>
+		<dependency>
+			<groupId>org.universAAL.middleware</groupId>
+			<artifactId>mw.bus.context.osgi</artifactId>
+			<version>3.0.0</version>
+		</dependency>
 </dependencies>
 	<build>
 		<plugins>

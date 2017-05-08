@@ -11,6 +11,9 @@ import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import echowand.common.EPC;
 import echowand.object.EchonetObjectException;
 import echowand.object.ObjectData;
@@ -691,6 +694,18 @@ public class EchonetDataConverter {
 			dec = dec.negate();
 		}
 		return dec.doubleValue();
+	}
+	public static String getIPAddr(String input) {
+		String IPADDRESS_PATTERN = 
+		        "(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)";
+		String ip = "";
+		Pattern pattern = Pattern.compile(IPADDRESS_PATTERN);
+		Matcher matcher = pattern.matcher(input);
+
+		if (matcher.find()) {
+			ip = matcher.group();
+		}
+		return ip;
 	}
 
 	public static byte[] requestData(EPC epc, String data) {
