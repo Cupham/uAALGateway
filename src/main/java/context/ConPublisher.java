@@ -3,7 +3,7 @@ package context;
 
 /* More on how to use this class at: 
  * http://forge.universaal.org/wiki/support:Developer_Handbook_6#Publishing_context_events */
-import mainpackage.Activator;
+//import mainpackage.OLD_Activator;
 import ont.MySensor;
 import ont.OntologyUpdater;
 
@@ -19,11 +19,11 @@ import utils.CEventData;
 import utils.Constants;
 
 
-public class CPublisher{
+public class ConPublisher{
 	public static final String NAMESPACE = "http://CARESSESuniversAALskeleton.org/CaressesOntology.owl#";
 	private ContextPublisher myContextPublisher;
 	
-	public CPublisher(ModuleContext context) {
+	public ConPublisher(ModuleContext context) {
 		System.out.println("Initiating Publisher");
 		ContextProvider myContextProvider = new ContextProvider(NAMESPACE+ "contextProvider");
 		myContextProvider.setType(ContextProviderType.gauge);

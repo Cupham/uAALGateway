@@ -1,7 +1,6 @@
 package ont;
 
 import echonet.objects.EchonetLiteDevice;
-import mainpackage.Activator;
 import utils.Constants;
 
 public class OntologyUpdater {

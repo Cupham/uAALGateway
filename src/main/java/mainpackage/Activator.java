@@ -4,26 +4,16 @@ import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.util.ArrayList;
 
-import ont.MySensor;
-import ont.MySensorOntology;
-
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 import org.universAAL.middleware.container.ModuleContext;
 import org.universAAL.middleware.container.osgi.uAALBundleContainer;
-import org.universAAL.middleware.context.ContextEvent;
-import org.universAAL.middleware.owl.Ontology;
 import org.universAAL.middleware.owl.OntologyManagement;
+import org.universAAL.ontology.phThing.Device;
 
 import services.ScanEchonetDevice;
-import utils.Constants;
 
-import context.CPublisher;
-import context.CSubcriber;
-import context.SensorPublisher;
-import context.SensorStateSubscriber;
 import echonet.objects.EchonetLiteDevice;
-import echonet.objects.eTemperatureSensor;
 import echowand.logic.TooManyObjectsException;
 import echowand.net.Inet4Subnet;
 import echowand.net.SubnetException;
@@ -32,76 +22,177 @@ import echowand.service.Core;
 import echowand.service.Service;
 
 
+
 public class Activator implements BundleActivator {
+	
+	private CaressesOntology caresses_ontology = new CaressesOntology();
+	
 	public static BundleContext osgiContext = null;
-	public static ModuleContext mContext = null;
+	public static ModuleContext context = null;	
 	
-	private Core echonetCore;
-	private static Service echonetService = null;
-	
-	
-	
-	
-	// Ontology area
-	//
-	private Ontology mySensorOnt = new MySensorOntology();
-	public static CPublisher pub;
-	public static SensorStateSubscriber csub;
-	public static CSubcriber sub;
-	boolean clientMode = true;
-	
+	public static Core echonetCore;
+	public static Service echonetService = null;
 
-	public void start(final BundleContext bcontext) throws Exception {
-		// Start Context
-		Activator.osgiContext = bcontext;
-		Activator.mContext = uAALBundleContainer.THE_CONTAINER.registerModule(new Object[] {bcontext});
+//	public static SCallee scallee = null;
+//	public static SCaller scaller = null;
+	
+	public static CSubscriber csubscriber = null;
+	public static CPublisher  cpublisher  = null;
+	
+	public static SocketPublisher socketpublisher = null;
 		
-		// Load ontology manager
-		OntologyManagement.getInstance().register(mContext, mySensorOnt);
-		pub = new CPublisher(mContext);
-		if(clientMode) {		
-			csub = new SensorStateSubscriber(mContext);
-			// Initialize ECHONET interface 
-			initialEchonetInterface();
-			
-			// Get device resources in iHouse
-			ArrayList<EchonetLiteDevice> echonetDeviceList = new ArrayList<EchonetLiteDevice>();
-			echonetDeviceList = getiHouseDevices();
-			
-			// Convert temperature device resources to DRF
-			
-			ArrayList<MySensor> sensorDRFList = new ArrayList<MySensor>();
-			sensorDRFList = convertTemperatureSensorToRDF(echonetDeviceList);
-			//System.out.println("I am subcriber");
-			//sub = new SensorStateSubscriber(mContext);
-			for(MySensor sensor : sensorDRFList) {
-				ContextEvent mySensorContextEvent = new ContextEvent(sensor, MySensor.MY_URI);
-				pub.publishContextEvent(mySensorContextEvent);
-			}
+	// : Declare one individual for each CaressesComponent sub-class
+	
+	protected static Cahrim i_cahrim;
+	protected static Ckb i_ckb;
+	protected static Cspem i_cspem;
+	protected static AALEnvironment i_AALEnv;
+	
+	// : Declare one individual for each DataMessage sub-sub-class
+	
+	protected static D1_1 i_D1_1;
+	protected static D1_2 i_D1_2;
+	protected static D2_1 i_D2_1;
+	protected static D2_2 i_D2_2;
+	protected static D2_3 i_D2_3;
+	protected static D2_4 i_D2_4;
+	protected static D3_1 i_D3_1;
+	protected static D3_2 i_D3_2;
+	protected static D4_1 i_D4_1;
+	protected static D4_2 i_D4_2;
+	protected static D5_1 i_D5_1;
+	protected static D5_2 i_D5_2;
+	protected static D6_1 i_D6_1;
+	protected static D6_2 i_D6_2;
+	protected static D6_3 i_D6_3;
+	protected static D7_1 i_D7_1;
+	protected static D7_2 i_D7_2;
+	protected static D8_1 i_D8_1;
+	protected static D8_2 i_D8_2;
+	protected static D11_1 i_D11_1;
+	protected static D11_2 i_D11_2;
+	protected static D11_3 i_D11_3;
+	protected static D11_4 i_D11_4;
+	protected static TemperatureSensor i_TemperatureSensor;
 
-			
-		} else {
-			System.out.println("Hello I am subcriber");
-			sub = new CSubcriber(mContext);
-			//MySensor s = new MySensor("http://ontology.universaal.org/MySenSorOntology.owl#"+Constants.TEMPERATURE_EVENT+"192.168.1.1");
-			//s.changeProperty(MySensor.PROP_LOCALTION, "My House");
-			//s.changeProperty(MySensor.PROP_OPERATION_STATUS,true);
-			//ContextEvent mySensorContextEvent = new ContextEvent(s, MySensor.MY_URI);
-			//pub.publishContextEvent(mySensorContextEvent);
-			
-		}
+	public void start(BundleContext bcontext) throws Exception {
+		
+		// : Set to which component this bundle refer (Component.CAHRIM, Component.CKB, Component.CSPEM)
+		//Component.setThisComponentAs(Component.CKB); 
+		Component.setThisComponentAs(Component.AALENVIRONMENT);
+		System.out.println(Component.component_ID + " ACTIVATOR: Application started\n");
+		
+		// initialize echonet interface
+		
+		initialEchonetInterface();
+		
+		Activator.osgiContext = bcontext;
+		Activator.context = uAALBundleContainer.THE_CONTAINER.registerModule(new Object[] { bcontext });
+		
+		OntologyManagement.getInstance().register(context, caresses_ontology);
+				
+//		scallee     = new SCallee(context);
+//		scaller     = new SCaller(context);
+		csubscriber = new CSubscriber(context);
+		cpublisher  = new CPublisher(context);
+		
+		i_cahrim = new Cahrim(CaressesOntology.NAMESPACE + "I_CAHRIM");
+		i_ckb    = new Ckb(CaressesOntology.NAMESPACE    + "I_CKB");
+		i_cspem  = new Cspem(CaressesOntology.NAMESPACE  + "I_CSPEM");
+		i_AALEnv =  new AALEnvironment(CaressesOntology.NAMESPACE + "I_AALEnvironment");
+		
+		i_D1_1 = new D1_1(CaressesOntology.NAMESPACE + "I_D1.1");
+		i_D1_2 = new D1_2(CaressesOntology.NAMESPACE + "I_D1.2");
+		i_D2_1 = new D2_1(CaressesOntology.NAMESPACE + "I_D2.1");
+		i_D2_2 = new D2_2(CaressesOntology.NAMESPACE + "I_D2.2");
+		i_D2_3 = new D2_3(CaressesOntology.NAMESPACE + "I_D2.3");
+		i_D2_4 = new D2_4(CaressesOntology.NAMESPACE + "I_D2.4");
+		i_D3_1 = new D3_1(CaressesOntology.NAMESPACE + "I_D3.1");
+		i_D3_2 = new D3_2(CaressesOntology.NAMESPACE + "I_D3.2");
+		i_D4_1 = new D4_1(CaressesOntology.NAMESPACE + "I_D4.1");
+		i_D4_2 = new D4_2(CaressesOntology.NAMESPACE + "I_D4.2");
+		i_D5_1 = new D5_1(CaressesOntology.NAMESPACE + "I_D5.1");
+		i_D5_2 = new D5_2(CaressesOntology.NAMESPACE + "I_D5.2");
+		i_D6_1 = new D6_1(CaressesOntology.NAMESPACE + "I_D6.1");
+		i_D6_2 = new D6_2(CaressesOntology.NAMESPACE + "I_D6.2");
+		i_D6_3 = new D6_3(CaressesOntology.NAMESPACE + "I_D6.3");
+		i_D7_1 = new D7_1(CaressesOntology.NAMESPACE + "I_D7.1");
+		i_D7_2 = new D7_2(CaressesOntology.NAMESPACE + "I_D7.2");
+		i_D8_1 = new D8_1(CaressesOntology.NAMESPACE + "I_D8.1");
+		i_D8_2 = new D8_2(CaressesOntology.NAMESPACE + "I_D8.2");
+		i_D11_1 = new D11_1(CaressesOntology.NAMESPACE + "I_D11.1");
+		i_D11_2 = new D11_2(CaressesOntology.NAMESPACE + "I_D11.2");
+		i_D11_3 = new D11_3(CaressesOntology.NAMESPACE + "I_D11.3");
+		i_D11_4 = new D11_4(CaressesOntology.NAMESPACE + "I_D11.4");
+		//i_TemperatureSensor = new TemperatureSensor(CaressesOntology.NAMESPACE +"I_TemperatureSensor");
+		setObjectPropertiesRelations();
+		Example example = new Example();
+		Thread t = new Thread(example);
+		t.start();
+		
+		//socketpublisher = new SocketPublisher(context);
+		//socketpublisher.startServer();
+				
 	}
-	public void stop(BundleContext arg0) throws Exception {
-		OntologyManagement.getInstance().unregister(mContext, mySensorOnt);
-		if(sub != null) {
-			sub.close();
-		}
-		if(csub != null) {
-			csub.close();
-		}
-		if(pub != null)
-			pub.close();
+	
+	public void setObjectPropertiesRelations(){
+		
+		i_cahrim.setOutput(i_D5_1);
+		i_cahrim.setOutput(i_D5_2);
+		i_cahrim.setOutput(i_D6_1);
+		i_cahrim.setOutput(i_D6_2);
+		i_cahrim.setOutput(i_D6_3);
+		i_cahrim.setOutput(i_D8_1);
+		i_cahrim.setOutput(i_D8_2);
+		
+		i_ckb.setOutput(i_D1_1);
+		i_ckb.setOutput(i_D1_2);
+		i_ckb.setOutput(i_D2_1);
+		i_ckb.setOutput(i_D2_2);
+		i_ckb.setOutput(i_D2_3);
+		i_ckb.setOutput(i_D2_4);
+		i_ckb.setOutput(i_D3_1);
+		i_ckb.setOutput(i_D3_2);
+		i_ckb.setOutput(i_D4_1);
+		i_ckb.setOutput(i_D4_2);
+		i_ckb.setOutput(i_D11_1);
+		i_ckb.setOutput(i_D11_2);
+		i_ckb.setOutput(i_D11_3);
+		i_ckb.setOutput(i_D11_4);
+		
+		i_cspem.setOutput(i_D7_1);
+		i_cspem.setOutput(i_D7_2);
+		
+		i_AALEnv.setOutput(i_TemperatureSensor);
+		
+		i_D1_1.setInput(i_cspem);
+		i_D1_2.setInput(i_cspem);
+		i_D2_1.setInput(i_cspem);
+		i_D2_2.setInput(i_cspem);
+		i_D2_3.setInput(i_cspem);
+		i_D2_4.setInput(i_cspem);
+		i_D3_1.setInput(i_cspem);
+		i_D3_2.setInput(i_cspem);
+		i_D4_1.setInput(i_cspem);
+		i_D4_2.setInput(i_cspem);
+		i_D5_1.setInput(i_cspem);
+		i_D5_1.setInput(i_ckb);
+		i_D5_2.setInput(i_cspem);
+		i_D5_2.setInput(i_ckb);
+		i_D6_1.setInput(i_cspem);
+		i_D6_2.setInput(i_cspem);
+		i_D6_3.setInput(i_cspem);
+		i_D7_1.setInput(i_cahrim);
+		i_D7_2.setInput(i_cahrim);
+		i_D8_1.setInput(i_ckb);
+		i_D8_2.setInput(i_ckb);
+		i_D11_1.setInput(i_cahrim);
+		i_D11_2.setInput(i_cahrim);
+		i_D11_3.setInput(i_cahrim);
+		i_D11_4.setInput(i_cahrim);
+		//i_TemperatureSensor.setInput(i_AALEnv);
 	}
+	
 	public boolean initialEchonetInterface() throws SocketException, SubnetException, TooManyObjectsException {
 		boolean isSuccessed = false;
 		
@@ -114,42 +205,17 @@ public class Activator implements BundleActivator {
 		}
 		return isSuccessed;
 	}
-	
-	public ArrayList<EchonetLiteDevice> getiHouseDevices() throws SocketException, SubnetException, TooManyObjectsException, InterruptedException, EchonetObjectException {
-		ScanEchonetDevice deviceScanner = new ScanEchonetDevice(echonetService);
-		return deviceScanner.scanEDevices();		
-	}
-	
-	public ArrayList<MySensor> convertTemperatureSensorToRDF(ArrayList<EchonetLiteDevice> devList) {
 
-		long startTime = System.currentTimeMillis();
-		ArrayList<MySensor> sensorList = new ArrayList<MySensor>();
-		System.out.println("      Parsing uAAL Objects to RDF objects"); 
-		for(EchonetLiteDevice dev : devList) {
-			if(dev.getDataObjList().size() >=1) {
-				if(dev.getDataObjList().get(0).getClass().equals(eTemperatureSensor.class)) {
-					String ip = dev.getProfileObj().getDeviceIP();
-					String location = dev.getProfileObj().getInstallLocation();
-					if(location == null) {
-						location ="Unknown";
-					}
-					eTemperatureSensor tempSensor=(eTemperatureSensor) dev.getDataObjList().get(0);
-					boolean opStatus = tempSensor.isOperationStatus();
-					float temp = tempSensor.getTemperature();
-					MySensor sensor = new MySensor("http://ontology.universaal.org/MySenSorOntology.owl#"+Constants.TEMPERATURE_EVENT+ip);
-					sensor.changeProperty(MySensor.PROP_LOCALTION, location);
-					sensor.changeProperty(MySensor.PROP_OPERATION_STATUS,opStatus);
-					sensor.changeProperty(MySensor.PROP_VALUE,temp);					
-					sensorList.add(sensor);	
-				}
-			}		
-			
-		}
+	public void stop(BundleContext arg0) throws Exception {
 		
-		System.out.println("      Finish parsing uAAL Objects to RDF objects within "+
-				(System.currentTimeMillis() - startTime) + " ms.");
-		return sensorList;
-	}
+//		scallee.close();
+//		scaller.close();
+		csubscriber.close();
+		cpublisher.close();
+		socketpublisher.close();
+		
+		System.out.println(Component.component_ID + " ACTIVATOR: Application stopped\n");
 	
+	}
 
 }

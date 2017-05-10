@@ -123,6 +123,9 @@ public class eProfileObject {
 	 * EPC: 0x9A Cumulative operating time
 	 */
 	private String cumulativeTime;
+	public eProfileObject() {
+		super();
+	}
 	
 	/**
 	 * Constructor

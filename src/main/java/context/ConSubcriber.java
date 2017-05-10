@@ -12,13 +12,14 @@ import org.universAAL.middleware.context.ContextEventPattern;
 import org.universAAL.middleware.context.ContextSubscriber;
 import org.universAAL.middleware.owl.MergedRestriction;
 import org.universAAL.ontology.device.LightController;
+import org.universAAL.ontology.phThing.Device;
 
 import utils.Constants;
 import utils.EchonetDataConverter;
 
-public class CSubcriber extends ContextSubscriber {
+public class ConSubcriber extends ContextSubscriber {
 
-	public CSubcriber(ModuleContext context) {
+	public ConSubcriber(ModuleContext context) {
 		super(context, getPermanentSubscriptions());
 		System.out.println(" Init subcriber with ID: " + context.getID());
 	}

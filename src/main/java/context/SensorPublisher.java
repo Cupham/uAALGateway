@@ -18,7 +18,14 @@ import org.universAAL.middleware.context.ContextPublisher;
 import org.universAAL.middleware.context.DefaultContextPublisher;
 import org.universAAL.middleware.context.owl.ContextProvider;
 import org.universAAL.middleware.context.owl.ContextProviderType;
+import org.universAAL.middleware.owl.ManagedIndividual;
+import org.universAAL.ontology.device.MotionSensor;
+import org.universAAL.ontology.device.TemperatureSensor;
+import org.universAAL.ontology.location.Location;
 import org.universAAL.ontology.phThing.Device;
+import org.universAAL.ontology.profile.HWSubProfile;
+import org.universAAL.ontology.profile.Profile;
+import org.universAAL.ontology.profile.User;
 
 import echonet.objects.EchonetLiteDevice;
 import echonet.objects.eTemperatureSensor;
@@ -114,7 +121,7 @@ public class SensorPublisher {
 		System.out.println("Publishing ontologies to Context Bus ..."); 
 		long startTime1 = System.currentTimeMillis();
 		for (int i=0; i< sensorList.size();i++) {
-			MySensor sensor = sensorList.get(i);
+			MySensor sensor = sensorList.get(i);		
 			ContextEvent mySensorContextEvent = new ContextEvent(sensor, MySensor.PROP_VALUE);
 			//ContextEvent mySensorContextEvent1 = new ContextEvent(sensor, MySensor.PROP_LOCALTION);
 			//ContextEvent mySensorContextEvent2 = new ContextEvent(sensor, MySensor.PROP_VALUE);

@@ -1,5 +1,6 @@
 package echonet.objects;
 
+
 import utils.EchonetDataConverter;
 import echowand.common.EPC;
 import echowand.object.EchonetObjectException;
@@ -11,7 +12,14 @@ public class eTemperatureSensor extends eDataObject{
 	 * between: 0xF554–0x7FFE (-2732–32766)~(-273.2–3276.6 Celcius)
 	 */
 	private float temperature;
+	private eProfileObject profile;
 	
+	public eProfileObject getProfile() {
+		return profile;
+	}
+	public void setProfile(eProfileObject profile) {
+		this.profile = profile;
+	}
 	public eTemperatureSensor() {
 		super();
 		this.groupCode= (byte) 0x00;

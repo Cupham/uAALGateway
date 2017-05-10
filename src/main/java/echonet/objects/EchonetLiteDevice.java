@@ -96,4 +96,9 @@ public class EchonetLiteDevice {
 	public void setDataObjList(ArrayList<eDataObject> dataObjList) {
 		this.dataObjList = dataObjList;
 	}
+	public void setDataObjList(eDataObject dataObj) {
+		ArrayList<eDataObject> objList = new ArrayList<eDataObject>();
+		objList.add(dataObj);
+		this.dataObjList = objList;
+	}
 }
