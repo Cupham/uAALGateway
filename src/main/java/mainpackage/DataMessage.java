@@ -2,7 +2,7 @@ package mainpackage;
 
 import org.universAAL.ontology.phThing.Device;
 
-public class DataMessage extends Device {
+public class DataMessage extends Device{
 	
 	public static final String MY_URI = CaressesOntology.NAMESPACE + "Data_Message";
 	

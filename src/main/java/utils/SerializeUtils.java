@@ -12,8 +12,8 @@ import echonet.objects.eTemperatureSensor;
 public class SerializeUtils {
 	public static eTemperatureSensor temperatureSensorFromMessage(String message) {
 		Gson gson = new Gson();
-		return gson.fromJson(message, eTemperatureSensor.class);
-
+		eTemperatureSensor rs =  gson.fromJson(message, eTemperatureSensor.class);
+		return rs;
 	}
 	public static eTemperatureSensor temperatureSensorFromEDataObjects(ArrayList<eDataObject> objList) {
 		for(eDataObject dataObj : objList) {

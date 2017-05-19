@@ -54,7 +54,7 @@ public class ScanEchonetDevice {
 		long startTime = System.currentTimeMillis();
 		ArrayList<EchonetLiteDevice> deviceList = new ArrayList<EchonetLiteDevice>();
 
-		UpdateRemoteInfoResult remoteResult = service.doUpdateRemoteInfo(3000);
+		UpdateRemoteInfoResult remoteResult = service.doUpdateRemoteInfo(5000);
 		remoteResult.join();
 
 		List<Node> nodes = service.getRemoteNodes(); // list device object

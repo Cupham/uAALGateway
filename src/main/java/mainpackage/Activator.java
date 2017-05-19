@@ -12,8 +12,10 @@ import org.universAAL.middleware.owl.OntologyManagement;
 import org.universAAL.ontology.phThing.Device;
 
 import services.ScanEchonetDevice;
+import utils.SerializeUtils;
 
 import echonet.objects.EchonetLiteDevice;
+import echonet.objects.eTemperatureSensor;
 import echowand.logic.TooManyObjectsException;
 import echowand.net.Inet4Subnet;
 import echowand.net.SubnetException;
@@ -38,6 +40,7 @@ public class Activator implements BundleActivator {
 	
 	public static CSubscriber csubscriber = null;
 	public static CPublisher  cpublisher  = null;
+	public static TemperatureServiceCallee serviceCallee = null;
 	
 	public static SocketPublisher socketpublisher = null;
 		
@@ -74,6 +77,7 @@ public class Activator implements BundleActivator {
 	protected static D11_3 i_D11_3;
 	protected static D11_4 i_D11_4;
 	protected static TemperatureSensor i_TemperatureSensor;
+	protected static ArrayList<TemperatureSensor> eSensorList;
 
 	public void start(BundleContext bcontext) throws Exception {
 		
@@ -89,12 +93,15 @@ public class Activator implements BundleActivator {
 		Activator.osgiContext = bcontext;
 		Activator.context = uAALBundleContainer.THE_CONTAINER.registerModule(new Object[] { bcontext });
 		
+		
 		OntologyManagement.getInstance().register(context, caresses_ontology);
-				
+		
+		eSensorList = new ArrayList<TemperatureSensor>();
 //		scallee     = new SCallee(context);
 //		scaller     = new SCaller(context);
-		csubscriber = new CSubscriber(context);
+		//csubscriber = new CSubscriber(context);
 		cpublisher  = new CPublisher(context);
+		serviceCallee = new TemperatureServiceCallee(context);
 		
 		i_cahrim = new Cahrim(CaressesOntology.NAMESPACE + "I_CAHRIM");
 		i_ckb    = new Ckb(CaressesOntology.NAMESPACE    + "I_CKB");
@@ -126,9 +133,10 @@ public class Activator implements BundleActivator {
 		i_D11_4 = new D11_4(CaressesOntology.NAMESPACE + "I_D11.4");
 		//i_TemperatureSensor = new TemperatureSensor(CaressesOntology.NAMESPACE +"I_TemperatureSensor");
 		setObjectPropertiesRelations();
-		Example example = new Example();
-		Thread t = new Thread(example);
-		t.start();
+		
+		getHomeResource();
+		
+		serviceCallee = new TemperatureServiceCallee(context);
 		
 		//socketpublisher = new SocketPublisher(context);
 		//socketpublisher.startServer();
@@ -197,13 +205,63 @@ public class Activator implements BundleActivator {
 		boolean isSuccessed = false;
 		
 		if(echonetService == null) {
-			NetworkInterface nif = NetworkInterface.getByName("eno1");
+			//NetworkInterface nif = NetworkInterface.getByName("eno1");
+			NetworkInterface nif = NetworkInterface.getByName("enx00018ebb0b5a");
 			echonetCore = new Core(Inet4Subnet.startSubnet(nif));
 			echonetCore.startService();
 			echonetService = new Service(echonetCore);
 			isSuccessed = true;
 		}
 		return isSuccessed;
+	}
+	public void getHomeResource() {
+		ArrayList<EchonetLiteDevice> echonetDeviceList = new ArrayList<EchonetLiteDevice>();
+		ScanEchonetDevice deviceScanner = new ScanEchonetDevice(Activator.echonetService);
+		ArrayList<eTemperatureSensor> sensorList = new ArrayList<eTemperatureSensor>();
+		try {
+			echonetDeviceList = deviceScanner.scanEDevices();
+			
+			if(echonetDeviceList.size() == 0) {
+				System.out.println("INFO: There is no device in iHouse");
+			} else {
+				for (EchonetLiteDevice dev : echonetDeviceList) {				
+					eTemperatureSensor temperatureSensor =SerializeUtils.temperatureSensorFromEDataObjects(dev.getDataObjList());
+					if(temperatureSensor != null) {
+						temperatureSensor.setProfile(dev.getProfileObj());
+						sensorList.add(temperatureSensor);					
+					}		
+				}
+				
+				if(sensorList.size()>0) {
+					for(int i=0; i< sensorList.size();i++) {
+						Activator.i_TemperatureSensor = new TemperatureSensor(CaressesOntology.NAMESPACE +"I_TemperatureSensor"+sensorList.get(i).getProfile().getDeviceIP());
+						String msg = SerializeUtils.messageFromTemperatureSensor(sensorList.get(i));
+						Activator.i_TemperatureSensor.changeProperty(TemperatureSensor.PROPERTY_HAS_TEMPERATURE_SENSOR_DESCRIPTION, msg);
+						Activator.eSensorList.add(Activator.i_TemperatureSensor);
+					}
+					 
+				} else {
+					System.out.println("INFO: There is no temperature sensor in iHouse");
+				}			
+			}		
+		} catch (SocketException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SubnetException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (TooManyObjectsException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (EchonetObjectException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			System.out.println(Activator.eSensorList.size() + " temperature sensor");
+		}
 	}
 
 	public void stop(BundleContext arg0) throws Exception {

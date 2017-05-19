@@ -15,9 +15,13 @@ public class TemperatureSensor extends EchonetSensor{
 	public static final String PROPERTY_HAS_TEMPERATURE_SENSOR_DESCRIPTION = CaressesOntology.NAMESPACE + "has_Temperature_Sensor_description";
 	
 	public static final String PROPERTY_HAS_TEMPERATURE = CaressesOntology.NAMESPACE + "has_Temperature";	
+	public static final String PROPERTY_HAS_LOCATION = CaressesOntology.NAMESPACE + "has_Location";
 	
 	public TemperatureSensor(String uri) {
 		super(uri);
+	}
+	public TemperatureSensor() {
+		super(MY_URI);
 	}
 	public String getClassURI(){
 		return MY_URI;
@@ -33,6 +37,7 @@ public class TemperatureSensor extends EchonetSensor{
 			changeProperty(EchonetSensor.PROPERTY_PROFILE, dev.getProfile());
 			changeProperty(EchonetSensor.PROPERTY_OPERATION_STATUS, dev.getProfile().isOperationStatus());
 			changeProperty(EchonetSensor.PROPERTY_HAS_IP, dev.getProfile().getDeviceIP());
+			changeProperty(PROPERTY_HAS_LOCATION, dev.getProfile().getInstallLocation());
 			rs = true;
 		}		
 		return rs;	
@@ -47,4 +52,9 @@ public class TemperatureSensor extends EchonetSensor{
 	public void setInput(AALEnvironment AALEnvironment_individual){
 		setProperty(PROPERTY_IS_AALENVIRONMENT_INPUT, AALEnvironment_individual);
 	}
+	@Override
+	public int getPropSerializationType(String propURI) {
+		return super.getPropSerializationType(propURI);
+	}
+	
 }

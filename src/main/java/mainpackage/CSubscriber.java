@@ -11,7 +11,10 @@ import org.universAAL.middleware.context.ContextEventPattern;
 import org.universAAL.middleware.context.ContextSubscriber;
 import org.universAAL.middleware.owl.MergedRestriction;
 
+import utils.SerializeUtils;
+
 public class CSubscriber extends ContextSubscriber {
+	Example example;
 	protected CSubscriber(ModuleContext context) {
 		super(context, getPermanentSubscriptions());
 	}
@@ -85,7 +88,6 @@ public class CSubscriber extends ContextSubscriber {
 		String theSubject   = event.getSubjectURI().substring(CaressesOntology.NAMESPACE.length());
 		String thePredicate = event.getRDFPredicate().substring(CaressesOntology.NAMESPACE.length());
 		Object theObject    = event.getRDFObject();
-		
 		String theSubjectClass = theSubject.substring(2);
 		
 		if(theSubjectClass.equals("D1.1")){
@@ -225,12 +227,16 @@ public class CSubscriber extends ContextSubscriber {
 				
 				OntologyUpdater.updateOntology(theSubjectClass, (String) theObject);
 			}
-		} if(theSubjectClass.equals("TemperatureSensor")) {
-			if(event.getRDFPredicate().equals(TemperatureSensor.PROPERTY_HAS_TEMPERATURE_SENSOR_DESCRIPTION)) {
-				OntologyUpdater.updateOntology(theSubjectClass, (String) theObject);
-			}		
+		} if(theSubjectClass.contains("TemperatureSensor")) {	
+			theSubjectClass = "TemperatureSensor";
+			if(event.getRDFPredicate().equals(TemperatureSensor.PROPERTY_HAS_TEMPERATURE)) {
+				for(int i =0;i<Activator.eSensorList.size();i++) {
+					String publisher_response = Activator.cpublisher.publishContextEvent("TemperatureSensor", 
+							Activator.eSensorList.get(i).getProperty(TemperatureSensor.PROPERTY_HAS_TEMPERATURE_SENSOR_DESCRIPTION).toString());
+					System.out.println("INFO: " + publisher_response + "\n");
+				}
+			}
 		}
-		
 		SubscriptionHandler.handleSubscribedMessage(theSubjectClass, (String) theObject);
 	    /*
 		try {

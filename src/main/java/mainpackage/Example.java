@@ -4,6 +4,8 @@ import java.lang.reflect.Array;
 import java.net.SocketException;
 import java.util.ArrayList;
 
+import org.universAAL.middleware.context.ContextEvent;
+
 import echowand.logic.TooManyObjectsException;
 import echowand.net.SubnetException;
 import echowand.object.EchonetObjectException;
@@ -93,9 +95,10 @@ public class Example implements Runnable {
 					for(int i=0; i< sensorList.size();i++) {
 						Activator.i_TemperatureSensor = new TemperatureSensor(CaressesOntology.NAMESPACE +"I_TemperatureSensor"+sensorList.get(i).getProfile().getDeviceIP());
 						String msg = SerializeUtils.messageFromTemperatureSensor(sensorList.get(i));
-						String publisher_response = Activator.cpublisher.publishContextEvent("TemperatureSensor", msg);
-						System.out.println("INFO: " + publisher_response + "\n");
-						System.out.println(Activator.i_TemperatureSensor.getIP());
+						Activator.i_TemperatureSensor.changeProperty(TemperatureSensor.PROPERTY_HAS_TEMPERATURE_SENSOR_DESCRIPTION, msg);
+						Activator.eSensorList.add(Activator.i_TemperatureSensor);
+						//String publisher_response = Activator.cpublisher.publishContextEvent("TemperatureSensor", msg);
+						//System.out.println("INFO: " + publisher_response + "\n");
 					}
 					 
 				} else {
@@ -117,8 +120,10 @@ public class Example implements Runnable {
 		} catch (EchonetObjectException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} finally {
+			System.out.println(Activator.eSensorList.size());
 		}
-		System.out.println(Activator.i_TemperatureSensor.getIP());
+		
 		
 		
 

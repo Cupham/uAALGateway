@@ -88,12 +88,13 @@
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echowand/object/NodeProfileObjectListener.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echowand/util/SelectorMember.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/mainpackage/AALEnvironment.java
+/home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/utils/loadiHouseResource.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/mainpackage/Ckb.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echowand/net/Node.java
-/home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echowand/net/NodeInfo.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echowand/service/NodeProfileObjectConfig.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/mainpackage/D7_2.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/context/ConPublisher.java
+/home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echowand/net/NodeInfo.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echowand/info/BasicObjectInfo.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/mainpackage/D1.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echowand/logic/SetGetTransactionConfig.java
@@ -105,6 +106,7 @@
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/ont/MySensorOntology.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echowand/util/Constraint.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/mainpackage/CaressesOntology.java
+/home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/mainpackage/TemperatureServiceCalleeProvidedService.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echowand/util/ConstraintShort.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echowand/service/result/SetGetResult.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echowand/object/AnnounceRequestProcessor.java
@@ -144,9 +146,9 @@
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/mainpackage/Cahrim.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echowand/net/InetSubnetTCPReceiverThread.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echowand/info/PropertyConstraintOnOff.java
+/home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echowand/object/LocalSetGetAtomic.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/services/guiClient.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/mainpackage/ConnectionHandler.java
-/home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echowand/object/LocalSetGetAtomic.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/mainpackage/D11.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echowand/service/PropertyUpdater.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echowand/info/TemperatureSensorInfo.java
@@ -160,8 +162,8 @@
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/mainpackage/Cspem.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echowand/info/PropertyConstraintTemperature.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echowand/service/result/ResultFrameSelector.java
-/home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echowand/logic/TooManyObjectsException.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echowand/object/LocalObjectNotifyDelegate.java
+/home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echowand/logic/TooManyObjectsException.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/mainpackage/SocketPublisher.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echowand/logic/DefaultRequestProcessor.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echowand/info/AirSpeedSensorInfo.java
@@ -197,6 +199,7 @@
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/mainpackage/D2.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echowand/logic/TransactionConfig.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echowand/info/DeviceObjectInfo.java
+/home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/mainpackage/TemperatureServiceCallee.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echowand/service/PropertyDelegate.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echowand/net/Inet4Subnet.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/mainpackage/D2_3.java

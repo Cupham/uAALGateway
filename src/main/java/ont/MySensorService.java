@@ -1,13 +1,15 @@
 package ont;
 
 
+import mainpackage.CaressesOntology;
+
 import org.universAAL.middleware.service.owl.Service;
 import org.universAAL.middleware.service.owls.profile.ServiceProfile;
 
 public class MySensorService extends Service{
 	
-	public static final String MY_URI=MySensorOntology.NAMESPACE +"MySensorService";
-	public static final String PROP_CONTROLS = MySensorOntology.NAMESPACE + "controls";
+	public static final String MY_URI=CaressesOntology.NAMESPACE +"MySensorService";
+	public static final String PROP_CONTROLS = CaressesOntology.NAMESPACE + "controls";
 	
 	
 	
