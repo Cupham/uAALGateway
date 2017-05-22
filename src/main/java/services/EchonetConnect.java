@@ -14,6 +14,7 @@ import org.universAAL.ontology.phThing.Device;
 
 
 import echonet.objects.EchonetLiteDevice;
+import echonet.objects.eDataObject;
 import echonet.objects.eTemperatureSensor;
 import echowand.common.EOJ;
 import echowand.common.EPC;
@@ -44,8 +45,14 @@ public class EchonetConnect {
 				System.out.println(dev.getProfileObj().getDeviceName());
 				if(dev.getDataObjList().size() >=1) {
 					System.out.println(dev.getDataObjList().get(0).getClass().equals(eTemperatureSensor.class));
-					eTemperatureSensor sensor = (eTemperatureSensor) dev.getDataObjList().get(0);
-					System.out.println(sensor.ToString());
+					for(eDataObject sensor : dev.getDataObjList()) {
+						eTemperatureSensor esensor = (eTemperatureSensor) sensor;
+						System.out.println(dev.getProfileObj());
+						System.out.println(esensor.ToString());
+						System.out.println("-----------------");
+						
+					}
+					
 				}
 				
 			}
@@ -76,7 +83,7 @@ public class EchonetConnect {
 	}
 	
 	public static void main(String[] args) {
-		System.out.println(getTemp());
+		getTemp();//System.out.println(getTemp());
 		System.exit(0);
 	} 
 

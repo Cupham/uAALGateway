@@ -68,8 +68,7 @@ public class eTemperatureSensor extends eDataObject{
 	@Override
 	public String ToString() {
 		StringBuilder rs = new StringBuilder();
-		rs.append("EOJ: "+String.format("%02x", this.getGroupCode())+
-				String.format("%02x", this.getClassCode())+
+		rs.append("Instance: " +
 				String.format("%02x", this.getInstanceCode())+"\r\n");
 		rs.append("\tStatus: "+((this.operationStatus)?"ON":"OFF")+"\r\n");
 		rs.append("\tTemperature: "+this.temperature+"*C");

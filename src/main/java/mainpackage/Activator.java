@@ -15,6 +15,7 @@ import services.ScanEchonetDevice;
 import utils.SerializeUtils;
 
 import echonet.objects.EchonetLiteDevice;
+import echonet.objects.eDataObject;
 import echonet.objects.eTemperatureSensor;
 import echowand.logic.TooManyObjectsException;
 import echowand.net.Inet4Subnet;
@@ -78,6 +79,7 @@ public class Activator implements BundleActivator {
 	protected static D11_4 i_D11_4;
 	protected static TemperatureSensor i_TemperatureSensor;
 	protected static ArrayList<TemperatureSensor> eSensorList;
+	public static ArrayList<EchonetLiteDevice> deviceList;
 
 	public void start(BundleContext bcontext) throws Exception {
 		
@@ -97,6 +99,7 @@ public class Activator implements BundleActivator {
 		OntologyManagement.getInstance().register(context, caresses_ontology);
 		
 		eSensorList = new ArrayList<TemperatureSensor>();
+		deviceList = new ArrayList<EchonetLiteDevice>();
 //		scallee     = new SCallee(context);
 //		scaller     = new SCaller(context);
 		//csubscriber = new CSubscriber(context);
@@ -205,8 +208,8 @@ public class Activator implements BundleActivator {
 		boolean isSuccessed = false;
 		
 		if(echonetService == null) {
-			//NetworkInterface nif = NetworkInterface.getByName("eno1");
-			NetworkInterface nif = NetworkInterface.getByName("enx00018ebb0b5a");
+			NetworkInterface nif = NetworkInterface.getByName("eno1");
+			//NetworkInterface nif = NetworkInterface.getByName("enx00018ebb0b5a");
 			echonetCore = new Core(Inet4Subnet.startSubnet(nif));
 			echonetCore.startService();
 			echonetService = new Service(echonetCore);
@@ -215,26 +218,31 @@ public class Activator implements BundleActivator {
 		return isSuccessed;
 	}
 	public void getHomeResource() {
-		ArrayList<EchonetLiteDevice> echonetDeviceList = new ArrayList<EchonetLiteDevice>();
 		ScanEchonetDevice deviceScanner = new ScanEchonetDevice(Activator.echonetService);
 		ArrayList<eTemperatureSensor> sensorList = new ArrayList<eTemperatureSensor>();
 		try {
-			echonetDeviceList = deviceScanner.scanEDevices();
+			deviceList = deviceScanner.scanEDevices();
 			
-			if(echonetDeviceList.size() == 0) {
+			if(deviceList.size() == 0) {
 				System.out.println("INFO: There is no device in iHouse");
 			} else {
-				for (EchonetLiteDevice dev : echonetDeviceList) {				
-					eTemperatureSensor temperatureSensor =SerializeUtils.temperatureSensorFromEDataObjects(dev.getDataObjList());
-					if(temperatureSensor != null) {
-						temperatureSensor.setProfile(dev.getProfileObj());
-						sensorList.add(temperatureSensor);					
-					}		
+				for (EchonetLiteDevice dev : deviceList) {	
+					for(eDataObject dataObj : dev.getDataObjList()) {
+						if(dataObj.getClass().equals(eTemperatureSensor.class)) {
+							eTemperatureSensor tempSensor = (eTemperatureSensor) dataObj;
+							if(tempSensor != null) {
+								tempSensor.setProfile(dev.getProfileObj());
+								sensorList.add(tempSensor);	
+								}
+							}							
+						}
+					}	
 				}
 				
 				if(sensorList.size()>0) {
 					for(int i=0; i< sensorList.size();i++) {
-						Activator.i_TemperatureSensor = new TemperatureSensor(CaressesOntology.NAMESPACE +"I_TemperatureSensor"+sensorList.get(i).getProfile().getDeviceIP());
+						String url = sensorList.get(i).getProfile().getDeviceIP() + "_"+sensorList.get(i).getInstanceCode();
+						Activator.i_TemperatureSensor = new TemperatureSensor(CaressesOntology.NAMESPACE +"I_TemperatureSensor"+url);
 						String msg = SerializeUtils.messageFromTemperatureSensor(sensorList.get(i));
 						Activator.i_TemperatureSensor.changeProperty(TemperatureSensor.PROPERTY_HAS_TEMPERATURE_SENSOR_DESCRIPTION, msg);
 						Activator.eSensorList.add(Activator.i_TemperatureSensor);
@@ -242,8 +250,7 @@ public class Activator implements BundleActivator {
 					 
 				} else {
 					System.out.println("INFO: There is no temperature sensor in iHouse");
-				}			
-			}		
+				}					
 		} catch (SocketException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

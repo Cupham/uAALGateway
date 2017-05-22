@@ -6,11 +6,13 @@ import java.util.Date;
 import utils.EchonetDataConverter;
 
 import echowand.common.EPC;
+import echowand.common.PropertyMap;
 import echowand.object.EchonetObjectException;
+import echowand.object.ObjectData;
 import echowand.object.RemoteObject;
 
 public class eProfileObject {
-	private String deviceName;
+	private String deviceID;
 	/**
 	 * Device IP
 	 */
@@ -135,7 +137,7 @@ public class eProfileObject {
 	 */
 	public eProfileObject(String ip, String name) {
 		this.deviceIP = ip;
-		this.deviceName = name;
+		this.deviceID = name;
 	}
 	
 	/**
@@ -145,90 +147,95 @@ public class eProfileObject {
 	 * @throws EchonetObjectException
 	 */
 	public void ParseProfileObjectFromEPC(RemoteObject rObj) throws EchonetObjectException {
+		
+
+		ObjectData data = rObj.getData(EPC.x9F);
+		
+		PropertyMap propertyMap = new PropertyMap(data.toBytes());
 
 		this.groupCode = rObj.getEOJ().getClassGroupCode();
 		this.classCode = rObj.getEOJ().getClassCode();
 		this.instanceCode = rObj.getEOJ().getInstanceCode();
-		if (rObj.contains(EPC.x80)) { // operation status
+		if (propertyMap.isSet(EPC.x80)) { // operation status
 			if (EchonetDataConverter.dataToInteger(rObj.getData(EPC.x80)) == 48) {
 				this.operationStatus = true; // device status is ON
 			} else {
 				this.operationStatus = false; // device status is OFF
 			}
 		}
-		if (rObj.contains(EPC.x81)) { // install location
+		if (propertyMap.isSet(EPC.x81)) { // install location
 			String rsLocation = EchonetDataConverter.dataToInstallLocation(rObj.getData(EPC.x81));
 			if (rsLocation == null) {
 				rsLocation = "Can not find install location!";
 			}
 			this.installLocation = rsLocation;
 		}
-		if (rObj.contains(EPC.x82)) { // standard version
+		if (propertyMap.isSet(EPC.x82)) { // standard version
 			this.standardVersionInfo = EchonetDataConverter.dataToVersion(rObj.getData(EPC.x82));
 		}
 
-		if (rObj.contains(EPC.x83)) { // identification number
+		if (propertyMap.isSet(EPC.x83)) { // identification number
 			this.identificationNumber = EchonetDataConverter.dataToIdentifiCationNumber(rObj.getData(EPC.x83)) + "";
 		}
 
-		if (rObj.contains(EPC.x84)) { // measured instantaneous power
+		if (propertyMap.isSet(EPC.x84)) { // measured instantaneous power
 										// consumption
 			this.instantaneousPower = EchonetDataConverter.dataToShort(rObj.getData(EPC.x84));
 		}
 
-		if (rObj.contains(EPC.x85)) { // Measured cumulative power consumption
+		if (propertyMap.isSet(EPC.x85)) { // Measured cumulative power consumption
 			this.cumulativePower = EchonetDataConverter.dataToLong(rObj.getData(EPC.x85));
 		}
 
-		if (rObj.contains(EPC.x86)) { // Manufacturer's fault code
+		if (propertyMap.isSet(EPC.x86)) { // Manufacturer's fault code
 			this.manufactureerFaultCode = EchonetDataConverter.dataToFaultCode(rObj.getData(EPC.x86)) + "";
 		}
 
-		if (rObj.contains(EPC.x87)) { // Current limit setting
+		if (propertyMap.isSet(EPC.x87)) { // Current limit setting
 			this.currentLimitSetting = EchonetDataConverter.dataToInteger(rObj.getData(EPC.x87));
 		}
 
-		if (rObj.contains(EPC.x88)) { // Fault status
+		if (propertyMap.isSet(EPC.x88)) { // Fault status
 			this.faultStatus = (EchonetDataConverter.dataToInteger(rObj.getData(EPC.x87)) == 65) ? true : false;
 		}
 
-		if (rObj.contains(EPC.x89)) { // Fault description
+		if (propertyMap.isSet(EPC.x89)) { // Fault description
 			if (this.faultStatus) {
 				this.faultDescription = EchonetDataConverter.getFaultDetail(rObj.getData(EPC.x89));
 			} else {
 				this.faultDescription = "No Fault";
 			}
 		}
-		if (rObj.contains(EPC.x8A)) { // Manufacture code
+		if (propertyMap.isSet(EPC.x8A)) { // Manufacture code
 			this.manufacturerCode = EchonetDataConverter.dataToString(rObj.getData(EPC.x8A)) + "";
 		}
 
-		if (rObj.contains(EPC.x8B)) { // Business facility code
+		if (propertyMap.isSet(EPC.x8B)) { // Business facility code
 			this.manufacturerCode = EchonetDataConverter.dataToString(rObj.getData(EPC.x8B)) + "";
 		}
 
-		if (rObj.contains(EPC.x8C)) { // product code
+		if (propertyMap.isSet(EPC.x8C)) { // product code
 			this.productCode = EchonetDataConverter.dataToString(rObj.getData(EPC.x8C)) + "";
 		}
 
-		if (rObj.contains(EPC.x8D)) { // producttion number
+		if (propertyMap.isSet(EPC.x8D)) { // producttion number
 			this.productNumber = EchonetDataConverter.dataToString(rObj.getData(EPC.x8D)) + "";
 		}
 
-		if (rObj.contains(EPC.x8E)) { // production date default 4bytes with
+		if (propertyMap.isSet(EPC.x8E)) { // production date default 4bytes with
 										// format YYMD
 			this.productDate = EchonetDataConverter.dataDateTime(rObj.getData(EPC.x8E));
 		}
 
-		if (rObj.contains(EPC.x8F)) { // Power saving mode
+		if (propertyMap.isSet(EPC.x8F)) { // Power saving mode
 			this.powerSaving = (EchonetDataConverter.dataToInteger(rObj.getData(EPC.x8F)) == 65) ? true : false;
 		}
 
-		if (rObj.contains(EPC.x93)) { // Remote control
+		if (propertyMap.isSet(EPC.x93)) { // Remote control
 			this.throughPublicNetwork = (EchonetDataConverter.dataToInteger(rObj.getData(EPC.x93)) == 65) ? true : false;
 		}
 
-		if (rObj.contains(EPC.x97)) { // current time 2bytes with format HH:MM
+		if (propertyMap.isSet(EPC.x97)) { // current time 2bytes with format HH:MM
 			byte timeArray[];
 			timeArray = rObj.getData(EPC.x97).toBytes();
 			int h = timeArray[0];
@@ -236,16 +243,16 @@ public class eProfileObject {
 			this.currentTimeSetting = "" + ((h < 10) ? ("0" + h) : (h + "")) + ":" + ((m < 10) ? ("0" + m) : ("" + m));
 		}
 
-		if (rObj.contains(EPC.x98)) { // current time 4bytes with format
+		if (propertyMap.isSet(EPC.x98)) { // current time 4bytes with format
 										// YYYY:MM:DD
 			this.currentDateSetting = EchonetDataConverter.dataDateTime(rObj.getData(EPC.x98));
 		}
 
-		if (rObj.contains(EPC.x99)) { // power limit
+		if (propertyMap.isSet(EPC.x99)) { // power limit
 			this.powerLimit = EchonetDataConverter.dataToShort(rObj.getData(EPC.x99));
 		}
 
-		if (rObj.contains(EPC.x9A)) { // Cumulative operating time 5bytes with
+		if (propertyMap.isSet(EPC.x9A)) { // Cumulative operating time 5bytes with
 										// first byte: Unit
 										// 4 bytes next: format
 										// Second:Minute:Hour:Day
@@ -293,7 +300,7 @@ public class eProfileObject {
 		eProfileObject checkObj = (eProfileObject) obj;
 		if (!compareObject(this.deviceIP, checkObj.deviceIP))
 			return false;
-		if (!compareObject(this.deviceName, checkObj.deviceName))
+		if (!compareObject(this.deviceID, checkObj.deviceID))
 			return false;
 		if (!compareObject(this.groupCode, checkObj.groupCode))
 			return false;
@@ -348,7 +355,7 @@ public class eProfileObject {
 	public String toString() {
 		StringBuilder rs = new StringBuilder();
 		rs.append(" Device IP: " + this.deviceIP + ",");
-		rs.append(" Device Name: " + this.deviceName + ",");
+		rs.append(" Device ID: " + this.deviceID + ",");
 		rs.append(" Operation status: " + ((this.operationStatus) ? "ON" : "OFF") + ",");
 		rs.append(" Installation location: " + this.installLocation + ",");
 		rs.append(" Standard version information: " + this.standardVersionInfo + ",");
@@ -413,10 +420,10 @@ public class eProfileObject {
 	}
 
 	public String getDeviceName() {
-		return deviceName;
+		return deviceID;
 	}
 	public void setDeviceName(String deviceName) {
-		this.deviceName = deviceName;
+		this.deviceID = deviceName;
 	}
 	public String getDeviceIP() {
 		return deviceIP;

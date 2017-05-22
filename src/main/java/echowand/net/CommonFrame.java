@@ -5,16 +5,14 @@ import java.nio.ByteBuffer;
 import echowand.common.EOJ;
 import echowand.common.ESV;
 
-/*
- * @author HiepNguyen
- */
+
 public class CommonFrame {
 	private byte ehd1;
 	private byte ehd2;
 	private short tid;
 	private Payload edata;
 	
-	public static final byte EHD1_ECHONET_LITE = (byte)0x01;
+	public static final byte EHD1_ECHONET_LITE = (byte)0x10;
 	public static final byte EHD2_STANDARD_PAYLOAD = (byte)0x81;
 	public static final byte EHD2_ARBITRARY_PAYLOAD=(byte)0x82;
 	
