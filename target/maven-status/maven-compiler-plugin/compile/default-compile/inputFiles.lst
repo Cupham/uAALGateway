@@ -49,6 +49,7 @@
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/mainpackage/D4.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/mainpackage/Component.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/mainpackage/ConnectionHandler.java
+/home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echonet/objects/eSuperClass.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/services/ScanEchonetDevice.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echowand/info/PropertyConstraintDetection.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echowand/net/TCPAcceptor.java
@@ -57,6 +58,7 @@
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/mainpackage/SCalleeProvidedService.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echowand/net/SubnetException.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echowand/object/NodeProfileObjectListener.java
+/home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echonet/objects/NodeProfileObject.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/mainpackage/D2.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echowand/logic/MainLoop.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echowand/net/UDPNetwork.java
@@ -144,7 +146,6 @@
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echowand/info/BasicObjectInfo.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/samples/display/iHouseSimulatorGUI.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echowand/object/LocalObjectDelegate.java
-/home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echonet/objects/eProfileObject.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/mainpackage/SensorServer.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echowand/logic/Listener.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/mainpackage/DataMessage.java

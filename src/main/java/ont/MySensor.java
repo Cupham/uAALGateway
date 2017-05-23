@@ -5,7 +5,7 @@ import org.universAAL.ontology.device.Sensor;
 
 import echonet.objects.EchonetLiteDevice;
 import echonet.objects.eDataObject;
-import echonet.objects.eProfileObject;
+import echonet.objects.eSuperClass;
 import echonet.objects.eTemperatureSensor;
 
 public class MySensor extends Sensor{
@@ -56,7 +56,7 @@ public class MySensor extends Sensor{
 	}
 	public boolean setData (EchonetLiteDevice obj) {
 		boolean changed = false;
-		eProfileObject profile = obj.getProfileObj();
+		eSuperClass profile = obj.getProfileObj();
 		for(eDataObject eData : obj.getDataObjList()) {
 			if(eData.getClass().equals(eTemperatureSensor.class)) {
 				eTemperatureSensor sensor = (eTemperatureSensor) eData;	

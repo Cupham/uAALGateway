@@ -8,7 +8,7 @@ import echowand.object.RemoteObject;
 
 public class EchonetLiteDevice {
 	
-	private eProfileObject profileObj;
+	private NodeProfileObject profileObj;
 	private ArrayList<eDataObject> dataObjList;
 	
 	public EchonetLiteDevice() {
@@ -50,6 +50,7 @@ public class EchonetLiteDevice {
 		}
 		if(dataObj != null) {
 			dataObj.ParseDataFromRemoteObject(rObj);
+			dataObj.ParseProfileObjectFromEPC(rObj);
 			this.dataObjList.add(dataObj);
 			return true;
 		}
@@ -71,7 +72,7 @@ public class EchonetLiteDevice {
 	public String toString() {
 		StringBuilder rs = new StringBuilder();
 		rs.append("\r\n*********************************************");
-		rs.append("\r\n>Profile Object: \r\n");
+		rs.append("\r\n>Node Profile Object: \r\n");
 		rs.append(this.profileObj.toString());
 		rs.append("\r\n>Data Object: "+dataObjList.size()+" devices\r\n");
 
@@ -84,10 +85,10 @@ public class EchonetLiteDevice {
 		return rs.toString();
 	}
 	// getter setter
-	public eProfileObject getProfileObj() {
+	public eSuperClass getProfileObj() {
 		return profileObj;
 	}
-	public void setProfileObj(eProfileObject profileObj) {
+	public void setProfileObj(NodeProfileObject profileObj) {
 		this.profileObj = profileObj;
 	}
 	public ArrayList<eDataObject> getDataObjList() {

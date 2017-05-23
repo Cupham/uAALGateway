@@ -11,7 +11,7 @@ import echowand.object.EchonetObjectException;
 import echowand.object.ObjectData;
 import echowand.object.RemoteObject;
 
-public class eProfileObject {
+public class eSuperClass {
 	private String deviceID;
 	/**
 	 * Device IP
@@ -125,7 +125,7 @@ public class eProfileObject {
 	 * EPC: 0x9A Cumulative operating time
 	 */
 	private String cumulativeTime;
-	public eProfileObject() {
+	public eSuperClass() {
 		super();
 	}
 	
@@ -135,7 +135,7 @@ public class eProfileObject {
 	 * @param ip
 	 * @param name
 	 */
-	public eProfileObject(String ip, String name) {
+	public eSuperClass(String ip, String name) {
 		this.deviceIP = ip;
 		this.deviceID = name;
 	}
@@ -196,7 +196,7 @@ public class eProfileObject {
 		}
 
 		if (propertyMap.isSet(EPC.x88)) { // Fault status
-			this.faultStatus = (EchonetDataConverter.dataToInteger(rObj.getData(EPC.x87)) == 65) ? true : false;
+			this.faultStatus = (EchonetDataConverter.dataToInteger(rObj.getData(EPC.x88)) == 65) ? true : false;
 		}
 
 		if (propertyMap.isSet(EPC.x89)) { // Fault description
@@ -293,11 +293,11 @@ public class eProfileObject {
 	public boolean equals(Object obj) {
 		if (obj == null)
 			return false;
-		if (!(obj instanceof eProfileObject))
+		if (!(obj instanceof eSuperClass))
 			return false;
 		if (obj == this)
 			return true;
-		eProfileObject checkObj = (eProfileObject) obj;
+		eSuperClass checkObj = (eSuperClass) obj;
 		if (!compareObject(this.deviceIP, checkObj.deviceIP))
 			return false;
 		if (!compareObject(this.deviceID, checkObj.deviceID))

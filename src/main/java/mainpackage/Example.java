@@ -86,7 +86,7 @@ public class Example implements Runnable {
 				for (EchonetLiteDevice dev : echonetDeviceList) {				
 					eTemperatureSensor temperatureSensor =SerializeUtils.temperatureSensorFromEDataObjects(dev.getDataObjList());
 					if(temperatureSensor != null) {
-						temperatureSensor.setProfile(dev.getProfileObj());
+						//temperatureSensor.setProfile(dev.getProfileObj());
 						sensorList.add(temperatureSensor);					
 					}		
 				}

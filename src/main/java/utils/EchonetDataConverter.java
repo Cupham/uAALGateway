@@ -233,7 +233,7 @@ public class EchonetDataConverter {
 		if (firstByte == (byte) 0xFF) {
 			return "Installation location not specified";
 		} else if (firstByte == (byte) 0x00) {
-			return "Installation location indefinite";
+			return "Installation location undefined";
 		} else if (firstByte == (byte) 0x01) { // 17 bytes
 			String rs = "";
 			for (int i = 1; i < data.length; i++) {

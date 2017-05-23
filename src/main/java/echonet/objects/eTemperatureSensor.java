@@ -12,12 +12,12 @@ public class eTemperatureSensor extends eDataObject{
 	 * between: 0xF554–0x7FFE (-2732–32766)~(-273.2–3276.6 Celcius)
 	 */
 	private float temperature;
-	private eProfileObject profile;
+	private eSuperClass profile;
 	
-	public eProfileObject getProfile() {
+	public eSuperClass getProfile() {
 		return profile;
 	}
-	public void setProfile(eProfileObject profile) {
+	public void setProfile(eSuperClass profile) {
 		this.profile = profile;
 	}
 	public eTemperatureSensor() {
@@ -49,18 +49,13 @@ public class eTemperatureSensor extends eDataObject{
 	@Override
 	public void ParseDataFromRemoteObject(RemoteObject rObj)
 			throws EchonetObjectException {
-		
-		boolean status = true;
 		float temperatureValue = 0;
 		this.instanceCode = rObj.getEOJ().getInstanceCode();
-		if (rObj.contains(EPC.x80)) { // operation status
-			status = (EchonetDataConverter.dataToInteger(rObj.getData(EPC.x80)) == 48) ? true : false;
-		}
+
 
 		if (rObj.contains(EPC.xE0)) { // temperature
 			temperatureValue = EchonetDataConverter.dataToFloat(rObj.getData(EPC.xE0))/10;
 		}
-		this.operationStatus = status;
 		this.temperature = temperatureValue;
 		return;	
 	}
@@ -70,7 +65,7 @@ public class eTemperatureSensor extends eDataObject{
 		StringBuilder rs = new StringBuilder();
 		rs.append("Instance: " +
 				String.format("%02x", this.getInstanceCode())+"\r\n");
-		rs.append("\tStatus: "+((this.operationStatus)?"ON":"OFF")+"\r\n");
+		rs.append("\tStatus: "+((isOperationStatus())?"ON":"OFF")+"\r\n");
 		rs.append("\tTemperature: "+this.temperature+"*C");
 		return rs.toString();
 	}

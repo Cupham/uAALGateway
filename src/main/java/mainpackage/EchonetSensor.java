@@ -1,6 +1,6 @@
 package mainpackage;
 
-import echonet.objects.eProfileObject;
+import echonet.objects.eSuperClass;
 
 public class EchonetSensor extends DataMessage{
 	public static final String MY_URI = CaressesOntology.NAMESPACE + "EchonetSensor";
@@ -16,10 +16,10 @@ public class EchonetSensor extends DataMessage{
 		return MY_URI;
 	}
 	
-	public eProfileObject getProfile() {
-		return (eProfileObject) getProperty(PROPERTY_PROFILE);
+	public eSuperClass getProfile() {
+		return (eSuperClass) getProperty(PROPERTY_PROFILE);
 	}
-	public void setProfile(eProfileObject obj) {
+	public void setProfile(eSuperClass obj) {
 		changeProperty(PROPERTY_PROFILE, obj);
 		changeProperty(PROPERTY_HAS_IP, obj.getDeviceIP());
 		changeProperty(PROPERTY_OPERATION_STATUS, obj.isOperationStatus());

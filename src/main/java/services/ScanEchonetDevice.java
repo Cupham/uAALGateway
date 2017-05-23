@@ -6,7 +6,8 @@ import java.util.Arrays;
 import java.util.List;
 
 import echonet.objects.EchonetLiteDevice;
-import echonet.objects.eProfileObject;
+import echonet.objects.NodeProfileObject;
+import echonet.objects.eSuperClass;
 import echowand.common.EOJ;
 import echowand.common.EPC;
 import echowand.common.PropertyMap;
@@ -73,7 +74,7 @@ public class ScanEchonetDevice {
 				service.doGet(node, eoj, Arrays.asList(EPC.x80, EPC.x81, EPC.xE0), timeout);
 				*/
 				
-				eProfileObject profileObj = new eProfileObject(node.toString(),node.getNodeInfo().toString());
+				NodeProfileObject profileObj = new NodeProfileObject(node.toString(),node.getNodeInfo().toString());
 				
 				try {
 					profileObj.ParseProfileObjectFromEPC(remoteobject);

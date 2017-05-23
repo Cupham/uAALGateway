@@ -6,7 +6,7 @@ import com.google.gson.Gson;
 
 import echonet.objects.EchonetLiteDevice;
 import echonet.objects.eDataObject;
-import echonet.objects.eProfileObject;
+import echonet.objects.eSuperClass;
 import echonet.objects.eTemperatureSensor;
 
 public class SerializeUtils {
