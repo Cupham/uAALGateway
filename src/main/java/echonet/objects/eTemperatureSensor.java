@@ -3,7 +3,9 @@ package echonet.objects;
 
 import utils.EchonetDataConverter;
 import echowand.common.EPC;
+import echowand.common.PropertyMap;
 import echowand.object.EchonetObjectException;
+import echowand.object.ObjectData;
 import echowand.object.RemoteObject;
 
 public class eTemperatureSensor extends eDataObject{
@@ -12,12 +14,13 @@ public class eTemperatureSensor extends eDataObject{
 	 * between: 0xF554–0x7FFE (-2732–32766)~(-273.2–3276.6 Celcius)
 	 */
 	private float temperature;
-	private eSuperClass profile;
+	private NodeProfileObject profile;
 	
-	public eSuperClass getProfile() {
+
+	public NodeProfileObject getProfile() {
 		return profile;
 	}
-	public void setProfile(eSuperClass profile) {
+	public void setProfile(NodeProfileObject profile) {
 		this.profile = profile;
 	}
 	public eTemperatureSensor() {
@@ -45,15 +48,15 @@ public class eTemperatureSensor extends eDataObject{
 		this.temperature = temp;
 	}
 	
-	
 	@Override
 	public void ParseDataFromRemoteObject(RemoteObject rObj)
 			throws EchonetObjectException {
 		float temperatureValue = 0;
 		this.instanceCode = rObj.getEOJ().getInstanceCode();
+		ObjectData data = rObj.getData(EPC.x9F);
+		PropertyMap propertyMap = new PropertyMap(data.toBytes());
 
-
-		if (rObj.contains(EPC.xE0)) { // temperature
+		if (propertyMap.isSet(EPC.xE0)) { // temperature
 			temperatureValue = EchonetDataConverter.dataToFloat(rObj.getData(EPC.xE0))/10;
 		}
 		this.temperature = temperatureValue;

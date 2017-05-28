@@ -313,11 +313,23 @@ public class CaressesOntology extends Ontology{
 			oci.addObjectProperty(EchonetSensor.PROPERTY_IS_AALENVIRONMENT_INPUT);
 				
 				// : Load TemperatureSensor
-			oci = createNewOntClassInfo(TemperatureSensor.MY_URI, factory, factory.TemperatureSensor);
-			oci.setResourceComment("Temperature Sensor class");
-			oci.setResourceLabel("Temperature Sensor");
-			oci.addSuperClass(EchonetSensor.MY_URI);	
-			oci.addObjectProperty(TemperatureSensor.PROPERTY_HAS_TEMPERATURE_SENSOR_DESCRIPTION);		
-	}
+				oci = createNewOntClassInfo(TemperatureSensor.MY_URI, factory, factory.TemperatureSensor);
+				oci.setResourceComment("Temperature Sensor class");
+				oci.setResourceLabel("Temperature Sensor");
+				oci.addSuperClass(EchonetSensor.MY_URI);	
+				oci.addObjectProperty(TemperatureSensor.PROPERTY_HAS_TEMPERATURE_SENSOR_DESCRIPTION);	
+			
+			oci = createNewOntClassInfo(EchonetAirConditioner.MY_URI, factory,factory.EchonetAirconditioner);
+			oci.setResourceComment("Echonet Air-Conditioner class");
+			oci.setResourceLabel("Echonet Air-Conditioner");
+			oci.addSuperClass(DataMessage.MY_URI);	
+			oci.addObjectProperty(EchonetAirConditioner.PROPERTY_IS_AALENVIRONMENT_INPUT);
+			
+				oci = createNewOntClassInfo(HomeAirConditioner.MY_URI, factory, factory.HomeAirconditioner);
+				oci.setResourceComment("Echonet Home Air-Conditioner class");
+				oci.setResourceLabel("Home Air-Conditioner");
+				oci.addSuperClass(EchonetAirConditioner.MY_URI);	
+				oci.addObjectProperty(HomeAirConditioner.PROPERTY_HAS_HOME_AIRCONDITIONER_DESCRIPTION);	
+		}
 
 }

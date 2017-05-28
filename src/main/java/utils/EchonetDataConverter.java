@@ -157,6 +157,46 @@ public class EchonetDataConverter {
 		String faultCode = String.format("%s - %s", manCode, fault);
 		return faultCode;
 	}
+	
+	/**
+	 * Convert to data AirConditioner OperationMode
+	 * 
+	 * @param data
+	 * @return string as fault code
+	 */
+	public static String dataToAirConditionerOperationMode(ObjectData data) {
+		int dataSize = data.size();
+		String rs = "";
+		if (dataSize != 1) {
+			rs =  "Invalid";
+		}
+
+		switch (data.get(0)) {
+			case (byte)0x41:
+				rs = "Automatic";
+				break;
+			case (byte) 0x42:
+				rs = "Cooling";
+				break;
+			case (byte) 0x43:
+				rs = "Heating";
+				break;
+			case (byte) 0x44:
+				rs = "Dehumidification";
+				break;
+			case (byte) 0x45:
+				rs = "Air circulator";
+			break;
+			case (byte) 0x40:
+				rs = "Other";
+			break;
+			default:
+				rs = "Invalid";
+				break;
+		}
+		
+		return rs;
+	}
 
 	/**
 	 * Get bit in byte by index

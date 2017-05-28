@@ -3,7 +3,6 @@ package mainpackage;
 
 /* More on how to use this class at: 
  * http://forge.universaal.org/wiki/support:Developer_Handbook_5#Ontologies_in_universAAL */
-import ont.MySensorService;
 
 import org.universAAL.middleware.owl.MergedRestriction;
 import org.universAAL.middleware.owl.OntologyManagement;
@@ -30,6 +29,9 @@ public class TemperatureServiceCalleeProvidedService extends DeviceService{
 	public static final String OUTPUT_TEMPERATURESENSOR_LOCATION = TEMPERATURE_SERVER_NAMESPACE+ "TemperatureSensorLocation";
 
 	public static final String GET_TEMPERATURESENSOR_IP = TEMPERATURE_SERVER_NAMESPACE+ "GetTemperatureSensorIP";
+	
+	public static final String GET_CONTROLLED_AIRCONDTIONER = TEMPERATURE_SERVER_NAMESPACE+ "GetControlledAirconditioners";
+	public static final String OUTPUT_CONTROLLED_AIRCONDTIONER = TEMPERATURE_SERVER_NAMESPACE+ "ControlledAirconditioners";
 
 	public static ServiceProfile[] profiles = new ServiceProfile[3];
 	private static Hashtable serverLevelRestrictions = new Hashtable();
@@ -45,22 +47,32 @@ public class TemperatureServiceCalleeProvidedService extends DeviceService{
 							}
 						}));
 		
-	//	String[] ppControls = new String[] { DeviceService.PROP_CONTROLS};
+		String[] ppControls = new String[] { DeviceService.PROP_CONTROLS};
 		String[] ppTemperatureValue = new String[]{DeviceService.PROP_CONTROLS,TemperatureSensor.MY_URI,TemperatureSensor.PROPERTY_HAS_TEMPERATURE};
 		String[] ppTemperatureLocation = new String[]{DeviceService.PROP_CONTROLS,TemperatureSensor.MY_URI,TemperatureSensor.PROPERTY_HAS_LOCATION};
-		String[] ppControls = new String[] { DeviceService.PROP_CONTROLS,
+		String[] ppTemperatureSensor = new String[] { DeviceService.PROP_CONTROLS,
 				TemperatureSensor.MY_URI,TemperatureSensor.PROPERTY_HAS_TEMPERATURE_SENSOR_DESCRIPTION};
+		
+		String[] ppAirConditioner = new String[] { DeviceService.PROP_CONTROLS,
+				HomeAirConditioner.MY_URI,HomeAirConditioner.PROPERTY_HAS_HOME_AIRCONDITIONER_DESCRIPTION};
 		
 		addRestriction((MergedRestriction) TemperatureSensor
 				.getClassRestrictionsOnProperty(DeviceService.MY_URI,
-				DeviceService.PROP_CONTROLS).copy(),ppControls,
+				DeviceService.PROP_CONTROLS).copy(),ppTemperatureSensor,
 				serverLevelRestrictions);
 		
 		TemperatureServiceCalleeProvidedService getControlledTemperatureSensor = new TemperatureServiceCalleeProvidedService(GET_CONTROLLED_TEMPERATURE_SENSORS);
 		getControlledTemperatureSensor.addOutput(OUTPUT_CONTROLLED_TEMPERATURE_SENSORS
-				, TemperatureSensor.MY_URI, 0, 0, ppControls);
+				, TemperatureSensor.MY_URI, 0, 0, ppTemperatureSensor);
 		profiles[0] = getControlledTemperatureSensor.myProfile;
 		
+		TemperatureServiceCalleeProvidedService getControlledAirConditioner = new TemperatureServiceCalleeProvidedService(GET_CONTROLLED_AIRCONDTIONER);
+		getControlledAirConditioner.addOutput(OUTPUT_CONTROLLED_AIRCONDTIONER
+				, HomeAirConditioner.MY_URI, 0, 0, ppAirConditioner);
+		profiles[1] = getControlledAirConditioner.myProfile;
+		
+		
+		/*
 		TemperatureServiceCalleeProvidedService getTemperatureSensorLocation = new TemperatureServiceCalleeProvidedService(GET_TEMPERATURESENSOR_LOCATION);
 		
 		getTemperatureSensorLocation.addOutput(OUTPUT_TEMPERATURESENSOR_LOCATION,
@@ -71,6 +83,7 @@ public class TemperatureServiceCalleeProvidedService extends DeviceService{
 		TemperatureServiceCalleeProvidedService getTemperature = new TemperatureServiceCalleeProvidedService(GET_TEMPERATURE);
 		getTemperature.addOutput(OUTPUT_TEMPERATURE, TypeMapper.getDatatypeURI(Float.class), 1, 1, ppTemperatureValue);
 		profiles[2] = getTemperature.myProfile;
+		*/
 	}
 	
 	public String getClassURI() {

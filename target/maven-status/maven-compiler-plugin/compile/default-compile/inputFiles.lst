@@ -67,6 +67,7 @@
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echowand/util/ConstraintUnion.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echowand/info/PropertyConstraintIlluminance.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/mainpackage/TemperatureSensor.java
+/home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/ont/DeviceSuperClass.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/mainpackage/D11_2.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echowand/service/result/UpdateRemoteInfoResult.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echowand/service/NodeProfileObjectConfig.java
@@ -91,15 +92,18 @@
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echowand/object/NodeProfileObjectDelegate.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/mainpackage/D5_1.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echowand/util/Selector.java
+/home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echonet/objects/eLighting.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echowand/info/HumiditySensorInfo.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/mainpackage/D1_1.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/context/SensorPublisher.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/ont/MySensor.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echowand/service/result/ResultDataSelector.java
+/home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echonet/objects/eAirConditioner.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/mainpackage/D2_2.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/mainpackage/D5_2.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/mainpackage/D3_2.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echowand/service/result/ResultBase.java
+/home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/mainpackage/HomeAirConditioner.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echowand/net/TCPReceiver.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echowand/net/TCPAcceptorObserver.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echowand/object/SetGetRequestProcessor.java
@@ -113,6 +117,7 @@
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echowand/service/PropertyDelegate.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echowand/service/CaptureSubnetObserver.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/utils/Constants.java
+/home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/mainpackage/EchonetAirConditioner.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echowand/object/LocalObjectDateTimeDelegate.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/mainpackage/D8.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echowand/net/InetSubnetUDPReceiverThread.java

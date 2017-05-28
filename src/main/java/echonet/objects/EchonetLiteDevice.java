@@ -29,8 +29,8 @@ public class EchonetLiteDevice {
 		byte instanceCode = eoj.getInstanceCode();
 		eDataObject dataObj = null;
 		//init object class 
-		switch (classGroupCode) {
 		
+		switch (classGroupCode) {		
 		case (byte) (0x00): // Sensor-related Device Class Group
 			switch(classCode) {
 			case (byte) (0x11): //temperature sensor
@@ -42,12 +42,24 @@ public class EchonetLiteDevice {
 			default:
 				return false;
 			}
-		case (byte)(0x01): //other device class
+		break;
+		
+		case (byte)(0x01): //air conditioner related class
+			switch (classCode) {
+			case (byte)(0x30):
+				dataObj = new eAirConditioner(instanceCode);
+				break;
+			default:
+				return false;
+			}	
+		break;	
+		
 			//TODO: implement other device class here
-			break;
 		default:
 			return false;
+			
 		}
+
 		if(dataObj != null) {
 			dataObj.ParseDataFromRemoteObject(rObj);
 			dataObj.ParseProfileObjectFromEPC(rObj);
@@ -85,7 +97,7 @@ public class EchonetLiteDevice {
 		return rs.toString();
 	}
 	// getter setter
-	public eSuperClass getProfileObj() {
+	public NodeProfileObject getProfileObj() {
 		return profileObj;
 	}
 	public void setProfileObj(NodeProfileObject profileObj) {

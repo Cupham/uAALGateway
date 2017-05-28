@@ -93,7 +93,7 @@ public class Example implements Runnable {
 				
 				if(sensorList.size()>0) {
 					for(int i=0; i< sensorList.size();i++) {
-						Activator.i_TemperatureSensor = new TemperatureSensor(CaressesOntology.NAMESPACE +"I_TemperatureSensor"+sensorList.get(i).getProfile().getDeviceIP());
+						Activator.i_TemperatureSensor = new TemperatureSensor(CaressesOntology.NAMESPACE +"I_TemperatureSensor"+sensorList.get(i).getDeviceIP()+"@"+sensorList.get(i).getInstanceCode());
 						String msg = SerializeUtils.messageFromTemperatureSensor(sensorList.get(i));
 						Activator.i_TemperatureSensor.changeProperty(TemperatureSensor.PROPERTY_HAS_TEMPERATURE_SENSOR_DESCRIPTION, msg);
 						Activator.eSensorList.add(Activator.i_TemperatureSensor);

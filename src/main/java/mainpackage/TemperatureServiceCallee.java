@@ -3,7 +3,6 @@ package mainpackage;
 
 /* More on how to use this class at: 
  * http://forge.universaal.org/wiki/support:Developer_Handbook_6#Providing_services_on_the_bus */
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 import org.universAAL.middleware.container.ModuleContext;
@@ -12,7 +11,7 @@ import org.universAAL.middleware.service.ServiceCall;
 import org.universAAL.middleware.service.ServiceCallee;
 import org.universAAL.middleware.service.ServiceResponse;
 import org.universAAL.middleware.service.owls.process.ProcessOutput;
-import org.universAAL.middleware.service.owls.profile.ServiceProfile;
+
 
 public class TemperatureServiceCallee extends ServiceCallee {
 	
@@ -51,6 +50,16 @@ public class TemperatureServiceCallee extends ServiceCallee {
 		}
 		return sr;
 	}
+	
+	private ServiceResponse getControlledAirConditioner() {
+		ServiceResponse sr = new ServiceResponse(CallStatus.succeeded);
+		if(Activator.eAirConditionerList != null) {
+			sr.addOutput(new ProcessOutput(
+					TemperatureServiceCalleeProvidedService.OUTPUT_CONTROLLED_AIRCONDTIONER,
+					Activator.eAirConditionerList));
+		}
+		return sr;
+	}
 	    
 
 
@@ -63,8 +72,11 @@ public class TemperatureServiceCallee extends ServiceCallee {
 		if(operation == null)
 			return null;
 		if(operation.startsWith(TemperatureServiceCalleeProvidedService.GET_CONTROLLED_TEMPERATURE_SENSORS)) {
-			System.out.println("Executing a call ");
+			System.out.println("Executing a call related to Temperature Sensor ");
 			return getControlledTemperatureSensor();
+		} if(operation.startsWith(TemperatureServiceCalleeProvidedService.GET_CONTROLLED_AIRCONDTIONER)) {
+			System.out.println("Executing a call related to Air Conditioner ");
+			return getControlledAirConditioner();
 		}
 		return null;
 	}

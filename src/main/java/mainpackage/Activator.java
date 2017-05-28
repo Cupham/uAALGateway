@@ -15,6 +15,7 @@ import services.ScanEchonetDevice;
 import utils.SerializeUtils;
 
 import echonet.objects.EchonetLiteDevice;
+import echonet.objects.eAirConditioner;
 import echonet.objects.eDataObject;
 import echonet.objects.eTemperatureSensor;
 import echowand.logic.TooManyObjectsException;
@@ -78,7 +79,9 @@ public class Activator implements BundleActivator {
 	protected static D11_3 i_D11_3;
 	protected static D11_4 i_D11_4;
 	protected static TemperatureSensor i_TemperatureSensor;
+	protected static HomeAirConditioner i_HomeAirConditoner;
 	protected static ArrayList<TemperatureSensor> eSensorList;
+	protected static ArrayList<HomeAirConditioner> eAirConditionerList;
 	public static ArrayList<EchonetLiteDevice> deviceList;
 
 	public void start(BundleContext bcontext) throws Exception {
@@ -99,10 +102,11 @@ public class Activator implements BundleActivator {
 		OntologyManagement.getInstance().register(context, caresses_ontology);
 		
 		eSensorList = new ArrayList<TemperatureSensor>();
+		eAirConditionerList = new ArrayList<HomeAirConditioner>();
 		deviceList = new ArrayList<EchonetLiteDevice>();
 //		scallee     = new SCallee(context);
 //		scaller     = new SCaller(context);
-		//csubscriber = new CSubscriber(context);
+		csubscriber = new CSubscriber(context);
 		cpublisher  = new CPublisher(context);
 		serviceCallee = new TemperatureServiceCallee(context);
 		
@@ -175,6 +179,7 @@ public class Activator implements BundleActivator {
 		i_cspem.setOutput(i_D7_2);
 		
 		i_AALEnv.setOutput(i_TemperatureSensor);
+		i_AALEnv.setOutput(i_HomeAirConditoner);
 		
 		i_D1_1.setInput(i_cspem);
 		i_D1_2.setInput(i_cspem);
@@ -220,6 +225,7 @@ public class Activator implements BundleActivator {
 	public void getHomeResource() {
 		ScanEchonetDevice deviceScanner = new ScanEchonetDevice(Activator.echonetService);
 		ArrayList<eTemperatureSensor> sensorList = new ArrayList<eTemperatureSensor>();
+		ArrayList<eAirConditioner> airConditionerList =  new ArrayList<eAirConditioner>();
 		try {
 			deviceList = deviceScanner.scanEDevices();
 			
@@ -232,25 +238,43 @@ public class Activator implements BundleActivator {
 							eTemperatureSensor tempSensor = (eTemperatureSensor) dataObj;
 							if(tempSensor != null) {
 								tempSensor.setProfile(dev.getProfileObj());
-								sensorList.add(tempSensor);	
+								sensorList.add(tempSensor);								
 								}
-							}							
+						} else if(dataObj.getClass().equals(eAirConditioner.class)){
+							eAirConditioner airCondtioner = (eAirConditioner) dataObj;
+							if(airCondtioner != null) {
+								airCondtioner.setProfile(dev.getProfileObj());
+								airConditionerList.add(airCondtioner);
+							}
+								
 						}
-					}	
-				}
-				
-				if(sensorList.size()>0) {
-					for(int i=0; i< sensorList.size();i++) {
-						String url = sensorList.get(i).getProfile().getDeviceIP() + "_"+sensorList.get(i).getInstanceCode();
-						Activator.i_TemperatureSensor = new TemperatureSensor(CaressesOntology.NAMESPACE +"I_TemperatureSensor"+url);
-						String msg = SerializeUtils.messageFromTemperatureSensor(sensorList.get(i));
-						Activator.i_TemperatureSensor.changeProperty(TemperatureSensor.PROPERTY_HAS_TEMPERATURE_SENSOR_DESCRIPTION, msg);
-						Activator.eSensorList.add(Activator.i_TemperatureSensor);
 					}
-					 
-				} else {
-					System.out.println("INFO: There is no temperature sensor in iHouse");
-				}					
+				}	
+			}
+				
+			if(sensorList.size()>0) {
+				for(int i=0; i< sensorList.size();i++) {
+					String url = sensorList.get(i).getProfile().getDeviceIP() + "_"+sensorList.get(i).getInstanceCode();
+					Activator.i_TemperatureSensor = new TemperatureSensor(CaressesOntology.NAMESPACE +"I_TemperatureSensor"+url);
+					String msg = SerializeUtils.messageFromTemperatureSensor(sensorList.get(i));
+					Activator.i_TemperatureSensor.setMessage(msg);
+					Activator.eSensorList.add(Activator.i_TemperatureSensor);
+				}					 
+			} else {
+				System.out.println("INFO: There is no temperature sensor in iHouse");
+			}	
+			
+			if(airConditionerList.size() >0) {
+				for(int i=0; i< airConditionerList.size();i++) {
+					String url = sensorList.get(i).getProfile().getDeviceIP() + "_"+sensorList.get(i).getInstanceCode();
+					Activator.i_HomeAirConditoner = new HomeAirConditioner(CaressesOntology.NAMESPACE +"I_HomeAirConditioner"+url);
+					String msg = SerializeUtils.messageFromHomeAirConditioner(airConditionerList.get(i));
+					Activator.i_HomeAirConditoner.setMessage(msg);
+					Activator.eAirConditionerList.add(Activator.i_HomeAirConditoner);
+				}
+			} else {
+				System.out.println("INFO: There is no air conditioner in iHouse");
+			}
 		} catch (SocketException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -268,6 +292,7 @@ public class Activator implements BundleActivator {
 			e.printStackTrace();
 		} finally {
 			System.out.println(Activator.eSensorList.size() + " temperature sensor");
+			System.out.println(Activator.eAirConditionerList.size() + " air-conditioner");
 		}
 	}
 

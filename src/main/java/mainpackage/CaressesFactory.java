@@ -25,8 +25,10 @@ public class CaressesFactory implements ResourceFactory {
 	public static final int D10                = 14;
 	public static final int D11                = 15;
 	public static final int EchonetSensor      = 150;
-	
 	public static final int TemperatureSensor = 151;
+	public static final int EchonetAirconditioner      = 160;
+	public static final int HomeAirconditioner      = 161;
+	
 	public static final int D1_1               = 16;
 	public static final int D1_2               = 17;
 	
@@ -105,6 +107,11 @@ public class CaressesFactory implements ResourceFactory {
 			case TemperatureSensor:
 				return new TemperatureSensor(instanceURI);
 				
+			case EchonetAirconditioner:
+				return new EchonetAirConditioner(instanceURI);
+			
+			case HomeAirconditioner:
+				return new HomeAirConditioner(instanceURI);
 			case D1_1:
 				return new D1_1(instanceURI);
 			case D1_2:

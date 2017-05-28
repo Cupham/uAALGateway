@@ -34,10 +34,12 @@ public class TemperatureSensor extends EchonetSensor{
 		if(null != dev)
 		{
 			changeProperty(PROPERTY_HAS_TEMPERATURE, dev.getTemperature());
-			changeProperty(EchonetSensor.PROPERTY_PROFILE, dev.getProfile());
-			changeProperty(EchonetSensor.PROPERTY_OPERATION_STATUS, dev.getProfile().isOperationStatus());
-			changeProperty(EchonetSensor.PROPERTY_HAS_IP, dev.getProfile().getDeviceIP());
-			changeProperty(PROPERTY_HAS_LOCATION, dev.getProfile().getInstallLocation());
+			changeProperty(EchonetSensor.PROPERTY_OPERATION_STATUS, dev.isOperationStatus());
+			changeProperty(PROPERTY_HAS_LOCATION, dev.getInstallLocation());
+			if(dev.getProfile()!=null) {
+				changeProperty(EchonetSensor.PROPERTY_PROFILE, dev.getProfile());
+				changeProperty(EchonetSensor.PROPERTY_HAS_IP, dev.getProfile().getDeviceIP());
+			}			
 			rs = true;
 		}		
 		return rs;	

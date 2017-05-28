@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import com.google.gson.Gson;
 
 import echonet.objects.EchonetLiteDevice;
+import echonet.objects.eAirConditioner;
 import echonet.objects.eDataObject;
 import echonet.objects.eSuperClass;
 import echonet.objects.eTemperatureSensor;
@@ -27,4 +28,14 @@ public class SerializeUtils {
 		Gson gson = new Gson();
 		return gson.toJson(sensor);
 	}
+	public static eAirConditioner airConditionerFromMessage(String message) {
+		Gson gson = new Gson();
+		return gson.fromJson(message, eAirConditioner.class);
+		
+	}
+	public static String messageFromHomeAirConditioner(eAirConditioner airConditioner) {
+		Gson gson = new Gson();
+		return gson.toJson(airConditioner);
+	}
+	
 }
