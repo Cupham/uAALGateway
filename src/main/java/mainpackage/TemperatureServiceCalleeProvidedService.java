@@ -18,6 +18,7 @@ import java.util.Hashtable;
 public class TemperatureServiceCalleeProvidedService extends DeviceService{
 	public static final String TEMPERATURE_SERVER_NAMESPACE = "http://CARESSESuniversAALskeleton.org/Services.owl#";
 	public static final String MY_URI = TEMPERATURE_SERVER_NAMESPACE+ "TemperatureSensorService";
+	
 	public static final String GET_CONTROLLED_TEMPERATURE_SENSORS = TEMPERATURE_SERVER_NAMESPACE+ "GetControlledTemperatureSensors";
 	public static final String OUTPUT_CONTROLLED_TEMPERATURE_SENSORS = TEMPERATURE_SERVER_NAMESPACE+ "ControlledTemperatureSensors";
 	
@@ -33,6 +34,9 @@ public class TemperatureServiceCalleeProvidedService extends DeviceService{
 	public static final String GET_CONTROLLED_AIRCONDTIONER = TEMPERATURE_SERVER_NAMESPACE+ "GetControlledAirconditioners";
 	public static final String OUTPUT_CONTROLLED_AIRCONDTIONER = TEMPERATURE_SERVER_NAMESPACE+ "ControlledAirconditioners";
 
+	public static final String SET_AIRCONDTIONER_TEMPERATURE = TEMPERATURE_SERVER_NAMESPACE+ "SetAirconditionerTemperature";
+	public static final String AIRCONDITIONER_URI = TEMPERATURE_SERVER_NAMESPACE+"AirConditionerURI";
+	public static final String AIRCONDITIONER_STATUS = TEMPERATURE_SERVER_NAMESPACE+"AirConditionerStatus";
 	public static ServiceProfile[] profiles = new ServiceProfile[3];
 	private static Hashtable serverLevelRestrictions = new Hashtable();
 	
@@ -48,13 +52,18 @@ public class TemperatureServiceCalleeProvidedService extends DeviceService{
 						}));
 		
 		String[] ppControls = new String[] { DeviceService.PROP_CONTROLS};
+		String[] ppCurrentSettingTemperuture = new String[] {DeviceService.PROP_CONTROLS,HomeAirConditioner.PROPERTY_OPERATION_STATUS};
+		
 		String[] ppTemperatureValue = new String[]{DeviceService.PROP_CONTROLS,TemperatureSensor.MY_URI,TemperatureSensor.PROPERTY_HAS_TEMPERATURE};
 		String[] ppTemperatureLocation = new String[]{DeviceService.PROP_CONTROLS,TemperatureSensor.MY_URI,TemperatureSensor.PROPERTY_HAS_LOCATION};
+		
+		
 		String[] ppTemperatureSensor = new String[] { DeviceService.PROP_CONTROLS,
 				TemperatureSensor.MY_URI,TemperatureSensor.PROPERTY_HAS_TEMPERATURE_SENSOR_DESCRIPTION};
 		
 		String[] ppAirConditioner = new String[] { DeviceService.PROP_CONTROLS,
 				HomeAirConditioner.MY_URI,HomeAirConditioner.PROPERTY_HAS_HOME_AIRCONDITIONER_DESCRIPTION};
+		
 		
 		addRestriction((MergedRestriction) TemperatureSensor
 				.getClassRestrictionsOnProperty(DeviceService.MY_URI,
@@ -70,6 +79,14 @@ public class TemperatureServiceCalleeProvidedService extends DeviceService{
 		getControlledAirConditioner.addOutput(OUTPUT_CONTROLLED_AIRCONDTIONER
 				, HomeAirConditioner.MY_URI, 0, 0, ppAirConditioner);
 		profiles[1] = getControlledAirConditioner.myProfile;
+		
+		TemperatureServiceCalleeProvidedService setAirconditionerTemperature = new TemperatureServiceCalleeProvidedService(SET_AIRCONDTIONER_TEMPERATURE);
+		setAirconditionerTemperature.addFilteringInput(AIRCONDITIONER_URI, HomeAirConditioner.MY_URI, 1, 1, ppControls);
+		setAirconditionerTemperature.addInputWithChangeEffect(AIRCONDITIONER_STATUS, TypeMapper.
+				getDatatypeURI(Boolean.class), 1, 1, ppCurrentSettingTemperuture);
+		//setAirconditionerTemperature.myProfile.addChangeEffect(ppCurrentSettingTemperuture, new Boolean(true));
+		profiles[2] = setAirconditionerTemperature.myProfile;
+		
 		
 		
 		/*

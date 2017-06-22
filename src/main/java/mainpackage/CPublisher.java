@@ -23,6 +23,7 @@ public class CPublisher {
 		myContextProvider.setProvidedEvents(new ContextEventPattern[] {new ContextEventPattern()});
 		
 		myContextPublisher = new DefaultContextPublisher(context, myContextProvider);
+		System.out.println("Initialized ContextPublisher Successfully");
 		
 	}
 	

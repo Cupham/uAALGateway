@@ -17,7 +17,7 @@ public class RemoteObject implements EchonetObject {
     private static final Logger logger = Logger.getLogger(RemoteObject.class.getName());
     private static final String className = RemoteObject.class.getName();
 
-    public static final int TRANSACTION_TIMEOUT = 3000;
+    public static final int TRANSACTION_TIMEOUT = 5000;
 
     public static final EOJ SOURCE_EOJ = new EOJ("0ef001");
 

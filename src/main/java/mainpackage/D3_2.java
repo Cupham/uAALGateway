@@ -23,7 +23,7 @@ public class D3_2 extends D3 {
 	
 	public String getMessage(){
 		String msg = (String) getProperty(PROPERTY_HAS_D3_2_DESCRIPTION);
-		return (msg == null) ? "" : msg;
+		return (msg == null) ? "EMPTY_MSG" : msg;
 		
 	}
 	

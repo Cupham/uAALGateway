@@ -22,7 +22,7 @@ public class D6_2 extends D6 {
 	
 	public String getMessage(){
 		String msg = (String) getProperty(PROPERTY_HAS_D6_2_DESCRIPTION);
-		return (msg == null) ? "" : msg;
+		return (msg == null) ? "EMPTY_MSG" : msg;
 		
 	}
 	

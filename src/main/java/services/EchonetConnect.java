@@ -38,7 +38,7 @@ public class EchonetConnect {
 				core.startService();
 				service = new Service(core);
 			}
-			ScanEchonetDevice deviceScanner = new ScanEchonetDevice(service);
+			EchonetDeviceScanner deviceScanner = new EchonetDeviceScanner(service);
 			logger.debug("Logger debug");
 			ArrayList<EchonetLiteDevice> devList = deviceScanner.scanEDevices();
 			for(EchonetLiteDevice dev : devList) {

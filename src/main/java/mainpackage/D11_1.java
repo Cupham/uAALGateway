@@ -23,7 +23,7 @@ public class D11_1 extends D11 {
 	
 	public String getMessage(){
 		String msg = (String) getProperty(PROPERTY_HAS_D11_1_DESCRIPTION);
-		return (msg == null) ? "" : msg;
+		return (msg == null) ? "EMPTY_MSG" : msg;
 		
 	}
 	

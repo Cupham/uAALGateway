@@ -22,7 +22,7 @@ public class D8_2 extends D8 {
 	
 	public String getMessage(){
 		String msg = (String) getProperty(PROPERTY_HAS_D8_2_DESCRIPTION);
-		return (msg == null) ? "" : msg;
+		return (msg == null) ? "EMPTY_MSG" : msg;
 		
 	}
 	

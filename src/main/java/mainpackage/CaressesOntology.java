@@ -1,9 +1,11 @@
 package mainpackage;
 
 import org.universAAL.middleware.owl.DataRepOntology;
+import org.universAAL.middleware.owl.MergedRestriction;
 import org.universAAL.middleware.owl.OntClassInfoSetup;
 import org.universAAL.middleware.owl.Ontology;
 import org.universAAL.middleware.rdf.Resource;
+import org.universAAL.middleware.service.owl.Service;
 import org.universAAL.middleware.service.owl.ServiceBusOntology;
 import org.universAAL.ontology.phThing.Device;
 
@@ -304,7 +306,59 @@ public class CaressesOntology extends Ontology{
 				oci.setResourceLabel("D11_4");
 				oci.addSuperClass(D11.MY_URI);
 				oci.addDatatypeProperty(D11_4.PROPERTY_HAS_D11_4_DESCRIPTION);
-				
+			// : Load DataMessageService
+		oci = createNewOntClassInfo(DataMessageService.MY_URI, factory, factory.DATA_MESSAGE_SERVICE);
+		oci.setResourceComment("Data message service");
+		oci.setResourceLabel("DataMessageService");
+		oci.addSuperClass(Service.MY_URI);
+		oci.addObjectProperty(DataMessageService.PROP_PROVIDES_D1_1_MESSAGE).setFunctional();
+		oci.addObjectProperty(DataMessageService.PROP_PROVIDES_D1_2_MESSAGE).setFunctional();
+		oci.addObjectProperty(DataMessageService.PROP_PROVIDES_D2_1_MESSAGE).setFunctional();
+		oci.addObjectProperty(DataMessageService.PROP_PROVIDES_D2_2_MESSAGE).setFunctional();
+		oci.addObjectProperty(DataMessageService.PROP_PROVIDES_D2_3_MESSAGE).setFunctional();
+		oci.addObjectProperty(DataMessageService.PROP_PROVIDES_D2_4_MESSAGE).setFunctional();
+		oci.addObjectProperty(DataMessageService.PROP_PROVIDES_D3_1_MESSAGE).setFunctional();
+		oci.addObjectProperty(DataMessageService.PROP_PROVIDES_D3_2_MESSAGE).setFunctional();
+		oci.addObjectProperty(DataMessageService.PROP_PROVIDES_D4_1_MESSAGE).setFunctional();
+		oci.addObjectProperty(DataMessageService.PROP_PROVIDES_D4_2_MESSAGE).setFunctional();
+		oci.addObjectProperty(DataMessageService.PROP_PROVIDES_D5_1_MESSAGE).setFunctional();
+		oci.addObjectProperty(DataMessageService.PROP_PROVIDES_D5_2_MESSAGE).setFunctional();
+		oci.addObjectProperty(DataMessageService.PROP_PROVIDES_D6_1_MESSAGE).setFunctional();
+		oci.addObjectProperty(DataMessageService.PROP_PROVIDES_D6_2_MESSAGE).setFunctional();
+		oci.addObjectProperty(DataMessageService.PROP_PROVIDES_D6_3_MESSAGE).setFunctional();
+		oci.addObjectProperty(DataMessageService.PROP_PROVIDES_D7_1_MESSAGE).setFunctional();
+		oci.addObjectProperty(DataMessageService.PROP_PROVIDES_D7_2_MESSAGE).setFunctional();
+		oci.addObjectProperty(DataMessageService.PROP_PROVIDES_D8_1_MESSAGE).setFunctional();
+		oci.addObjectProperty(DataMessageService.PROP_PROVIDES_D8_2_MESSAGE).setFunctional();
+		oci.addObjectProperty(DataMessageService.PROP_PROVIDES_D11_1_MESSAGE).setFunctional();
+		oci.addObjectProperty(DataMessageService.PROP_PROVIDES_D11_2_MESSAGE).setFunctional();
+		oci.addObjectProperty(DataMessageService.PROP_PROVIDES_D11_3_MESSAGE).setFunctional();
+		oci.addObjectProperty(DataMessageService.PROP_PROVIDES_D11_4_MESSAGE).setFunctional();
+		
+		oci.addRestriction(MergedRestriction.getAllValuesRestriction(DataMessageService.PROP_PROVIDES_D1_1_MESSAGE, D1_1.MY_URI));
+		oci.addRestriction(MergedRestriction.getAllValuesRestriction(DataMessageService.PROP_PROVIDES_D1_2_MESSAGE, D1_2.MY_URI));
+		oci.addRestriction(MergedRestriction.getAllValuesRestriction(DataMessageService.PROP_PROVIDES_D2_1_MESSAGE, D2_1.MY_URI));
+		oci.addRestriction(MergedRestriction.getAllValuesRestriction(DataMessageService.PROP_PROVIDES_D2_2_MESSAGE, D2_2.MY_URI));
+		oci.addRestriction(MergedRestriction.getAllValuesRestriction(DataMessageService.PROP_PROVIDES_D2_3_MESSAGE, D2_3.MY_URI));
+		oci.addRestriction(MergedRestriction.getAllValuesRestriction(DataMessageService.PROP_PROVIDES_D2_4_MESSAGE, D2_4.MY_URI));
+		oci.addRestriction(MergedRestriction.getAllValuesRestriction(DataMessageService.PROP_PROVIDES_D3_1_MESSAGE, D3_1.MY_URI));
+		oci.addRestriction(MergedRestriction.getAllValuesRestriction(DataMessageService.PROP_PROVIDES_D3_2_MESSAGE, D3_2.MY_URI));
+		oci.addRestriction(MergedRestriction.getAllValuesRestriction(DataMessageService.PROP_PROVIDES_D4_1_MESSAGE, D4_1.MY_URI));
+		oci.addRestriction(MergedRestriction.getAllValuesRestriction(DataMessageService.PROP_PROVIDES_D4_2_MESSAGE, D4_2.MY_URI));
+		oci.addRestriction(MergedRestriction.getAllValuesRestriction(DataMessageService.PROP_PROVIDES_D5_1_MESSAGE, D5_1.MY_URI));
+		oci.addRestriction(MergedRestriction.getAllValuesRestriction(DataMessageService.PROP_PROVIDES_D5_2_MESSAGE, D5_2.MY_URI));
+		oci.addRestriction(MergedRestriction.getAllValuesRestriction(DataMessageService.PROP_PROVIDES_D6_1_MESSAGE, D6_1.MY_URI));
+		oci.addRestriction(MergedRestriction.getAllValuesRestriction(DataMessageService.PROP_PROVIDES_D6_2_MESSAGE, D6_2.MY_URI));
+		oci.addRestriction(MergedRestriction.getAllValuesRestriction(DataMessageService.PROP_PROVIDES_D6_3_MESSAGE, D6_3.MY_URI));
+		oci.addRestriction(MergedRestriction.getAllValuesRestriction(DataMessageService.PROP_PROVIDES_D7_1_MESSAGE, D7_1.MY_URI));
+		oci.addRestriction(MergedRestriction.getAllValuesRestriction(DataMessageService.PROP_PROVIDES_D7_2_MESSAGE, D7_2.MY_URI));
+		oci.addRestriction(MergedRestriction.getAllValuesRestriction(DataMessageService.PROP_PROVIDES_D8_1_MESSAGE, D8_1.MY_URI));
+		oci.addRestriction(MergedRestriction.getAllValuesRestriction(DataMessageService.PROP_PROVIDES_D8_2_MESSAGE, D8_2.MY_URI));
+		oci.addRestriction(MergedRestriction.getAllValuesRestriction(DataMessageService.PROP_PROVIDES_D11_1_MESSAGE, D11_1.MY_URI));
+		oci.addRestriction(MergedRestriction.getAllValuesRestriction(DataMessageService.PROP_PROVIDES_D11_2_MESSAGE, D11_2.MY_URI));
+		oci.addRestriction(MergedRestriction.getAllValuesRestriction(DataMessageService.PROP_PROVIDES_D11_3_MESSAGE, D11_3.MY_URI));
+		oci.addRestriction(MergedRestriction.getAllValuesRestriction(DataMessageService.PROP_PROVIDES_D11_4_MESSAGE, D11_4.MY_URI));
+
 			// : Load EchonetSensor
 			oci = createNewOntClassInfo(EchonetSensor.MY_URI, factory, factory.EchonetSensor);
 			oci.setResourceComment("Echonet Sensor class");

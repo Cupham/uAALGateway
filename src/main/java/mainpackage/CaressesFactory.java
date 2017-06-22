@@ -61,7 +61,7 @@ public class CaressesFactory implements ResourceFactory {
 	public static final int D11_3              = 37;
 	public static final int D11_4              = 38;
 	
-	
+	public static final int DATA_MESSAGE_SERVICE = 39;
 	
 	public Resource createInstance(String classURI, String instanceURI, int factoryIndex){
 		switch(factoryIndex){
@@ -166,6 +166,9 @@ public class CaressesFactory implements ResourceFactory {
 				return new D11_3(instanceURI);
 			case D11_4:
 				return new D11_4(instanceURI);
+				
+			case DATA_MESSAGE_SERVICE:
+				return new DataMessageService(instanceURI);
 		}
 		
 		return null;

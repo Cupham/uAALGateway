@@ -14,15 +14,8 @@ public class eTemperatureSensor extends eDataObject{
 	 * between: 0xF554–0x7FFE (-2732–32766)~(-273.2–3276.6 Celcius)
 	 */
 	private float temperature;
-	private NodeProfileObject profile;
 	
 
-	public NodeProfileObject getProfile() {
-		return profile;
-	}
-	public void setProfile(NodeProfileObject profile) {
-		this.profile = profile;
-	}
 	public eTemperatureSensor() {
 		super();
 		this.groupCode= (byte) 0x00;
@@ -53,11 +46,13 @@ public class eTemperatureSensor extends eDataObject{
 			throws EchonetObjectException {
 		float temperatureValue = 0;
 		this.instanceCode = rObj.getEOJ().getInstanceCode();
-		ObjectData data = rObj.getData(EPC.x9F);
-		PropertyMap propertyMap = new PropertyMap(data.toBytes());
 
-		if (propertyMap.isSet(EPC.xE0)) { // temperature
-			temperatureValue = EchonetDataConverter.dataToFloat(rObj.getData(EPC.xE0))/10;
+		if (rObj.isGettable(EPC.xE0)) { // temperature
+			ObjectData data =rObj.getData(EPC.xE0);
+					
+			temperatureValue = EchonetDataConverter.dataToFloat(data)/10;
+			System.out.println(String.format("   			{EPC:0xE0, EDT: 0x%02X%02X}=={Temperature:%.2f}",data.toBytes()[0],data.toBytes()[1],temperatureValue));
+			//System.out.println("   			{EPC:0xE0, EDT:"+data.toBytes()[0]+"}=={Temperature:"+temperatureValue+"}");
 		}
 		this.temperature = temperatureValue;
 		return;	

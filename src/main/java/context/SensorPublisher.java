@@ -37,7 +37,7 @@ import echowand.service.Core;
 import echowand.service.Service;
 
 import services.EchonetConnect;
-import services.ScanEchonetDevice;
+import services.EchonetDeviceScanner;
 
 public class SensorPublisher {
 	final static Logger logger = Logger.getLogger(SensorPublisher.class);
@@ -90,7 +90,7 @@ public class SensorPublisher {
 		
 		// Get sensor from echonet network
 		ArrayList<MySensor> sensorList = new ArrayList<MySensor>();
-		ScanEchonetDevice deviceScanner = new ScanEchonetDevice(service);
+		EchonetDeviceScanner deviceScanner = new EchonetDeviceScanner(service);
 		ArrayList<EchonetLiteDevice> devList = deviceScanner.scanEDevices();
 		long startTime = System.currentTimeMillis();
 		System.out.println("      Parsing uAAL Objects to RDF objects"); 

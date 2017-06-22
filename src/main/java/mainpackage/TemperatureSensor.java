@@ -19,6 +19,7 @@ public class TemperatureSensor extends EchonetSensor{
 	
 	public TemperatureSensor(String uri) {
 		super(uri);
+		changeProperty(MY_URI, uri);
 	}
 	public TemperatureSensor() {
 		super(MY_URI);
@@ -36,10 +37,7 @@ public class TemperatureSensor extends EchonetSensor{
 			changeProperty(PROPERTY_HAS_TEMPERATURE, dev.getTemperature());
 			changeProperty(EchonetSensor.PROPERTY_OPERATION_STATUS, dev.isOperationStatus());
 			changeProperty(PROPERTY_HAS_LOCATION, dev.getInstallLocation());
-			if(dev.getProfile()!=null) {
-				changeProperty(EchonetSensor.PROPERTY_PROFILE, dev.getProfile());
-				changeProperty(EchonetSensor.PROPERTY_HAS_IP, dev.getProfile().getDeviceIP());
-			}			
+			changeProperty(EchonetSensor.PROPERTY_HAS_IP, dev.getDeviceIP());		
 			rs = true;
 		}		
 		return rs;	

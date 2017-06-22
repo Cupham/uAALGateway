@@ -6,7 +6,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 
-public class SensorServer implements Runnable {
+public class ScktServer implements Runnable {
 
 	private ServerSocket server;
 	private int port = 12345;
@@ -17,9 +17,8 @@ public class SensorServer implements Runnable {
 
 	SocketPublisher myPublisher;
 	
-	public SensorServer(SocketPublisher mypub) {
-		System.out.println("Creo il socket");
-		System.out.flush();
+	public ScktServer(SocketPublisher mypub) {
+		System.out.println(Component.component_ID + " SCKT SERVER: " + "Creating the socket\n"); System.out.flush();
 		myPublisher=mypub;
 		msgs = new ArrayList<String>();
 		try {
@@ -29,9 +28,8 @@ public class SensorServer implements Runnable {
 		}
 	}
 
-	public SensorServer() {
-		System.out.println("Creo il socket");
-		System.out.flush();
+	public ScktServer() {
+		System.out.println(Component.component_ID + " SCKT SERVER: " + "Creating the socket\n"); System.out.flush();
 		//myPublisher=mypub;
 		msgs = new ArrayList<String>();
 		try {
@@ -42,7 +40,8 @@ public class SensorServer implements Runnable {
 	}
 	
 	public void run() {
-		System.out.println("Waiting for client message...");System.out.flush();
+		System.out.println(Component.component_ID + " SCKT SERVER: " + "Waiting for client message...\n");
+		System.out.flush();
 
 		while (!killme) {
 			try {
@@ -53,7 +52,7 @@ public class SensorServer implements Runnable {
 				Thread th = new Thread(cd);
 				th.start();
 				thcons.add(th);
-				System.out.println("New Connection");
+				System.out.println(Component.component_ID + " SCKT SERVER: " + "New Connection\n");
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -69,33 +68,27 @@ public class SensorServer implements Runnable {
 		return msgs;
 	}
 	
-	public void addMessage(String msg)
-	{
+	public void addMessage(String msg){
 		msgs.add(msg);
 	}
 	
-	public void clearMessageList()
-	{
+	public void clearMessageList(){
 		
 		msgs.clear();
-		System.out.println("msg clear "+msgs.size());
+		System.out.println("msg clear " + msgs.size());
 	}
 
-	public void kill()
-	{
+	public void kill(){
 		killme=true;
-		
 	}
 	
-	public void setCode(String code)
-	{
-		System.out.println("SEND CCODE ");
+	public void setCode(String code) {
+		System.out.println(Component.component_ID + " SCKT SERVER: " + "Send code ");
 		for(ConnectionHandler ch : conhs)
 			ch.code = code;
 	}
 	
-	public String publishMsg(String msg)
-	{
+	public String publishMsg(String msg) {
 		return myPublisher.publishCESocketMessage(msg);
 	}
 

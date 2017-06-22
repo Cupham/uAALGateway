@@ -55,12 +55,13 @@ public class eAirConditioner extends eDataObject{
 	private Date offTimerSetting;
 	private Date offTimerRelativeSetting;
 	
-	private NodeProfileObject profile;
+	//private NodeProfileObject profile;
 	public eAirConditioner() {
 		this.classCode = (byte)0x01;
 		this.groupCode = (byte)0x30;
 	}
 	public eAirConditioner(byte instanceCode) {
+		super();
 		this.classCode = (byte)0x01;
 		this.groupCode = (byte)0x30;
 		this.instanceCode = instanceCode;
@@ -68,22 +69,17 @@ public class eAirConditioner extends eDataObject{
 	@Override
 	public void ParseDataFromRemoteObject(RemoteObject rObj) throws EchonetObjectException {
 		this.instanceCode = rObj.getEOJ().getInstanceCode();
-		ObjectData data = rObj.getData(EPC.x9F);
-		PropertyMap propertyMap = new PropertyMap(data.toBytes());
-		if(propertyMap.isSet(EPC.xB0)) {
+	//	ObjectData data = rObj.getData(EPC.x9F);
+	//	PropertyMap propertyMap = new PropertyMap(data.toBytes());
+		if(rObj.isGettable(EPC.xB0)) {
 			this.setOperationModeSetting(EchonetDataConverter.dataToAirConditionerOperationMode(rObj.getData(EPC.xB0)));
 		}
-		if(propertyMap.isSet(EPC.xB3)) {
+		if(rObj.isGettable(EPC.xB3)) {
 			this.setCurrentSettingTemperature(EchonetDataConverter.dataToInteger(rObj.getData(EPC.xB3)));
 		}
 		
 	}
 
-	@Override
-	public String ToString() {
-		// TODO Auto-generated method stub
-		return null;
-	}
 	public boolean isOperationPowerSaving() {
 		return operationPowerSaving;
 	}
@@ -348,11 +344,21 @@ public class eAirConditioner extends eDataObject{
 	public void setOffTimerRelativeSetting(Date offTimerRelativeSetting) {
 		this.offTimerRelativeSetting = offTimerRelativeSetting;
 	}
+	/*
 	public NodeProfileObject getProfile() {
 		return profile;
 	}
 	public void setProfile(NodeProfileObject profile) {
 		this.profile = profile;
+	}
+	*/
+	@Override
+	public String ToString() {
+		StringBuilder rs = new StringBuilder();
+		rs.append("IP:" + getDeviceIP() +"/n");
+		rs.append("Mode:" + getOperationModeSetting() +"/n");
+		rs.append("Current Temperature: " + getCurrentSettingTemperature());
+		return rs.toString();
 	}
 	
 	

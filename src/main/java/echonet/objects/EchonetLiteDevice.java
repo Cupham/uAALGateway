@@ -34,6 +34,7 @@ public class EchonetLiteDevice {
 		case (byte) (0x00): // Sensor-related Device Class Group
 			switch(classCode) {
 			case (byte) (0x11): //temperature sensor
+				System.out.println("   			Creating TemperatureSensor object from ECHONET frame...");
 				dataObj = new eTemperatureSensor(instanceCode);
 				break;
 			case (byte) (0x12): //humidity sensor
@@ -47,6 +48,7 @@ public class EchonetLiteDevice {
 		case (byte)(0x01): //air conditioner related class
 			switch (classCode) {
 			case (byte)(0x30):
+				System.out.println("   			Creating Air-Conditioner object from ECHONET frame...");
 				dataObj = new eAirConditioner(instanceCode);
 				break;
 			default:

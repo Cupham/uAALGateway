@@ -22,10 +22,10 @@ import echowand.service.result.GetResult;
 import echowand.service.result.ResultData;
 import echowand.service.result.UpdateRemoteInfoResult;
 
-public class ScanEchonetDevice {
+public class EchonetDeviceScanner {
 	private Service service;
 	
-	public ScanEchonetDevice(Service ser) {
+	public EchonetDeviceScanner(Service ser) {
 		this.service = ser;
 	}
 	
@@ -77,35 +77,15 @@ public class ScanEchonetDevice {
 				NodeProfileObject profileObj = new NodeProfileObject(node.toString(),node.getNodeInfo().toString());
 				
 				try {
+					System.out.println("   		Translating ECHONET Profile object...");
 					profileObj.ParseProfileObjectFromEPC(remoteobject);
 				} catch (EchonetObjectException ex) {
 					ex.printStackTrace();
-				}
-				/*
-				
-				ObjectData data = remoteobject.getData(EPC.x9F);
-				
-				PropertyMap propertyMap = new PropertyMap(data.toBytes());
-				for (int i=0x80; i<=0xff; i++) {
-					EPC epc = EPC.fromByte((byte)i);
-					if (propertyMap.isSet(epc)) {
-						profileObj.ParseProfileObjectFromEPC(remoteobject);
-					}
-				}
-				*/
-					
-				/*
-				for (int i = 0x80; i < 0xff; i++) {
-					EPC epc = EPC.fromByte((byte) i);
-						if (remoteobject.isGettable(epc)) {
-							profileObj.ParseProfileObjectFromEPC(remoteobject);
-						}
-				}
-				*/
-				
+				}			
 				eDevice.setProfileObj(profileObj);
 			} else if (eoj.isDeviceObject()) {
 				try {
+					System.out.println("   		Translating ECHONET Device object...");
 					eDevice.addDataObject(eoj, remoteobject);
 				} catch (EchonetObjectException ex) {
 					ex.printStackTrace();
@@ -127,18 +107,18 @@ public class ScanEchonetDevice {
 		remoteResult.join();
 
 		List<Node> nodes = service.getRemoteNodes(); // list device object
-		System.out.println("Get all ECHONET Lite device resources in the home network. (" + nodes.size() + 
-				" device(s).) " + "within" + (System.currentTimeMillis() - startTime) + " ms.");
+		System.out.println("	Get all ECHONET Lite device resources in iHouse. (" + nodes.size() + 
+				" device(s).) " + "within " + (System.currentTimeMillis() - startTime) + " ms.");
 		
 		long startTime1 = System.currentTimeMillis();
-		System.out.println("   Translating ECHONET Lite Frame to uAAL Object...");
+		System.out.println("   		Translating ECHONET Lite Frame to ECHONET objects...");
 		/********************************************
 		 * Parse device (node)
 		 ********************************************/
 		for (Node node : nodes) {
 			deviceList.add(getDeviceResources(this.service,node));
 		}
-		System.out.println("   Finish translating ECHONET Lite to uAAL Object within "+
+		System.out.println("   Finish translating ECHONET Lite frame to ECHONET objects within "+
 		(System.currentTimeMillis() - startTime1) + " ms.");
 		return deviceList;
 	}

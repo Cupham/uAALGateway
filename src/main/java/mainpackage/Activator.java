@@ -11,7 +11,8 @@ import org.universAAL.middleware.container.osgi.uAALBundleContainer;
 import org.universAAL.middleware.owl.OntologyManagement;
 import org.universAAL.ontology.phThing.Device;
 
-import services.ScanEchonetDevice;
+import services.EchonetDeviceScanner;
+import services.EchonetDeviceUpdater;
 import utils.SerializeUtils;
 
 import echonet.objects.EchonetLiteDevice;
@@ -36,9 +37,12 @@ public class Activator implements BundleActivator {
 	
 	public static Core echonetCore;
 	public static Service echonetService = null;
+	public static EchonetDeviceUpdater deviceUpdater = null;
 
-//	public static SCallee scallee = null;
-//	public static SCaller scaller = null;
+	public static SCallee_CAHRIM scallee_CAHRIM;
+	public static SCallee_CKB    scallee_CKB;
+	public static SCallee_CSPEM  scallee_CSPEM;
+	public static SCaller scaller;
 	
 	public static CSubscriber csubscriber = null;
 	public static CPublisher  cpublisher  = null;
@@ -52,7 +56,9 @@ public class Activator implements BundleActivator {
 	protected static Ckb i_ckb;
 	protected static Cspem i_cspem;
 	protected static AALEnvironment i_AALEnv;
-	
+		// : Declare a variable to set or not the use of socket communication
+
+	protected static boolean using_socket;
 	// : Declare one individual for each DataMessage sub-sub-class
 	
 	protected static D1_1 i_D1_1;
@@ -83,10 +89,18 @@ public class Activator implements BundleActivator {
 	protected static ArrayList<TemperatureSensor> eSensorList;
 	protected static ArrayList<HomeAirConditioner> eAirConditionerList;
 	public static ArrayList<EchonetLiteDevice> deviceList;
+protected static String[] cahrim_inputs = {"D7.1", "D7.2", "D11.1", "D11.2", "D11.3", "D11.4"};
+	protected static String[] ckb_inputs    = {"D5.1", "D5.2", "D8.1", "D8.2"};
+	protected static String[] cspem_inputs  = {"D1.1", "D1.2", "D2.1", "D2.2", "D2.3", "D2.4", "D3.1", "D3.2", "D4.1", "D4.2", "D5.1", "D5.2", "D6.1", "D6.2", "D6.3"};
+	protected static String[] cahrim_outputs = {"D5.1", "D5.2", "D6.1", "D6.2", "D6.3", "D8.1", "D8.2", "D10"};
+	protected static String[] ckb_outputs    = {"D1.1", "D1.2", "D2.1", "D2.2", "D2.3", "D2.4", "D3.1", "D3.2", "D4.1", "D4.2", "D11.1", "D11.2", "D11.3", "D11.4"};
+	protected static String[] cspem_outputs  = {"D7.1", "D7.2", "D9"};
+	
 
 	public void start(BundleContext bcontext) throws Exception {
 		
 		// : Set to which component this bundle refer (Component.CAHRIM, Component.CKB, Component.CSPEM)
+		using_socket = false;		
 		//Component.setThisComponentAs(Component.CKB); 
 		Component.setThisComponentAs(Component.AALENVIRONMENT);
 		System.out.println(Component.component_ID + " ACTIVATOR: Application started\n");
@@ -100,10 +114,18 @@ public class Activator implements BundleActivator {
 		
 		
 		OntologyManagement.getInstance().register(context, caresses_ontology);
+
+		if (Component.is_Cahrim)
+			scallee_CAHRIM = new SCallee_CAHRIM(context);
+		if (Component.is_Ckb)
+			scallee_CKB = new SCallee_CKB(context);
+		if (Component.is_Cspem)
+			scallee_CSPEM = new SCallee_CSPEM(context);
 		
 		eSensorList = new ArrayList<TemperatureSensor>();
 		eAirConditionerList = new ArrayList<HomeAirConditioner>();
 		deviceList = new ArrayList<EchonetLiteDevice>();
+		scaller     = new SCaller(context);
 //		scallee     = new SCallee(context);
 //		scaller     = new SCaller(context);
 		csubscriber = new CSubscriber(context);
@@ -145,8 +167,14 @@ public class Activator implements BundleActivator {
 		
 		serviceCallee = new TemperatureServiceCallee(context);
 		
-		//socketpublisher = new SocketPublisher(context);
-		//socketpublisher.startServer();
+		if (using_socket){
+			socketpublisher = new SocketPublisher(context);
+			socketpublisher.startServer();
+		} else {
+			MainClass main_class = new MainClass();
+			Thread t = new Thread(main_class);
+			t.start();
+		}
 				
 	}
 	
@@ -218,32 +246,37 @@ public class Activator implements BundleActivator {
 			echonetCore = new Core(Inet4Subnet.startSubnet(nif));
 			echonetCore.startService();
 			echonetService = new Service(echonetCore);
+			deviceUpdater = new EchonetDeviceUpdater(echonetService);
 			isSuccessed = true;
+		} 
+		if(isSuccessed) {
+			System.out.println("Initilized ECHONET API successfully!");
 		}
 		return isSuccessed;
 	}
 	public void getHomeResource() {
-		ScanEchonetDevice deviceScanner = new ScanEchonetDevice(Activator.echonetService);
+		System.out.println("Getting Device Resources...");
+		EchonetDeviceScanner deviceScanner = new EchonetDeviceScanner(Activator.echonetService);
 		ArrayList<eTemperatureSensor> sensorList = new ArrayList<eTemperatureSensor>();
 		ArrayList<eAirConditioner> airConditionerList =  new ArrayList<eAirConditioner>();
 		try {
 			deviceList = deviceScanner.scanEDevices();
 			
 			if(deviceList.size() == 0) {
-				System.out.println("INFO: There is no device in iHouse");
+				System.out.println("	There is no device in iHouse");
 			} else {
 				for (EchonetLiteDevice dev : deviceList) {	
 					for(eDataObject dataObj : dev.getDataObjList()) {
 						if(dataObj.getClass().equals(eTemperatureSensor.class)) {
 							eTemperatureSensor tempSensor = (eTemperatureSensor) dataObj;
 							if(tempSensor != null) {
-								tempSensor.setProfile(dev.getProfileObj());
+								tempSensor.setDeviceIP(dev.getProfileObj().getDeviceIP());
 								sensorList.add(tempSensor);								
 								}
 						} else if(dataObj.getClass().equals(eAirConditioner.class)){
 							eAirConditioner airCondtioner = (eAirConditioner) dataObj;
 							if(airCondtioner != null) {
-								airCondtioner.setProfile(dev.getProfileObj());
+								airCondtioner.setDeviceIP(dev.getProfileObj().getDeviceIP());
 								airConditionerList.add(airCondtioner);
 							}
 								
@@ -254,7 +287,8 @@ public class Activator implements BundleActivator {
 				
 			if(sensorList.size()>0) {
 				for(int i=0; i< sensorList.size();i++) {
-					String url = sensorList.get(i).getProfile().getDeviceIP() + "_"+sensorList.get(i).getInstanceCode();
+					String url = sensorList.get(i).getDeviceIP() + "_"+sensorList.get(i).getInstanceCode();
+					System.out.println("Translating uAAL objects(TemperatureSensor "+sensorList.get(i).getInstanceCode()+") with IP "+sensorList.get(i).getDeviceIP() +" to uAAL objects...");
 					Activator.i_TemperatureSensor = new TemperatureSensor(CaressesOntology.NAMESPACE +"I_TemperatureSensor"+url);
 					String msg = SerializeUtils.messageFromTemperatureSensor(sensorList.get(i));
 					Activator.i_TemperatureSensor.setMessage(msg);
@@ -266,7 +300,9 @@ public class Activator implements BundleActivator {
 			
 			if(airConditionerList.size() >0) {
 				for(int i=0; i< airConditionerList.size();i++) {
-					String url = sensorList.get(i).getProfile().getDeviceIP() + "_"+sensorList.get(i).getInstanceCode();
+					String url = airConditionerList.get(i).getDeviceIP() + "_"+airConditionerList.get(i).getInstanceCode();
+					System.out.println("Translating uAAL objects(AirConditioner) with IP "+airConditionerList.get(i).getDeviceIP() +" to uAAL objects...");
+
 					Activator.i_HomeAirConditoner = new HomeAirConditioner(CaressesOntology.NAMESPACE +"I_HomeAirConditioner"+url);
 					String msg = SerializeUtils.messageFromHomeAirConditioner(airConditionerList.get(i));
 					Activator.i_HomeAirConditoner.setMessage(msg);
@@ -292,14 +328,16 @@ public class Activator implements BundleActivator {
 			e.printStackTrace();
 		} finally {
 			System.out.println(Activator.eSensorList.size() + " temperature sensor");
-			System.out.println(Activator.eAirConditionerList.size() + " air-conditioner");
+			System.out.println(Activator.eAirConditionerList.size() + " AirConditioner");
 		}
 	}
 
 	public void stop(BundleContext arg0) throws Exception {
 		
-//		scallee.close();
-//		scaller.close();
+		scallee_CAHRIM.close();
+		scallee_CKB.close();
+		scallee_CSPEM.close();
+		scaller.close();
 		csubscriber.close();
 		cpublisher.close();
 		socketpublisher.close();

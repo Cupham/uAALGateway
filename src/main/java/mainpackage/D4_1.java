@@ -22,7 +22,7 @@ public class D4_1 extends D4 {
 	
 	public String getMessage(){
 		String msg = (String) getProperty(PROPERTY_HAS_D4_1_DESCRIPTION);
-		return (msg == null) ? "" : msg;
+		return (msg == null) ? "EMPTY_MSG" : msg;
 		
 	}
 	

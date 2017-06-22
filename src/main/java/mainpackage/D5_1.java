@@ -22,7 +22,7 @@ public class D5_1 extends D5 {
 	
 	public String getMessage(){
 		String msg = (String) getProperty(PROPERTY_HAS_D5_1_DESCRIPTION);
-		return (msg == null) ? "" : msg;
+		return (msg == null) ? "EMPTY_MSG" : msg;
 		
 	}
 	

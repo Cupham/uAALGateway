@@ -17,6 +17,7 @@ public class CSubscriber extends ContextSubscriber {
 	Example example;
 	protected CSubscriber(ModuleContext context) {
 		super(context, getPermanentSubscriptions());
+		System.out.println("Initialized ContextSubcriber Successfully");
 	}
 
 	private static ContextEventPattern[] getPermanentSubscriptions() {
@@ -237,7 +238,7 @@ public class CSubscriber extends ContextSubscriber {
 				}
 			}
 		}
-		SubscriptionHandler.handleSubscribedMessage(theSubjectClass, (String) theObject);
+		SubscriptionHandler.handleSubscribedMessage(theSubjectClass);
 	    /*
 		try {
 			ConnectionHandler.send(theSubjectClass, (String) theObject);

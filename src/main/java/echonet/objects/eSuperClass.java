@@ -4,7 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import utils.EchonetDataConverter;
-
+import echowand.common.Data;
 import echowand.common.EPC;
 import echowand.common.PropertyMap;
 import echowand.object.EchonetObjectException;
@@ -149,93 +149,98 @@ public class eSuperClass {
 	public void ParseProfileObjectFromEPC(RemoteObject rObj) throws EchonetObjectException {
 		
 
-		ObjectData data = rObj.getData(EPC.x9F);
-		
-		PropertyMap propertyMap = new PropertyMap(data.toBytes());
+
 
 		this.groupCode = rObj.getEOJ().getClassGroupCode();
 		this.classCode = rObj.getEOJ().getClassCode();
 		this.instanceCode = rObj.getEOJ().getInstanceCode();
-		if (propertyMap.isSet(EPC.x80)) { // operation status
-			if (EchonetDataConverter.dataToInteger(rObj.getData(EPC.x80)) == 48) {
+		if (rObj.isGettable(EPC.x80)) { // operation status
+			ObjectData data = rObj.getData(EPC.x80);			
+			if (EchonetDataConverter.dataToInteger(data) == 48) {
+				System.out.println(String.format("   			{EPC:0x80, EDT: 0x%02X}=={OperationStatus:True}",data.toBytes()[0]));
 				this.operationStatus = true; // device status is ON
 			} else {
+				System.out.println(String.format("   			{EPC:0x80, EDT: 0x%02X}=={OperationStatus:False}",data.toBytes()[0]));
 				this.operationStatus = false; // device status is OFF
 			}
 		}
-		if (propertyMap.isSet(EPC.x81)) { // install location
-			String rsLocation = EchonetDataConverter.dataToInstallLocation(rObj.getData(EPC.x81));
+		if (rObj.isGettable(EPC.x81)) { // install location
+			ObjectData data = rObj.getData(EPC.x81);
+			String rsLocation = EchonetDataConverter.dataToInstallLocation(data);
+			System.out.println(String.format("   			{EPC:0x81, EDT: 0x%02X}=={InstallationLocation: ",data.toBytes()[0])+rsLocation+"}");
+			
 			if (rsLocation == null) {
-				rsLocation = "Can not find install location!";
+				rsLocation = "			Can not find install location!";
 			}
 			this.installLocation = rsLocation;
 		}
-		if (propertyMap.isSet(EPC.x82)) { // standard version
+		System.out.println("   			...");
+		if (rObj.isGettable(EPC.x82)) { // standard version
 			this.standardVersionInfo = EchonetDataConverter.dataToVersion(rObj.getData(EPC.x82));
 		}
 
-		if (propertyMap.isSet(EPC.x83)) { // identification number
+		if (rObj.isGettable(EPC.x83)) { // identification number
 			this.identificationNumber = EchonetDataConverter.dataToIdentifiCationNumber(rObj.getData(EPC.x83)) + "";
 		}
 
-		if (propertyMap.isSet(EPC.x84)) { // measured instantaneous power
+		if (rObj.isGettable(EPC.x84)) { // measured instantaneous power
 										// consumption
 			this.instantaneousPower = EchonetDataConverter.dataToShort(rObj.getData(EPC.x84));
 		}
 
-		if (propertyMap.isSet(EPC.x85)) { // Measured cumulative power consumption
+		if (rObj.isGettable(EPC.x85)) { // Measured cumulative power consumption
 			this.cumulativePower = EchonetDataConverter.dataToLong(rObj.getData(EPC.x85));
 		}
 
-		if (propertyMap.isSet(EPC.x86)) { // Manufacturer's fault code
+		if (rObj.isGettable(EPC.x86)) { // Manufacturer's fault code
 			this.manufactureerFaultCode = EchonetDataConverter.dataToFaultCode(rObj.getData(EPC.x86)) + "";
 		}
 
-		if (propertyMap.isSet(EPC.x87)) { // Current limit setting
+		if (rObj.isGettable(EPC.x87)) { // Current limit setting
 			this.currentLimitSetting = EchonetDataConverter.dataToInteger(rObj.getData(EPC.x87));
 		}
 
-		if (propertyMap.isSet(EPC.x88)) { // Fault status
+		if (rObj.isGettable(EPC.x88)) { // Fault status
 			this.faultStatus = (EchonetDataConverter.dataToInteger(rObj.getData(EPC.x88)) == 65) ? true : false;
 		}
 
-		if (propertyMap.isSet(EPC.x89)) { // Fault description
+		if (rObj.isGettable(EPC.x89)) { // Fault description
 			if (this.faultStatus) {
 				this.faultDescription = EchonetDataConverter.getFaultDetail(rObj.getData(EPC.x89));
 			} else {
 				this.faultDescription = "No Fault";
 			}
 		}
-		if (propertyMap.isSet(EPC.x8A)) { // Manufacture code
+		if (rObj.isGettable(EPC.x8A)) { // Manufacture code
 			this.manufacturerCode = EchonetDataConverter.dataToString(rObj.getData(EPC.x8A)) + "";
 		}
 
-		if (propertyMap.isSet(EPC.x8B)) { // Business facility code
+		if (rObj.isGettable(EPC.x8B)) { // Business facility code
 			this.manufacturerCode = EchonetDataConverter.dataToString(rObj.getData(EPC.x8B)) + "";
 		}
 
-		if (propertyMap.isSet(EPC.x8C)) { // product code
+		if (rObj.isGettable(EPC.x8C)) { // product code
 			this.productCode = EchonetDataConverter.dataToString(rObj.getData(EPC.x8C)) + "";
 		}
 
-		if (propertyMap.isSet(EPC.x8D)) { // producttion number
+		if (rObj.isGettable(EPC.x8D)) { // producttion number
 			this.productNumber = EchonetDataConverter.dataToString(rObj.getData(EPC.x8D)) + "";
 		}
 
-		if (propertyMap.isSet(EPC.x8E)) { // production date default 4bytes with
+		if (rObj.isGettable(EPC.x8E)) { // production date default 4bytes with
 										// format YYMD
 			this.productDate = EchonetDataConverter.dataDateTime(rObj.getData(EPC.x8E));
 		}
 
-		if (propertyMap.isSet(EPC.x8F)) { // Power saving mode
+		if (rObj.isGettable(EPC.x8F)) { // Power saving mode
 			this.powerSaving = (EchonetDataConverter.dataToInteger(rObj.getData(EPC.x8F)) == 65) ? true : false;
 		}
 
-		if (propertyMap.isSet(EPC.x93)) { // Remote control
+		if (rObj.isGettable(EPC.x93)) { // Remote control
 			this.throughPublicNetwork = (EchonetDataConverter.dataToInteger(rObj.getData(EPC.x93)) == 65) ? true : false;
 		}
 
-		if (propertyMap.isSet(EPC.x97)) { // current time 2bytes with format HH:MM
+		if (rObj.isGettable(EPC.x97)) { // current time 2bytes with format HH:MM
 			byte timeArray[];
 			timeArray = rObj.getData(EPC.x97).toBytes();
 			int h = timeArray[0];
@@ -243,16 +248,16 @@ public class eSuperClass {
 			this.currentTimeSetting = "" + ((h < 10) ? ("0" + h) : (h + "")) + ":" + ((m < 10) ? ("0" + m) : ("" + m));
 		}
 
-		if (propertyMap.isSet(EPC.x98)) { // current time 4bytes with format
+		if (rObj.isGettable(EPC.x98)) { // current time 4bytes with format
 										// YYYY:MM:DD
 			this.currentDateSetting = EchonetDataConverter.dataDateTime(rObj.getData(EPC.x98));
 		}
 
-		if (propertyMap.isSet(EPC.x99)) { // power limit
+		if (rObj.isGettable(EPC.x99)) { // power limit
 			this.powerLimit = EchonetDataConverter.dataToShort(rObj.getData(EPC.x99));
 		}
 
-		if (propertyMap.isSet(EPC.x9A)) { // Cumulative operating time 5bytes with
+		if (rObj.isGettable(EPC.x9A)) { // Cumulative operating time 5bytes with
 										// first byte: Unit
 										// 4 bytes next: format
 										// Second:Minute:Hour:Day

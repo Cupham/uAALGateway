@@ -9,7 +9,7 @@ import org.universAAL.middleware.context.ContextEvent;
 import echowand.logic.TooManyObjectsException;
 import echowand.net.SubnetException;
 import echowand.object.EchonetObjectException;
-import services.ScanEchonetDevice;
+import services.EchonetDeviceScanner;
 import utils.SerializeUtils;
 import echonet.objects.*;
 
@@ -74,7 +74,7 @@ public class Example implements Runnable {
 	
 	// : This function can be used as the Main function of your program.
 	private ArrayList<EchonetLiteDevice> echonetDeviceList = new ArrayList<EchonetLiteDevice>();
-	ScanEchonetDevice deviceScanner = new ScanEchonetDevice(Activator.echonetService);
+	EchonetDeviceScanner deviceScanner = new EchonetDeviceScanner(Activator.echonetService);
 	ArrayList<eTemperatureSensor> sensorList = new ArrayList<eTemperatureSensor>();
 	public void run() {
 		try {

@@ -1,5 +1,5 @@
 Manifest-Version: 1.0
-Bnd-LastModified: 1495969577140
+Bnd-LastModified: 1498116496915
 Build-Jdk: 1.8.0_131
 Built-By: elite
 Bundle-Activator: mainpackage.Activator
@@ -26,21 +26,22 @@ Export-Package: context;uses:="org.universAAL.middleware.context.owl,uti
  ,echowand.common,echowand.object";version="1.0.0",echowand.util;uses:="
  echowand.object,echowand.common";version="1.0.0",mainpackage;uses:="ech
  owand.service,echowand.net,services,org.universAAL.middleware.container
- ,org.osgi.framework,org.universAAL.middleware.owl,echowand.logic,org.un
- iversAAL.middleware.container.osgi,utils,echowand.object,echonet.object
+ ,org.osgi.framework,echowand.logic,org.universAAL.middleware.owl,utils,
+ org.universAAL.middleware.container.osgi,echowand.object,echonet.object
  s,org.universAAL.middleware.rdf,org.universAAL.middleware.context.owl,o
  rg.universAAL.middleware.context,org.universAAL.ontology.phThing,org.un
  iversAAL.middleware.service.owl,org.universAAL.middleware.service.owls.
  profile,org.universAAL.middleware.service,org.universAAL.middleware.ser
- vice.owls.process";version="1.0.0",ont;uses:="org.universAAL.middleware
- .rdf,mainpackage,org.universAAL.ontology.phThing,org.universAAL.ontolog
- y.device,echonet.objects,org.universAAL.middleware.owl,org.universAAL.m
- iddleware.service.owl";version="1.0.0",samples.display;uses:="javax.swi
- ng.border,javax.swing";version="1.0.0",services;uses:="echowand.service
- ,echowand.net,org.apache.log4j,echonet.objects,echowand.common,echowand
- .logic,echowand.service.result,echowand.object,javax.swing";version="1.
- 0.0",utils;uses:="org.universAAL.middleware.context,echowand.common,ech
- owand.object,com.google.gson,echonet.objects";version="1.0.0"
+ vice.owls.process,echowand.common";version="1.0.0",ont;uses:="org.unive
+ rsAAL.middleware.rdf,mainpackage,org.universAAL.ontology.phThing,org.un
+ iversAAL.ontology.device,echonet.objects,org.universAAL.middleware.owl,
+ org.universAAL.middleware.service.owl";version="1.0.0",samples.display;
+ uses:="javax.swing.border,javax.swing";version="1.0.0",services;uses:="
+ echowand.service,echowand.net,org.apache.log4j,echonet.objects,echowand
+ .common,echowand.logic,echowand.service.result,echowand.object,javax.sw
+ ing";version="1.0.0",utils;uses:="org.universAAL.middleware.context,ech
+ owand.common,echowand.object,com.google.gson,echonet.objects";version="
+ 1.0.0"
 Import-Package: com.google.gson;version="[2.2,3)",javax.swing,javax.swin
  g.border,org.apache.log4j;version="[1.2,2)",org.osgi.framework;version=
  "[1,2)",org.universAAL.middleware.container;version="[3.4,4)",org.unive
