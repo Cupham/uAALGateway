@@ -78,9 +78,6 @@ public class OntologyUpdater {
 			case "D11.4":
 				Activator.i_D11_4.setMessage(message_content);
 				break;
-			case "TemperatureSensor":
-				Activator.i_TemperatureSensor.setMessage(message_content);
-				break;
 		}
 		
 	}

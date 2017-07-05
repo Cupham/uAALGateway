@@ -1,3 +1,4 @@
+
 package mainpackage;
 
 
@@ -22,6 +23,9 @@ import echowand.net.SubnetException;
 import echowand.object.EchonetObjectException;
 import echowand.object.ObjectData;
 import echowand.service.ObjectNotFoundException;
+import old.HomeAirConditioner_old;
+import old.TemperatureSensor_odd;
+import ontologies.TemperatureSensor;
 
 
 public class TemperatureServiceCallee extends ServiceCallee {
@@ -46,8 +50,8 @@ public class TemperatureServiceCallee extends ServiceCallee {
 		}
 		
 	    public ArrayList<TemperatureSensor> getAllTemperatureSensor() {
-	    	if(Activator.eSensorList != null) {
-	    		return Activator.eSensorList;
+	    	if(Activator.temperatureSensorOntologies != null) {
+	    		return Activator.temperatureSensorOntologies;
 	    	} else {
 	    		return null;
 	    	}
@@ -56,15 +60,15 @@ public class TemperatureServiceCallee extends ServiceCallee {
 	private ServiceResponse getControlledTemperatureSensor() {
 		ServiceResponse sr = new ServiceResponse(CallStatus.succeeded);
 		System.out.println("	Getting RDF Objects from uAAL Objects (TemperatureSensor)");
-		if(Activator.eSensorList != null) {
+		if(Activator.temperatureSensorOntologies != null) {
 			sr.addOutput(new ProcessOutput(
 					TemperatureServiceCalleeProvidedService.OUTPUT_CONTROLLED_TEMPERATURE_SENSORS
-					,Activator.eSensorList));
+					,Activator.temperatureSensorOntologies));
 		}
 		//System.out.println("	RDFObjectList<TemperatureSensor>.Size="+Activator.eSensorList.size());
 		System.out.println("	RDFObjectList<TemperatureSensor>.get(0):");
-		System.out.println("		URI:"+Activator.eSensorList.get(0).getProperty(TemperatureSensor.MY_URI));
-		System.out.println("		Message:"+Activator.eSensorList.get(0).getMessage());
+		System.out.println("		URI:"+Activator.temperatureSensorOntologies.get(0).getProperty(TemperatureSensor_odd.MY_URI));
+		//System.out.println("		Message:"+Activator.temperatureSensorOntologies.get(0).getMessage());
 		
 		return sr;
 	}
@@ -86,16 +90,16 @@ public class TemperatureServiceCallee extends ServiceCallee {
 	private ServiceResponse getControlledAirConditioner() {
 		ServiceResponse sr = new ServiceResponse(CallStatus.succeeded);
 		System.out.println("	Getting RDF Objects from uAAL Objects (Airconditioner)");
-		if(Activator.eAirConditionerList != null) {
+		if(Activator.homeAirconditionerOntologies != null) {
 			sr.addOutput(new ProcessOutput(
 					TemperatureServiceCalleeProvidedService.OUTPUT_CONTROLLED_AIRCONDTIONER,
-					Activator.eAirConditionerList));
+					Activator.homeAirconditionerOntologies));
 		}
-		System.out.println("	RDFObjectList<Airconditioner>.Size="+Activator.eAirConditionerList.size());
+		System.out.println("	RDFObjectList<Airconditioner>.Size="+Activator.homeAirconditionerOntologies.size());
 		System.out.println("	RDFObjectList<Airconditioner>.get(0):");
-		System.out.println("		ClassURI:"+Activator.eAirConditionerList.get(0).getClassURI());
-		System.out.println("		URI:"+Activator.eAirConditionerList.get(0).getProperty(TemperatureSensor.MY_URI));
-		System.out.println("		Message:"+Activator.eAirConditionerList.get(0).getMessage());
+		System.out.println("		ClassURI:"+Activator.homeAirconditionerOntologies.get(0).getClassURI());
+		System.out.println("		URI:"+Activator.homeAirconditionerOntologies.get(0).getProperty(TemperatureSensor_odd.MY_URI));
+		//System.out.println("		Message:"+Activator.homeAirconditionerOntologies.get(0).getMessage());
 		return sr;
 	}
 	    
@@ -124,7 +128,7 @@ public class TemperatureServiceCallee extends ServiceCallee {
 			System.out.println(call.getInputValue(TemperatureServiceCalleeProvidedService.AIRCONDITIONER_STATUS));
 			System.out.println(call.getInputValue(DeviceService.PROP_CONTROLS));
 			System.out.println(call.getInputValue(TemperatureServiceCalleeProvidedService.PROP_CONTROLS)+"");
-			System.out.println(call.getInputValue(HomeAirConditioner.PROPERTY_OPERATION_STATUS)+"");
+			System.out.println(call.getInputValue(HomeAirConditioner_old.PROPERTY_OPERATION_STATUS)+"");
 		}
 		return null;
 	}

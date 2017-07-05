@@ -1,5 +1,5 @@
 Manifest-Version: 1.0
-Bnd-LastModified: 1498116496915
+Bnd-LastModified: 1499235848216
 Build-Jdk: 1.8.0_131
 Built-By: elite
 Bundle-Activator: mainpackage.Activator
@@ -9,39 +9,42 @@ Bundle-Name: Echonet Lite uAAL gateway
 Bundle-SymbolicName: uAALGateway
 Bundle-Version: 1.0.0
 Created-By: Apache Maven Bundle Plugin
-Export-Package: context;uses:="org.universAAL.middleware.context.owl,uti
- ls,org.universAAL.middleware.context,org.universAAL.middleware.containe
- r,org.universAAL.middleware.owl,org.universAAL.middleware.rdf,ont,echow
- and.service,echowand.net,services,echowand.logic,org.apache.log4j,echow
- and.object,echonet.objects";version="1.0.0",echonet.objects;uses:="echo
- wand.common,echowand.object,utils";version="1.0.0",echowand.common;vers
- ion="1.0.0",echowand.info;uses:="echowand.common,echowand.util";version
- ="1.0.0",echowand.logic;uses:="echowand.common,echowand.util,echowand.n
- et";version="1.0.0",echowand.net;uses:="echowand.common,echowand.util";
- version="1.0.0",echowand.object;uses:="echowand.common,echowand.logic,e
- chowand.net,echowand.util,echowand.info";version="1.0.0",echowand.servi
- ce;uses:="echowand.service.result,echowand.net,echowand.logic,echowand.
- object,echowand.common,echowand.info,echowand.util";version="1.0.0",ech
- owand.service.result;uses:="echowand.util,echowand.service,echowand.net
- ,echowand.common,echowand.object";version="1.0.0",echowand.util;uses:="
- echowand.object,echowand.common";version="1.0.0",mainpackage;uses:="ech
- owand.service,echowand.net,services,org.universAAL.middleware.container
- ,org.osgi.framework,echowand.logic,org.universAAL.middleware.owl,utils,
- org.universAAL.middleware.container.osgi,echowand.object,echonet.object
- s,org.universAAL.middleware.rdf,org.universAAL.middleware.context.owl,o
- rg.universAAL.middleware.context,org.universAAL.ontology.phThing,org.un
- iversAAL.middleware.service.owl,org.universAAL.middleware.service.owls.
- profile,org.universAAL.middleware.service,org.universAAL.middleware.ser
- vice.owls.process,echowand.common";version="1.0.0",ont;uses:="org.unive
- rsAAL.middleware.rdf,mainpackage,org.universAAL.ontology.phThing,org.un
- iversAAL.ontology.device,echonet.objects,org.universAAL.middleware.owl,
- org.universAAL.middleware.service.owl";version="1.0.0",samples.display;
- uses:="javax.swing.border,javax.swing";version="1.0.0",services;uses:="
- echowand.service,echowand.net,org.apache.log4j,echonet.objects,echowand
- .common,echowand.logic,echowand.service.result,echowand.object,javax.sw
- ing";version="1.0.0",utils;uses:="org.universAAL.middleware.context,ech
- owand.common,echowand.object,com.google.gson,echonet.objects";version="
- 1.0.0"
+Export-Package: ServiceBus;uses:="org.universAAL.middleware.service.owls
+ .process,mainpackage,old,org.universAAL.middleware.service.owls.profile
+ ,org.universAAL.middleware.service,org.universAAL.middleware.container,
+ ontologies,org.universAAL.middleware.rdf,org.universAAL.middleware.owl"
+ ;version="1.0.0",echonet.objects;uses:="echowand.common,echowand.object
+ ,utils";version="1.0.0",echowand.common;version="1.0.0",echowand.info;u
+ ses:="echowand.common,echowand.util";version="1.0.0",echowand.logic;use
+ s:="echowand.common,echowand.util,echowand.net";version="1.0.0",echowan
+ d.net;uses:="echowand.common,echowand.util";version="1.0.0",echowand.ob
+ ject;uses:="echowand.common,echowand.logic,echowand.net,echowand.util,e
+ chowand.info";version="1.0.0",echowand.service;uses:="echowand.service.
+ result,echowand.net,echowand.logic,echowand.object,echowand.common,echo
+ wand.info,echowand.util";version="1.0.0",echowand.service.result;uses:=
+ "echowand.util,echowand.service,echowand.net,echowand.common,echowand.o
+ bject";version="1.0.0",echowand.util;uses:="echowand.object,echowand.co
+ mmon";version="1.0.0",homegateway.services;uses:="echowand.common,echow
+ and.logic,echowand.service,echowand.service.result,echowand.net,echowan
+ d.object,echonet.objects";version="1.0.0",mainpackage;uses:="echowand.s
+ ervice,ServiceBus,echowand.net,org.universAAL.middleware.container,org.
+ osgi.framework,org.universAAL.middleware.owl,echowand.logic,org.univers
+ AAL.middleware.container.osgi,ontologies,echowand.object,echonet.object
+ s,homegateway.services,org.universAAL.middleware.rdf,org.universAAL.mid
+ dleware.context.owl,old,org.universAAL.middleware.context,org.universAA
+ L.ontology.phThing,org.universAAL.middleware.service.owl,utils,org.univ
+ ersAAL.middleware.service.owls.profile,org.universAAL.middleware.servic
+ e,org.universAAL.middleware.service.owls.process,echowand.common";versi
+ on="1.0.0",old;uses:="org.universAAL.middleware.context,org.universAAL.
+ middleware.context.owl,org.universAAL.middleware.container,org.universA
+ AL.middleware.owl,org.universAAL.middleware.rdf,utils,javax.swing.borde
+ r,javax.swing,mainpackage,echonet.objects,echowand.service,echowand.net
+ ,org.apache.log4j,homegateway.services,org.universAAL.ontology.device,o
+ rg.universAAL.middleware.service.owl,echowand.logic,echowand.object,com
+ .google.gson";version="1.0.0",ontologies;uses:="mainpackage,org.univers
+ AAL.ontology.phThing,org.universAAL.middleware.rdf,org.universAAL.ontol
+ ogy.profile";version="1.0.0",utils;uses:="echowand.common,echowand.obje
+ ct";version="1.0.0"
 Import-Package: com.google.gson;version="[2.2,3)",javax.swing,javax.swin
  g.border,org.apache.log4j;version="[1.2,2)",org.osgi.framework;version=
  "[1,2)",org.universAAL.middleware.container;version="[3.4,4)",org.unive
@@ -52,5 +55,5 @@ Import-Package: com.google.gson;version="[2.2,3)",javax.swing,javax.swin
  ice,org.universAAL.middleware.service.owl,org.universAAL.middleware.ser
  vice.owls.process,org.universAAL.middleware.service.owls.profile,org.un
  iversAAL.ontology.device;version="[3.4,4)",org.universAAL.ontology.phTh
- ing;version="[3.4,4)"
+ ing;version="[3.4,4)",org.universAAL.ontology.profile;version="[3.4,4)"
 Tool: Bnd-1.50.0

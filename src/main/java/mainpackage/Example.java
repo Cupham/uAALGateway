@@ -9,8 +9,10 @@ import org.universAAL.middleware.context.ContextEvent;
 import echowand.logic.TooManyObjectsException;
 import echowand.net.SubnetException;
 import echowand.object.EchonetObjectException;
-import services.EchonetDeviceScanner;
-import utils.SerializeUtils;
+import homegateway.services.EchonetDeviceScanner;
+import old.SerializeUtils;
+import old.TemperatureSensor_odd;
+import ontologies.TemperatureSensor;
 import echonet.objects.*;
 
 /* ==============================================================================
@@ -95,8 +97,8 @@ public class Example implements Runnable {
 					for(int i=0; i< sensorList.size();i++) {
 						Activator.i_TemperatureSensor = new TemperatureSensor(CaressesOntology.NAMESPACE +"I_TemperatureSensor"+sensorList.get(i).getDeviceIP()+"@"+sensorList.get(i).getInstanceCode());
 						String msg = SerializeUtils.messageFromTemperatureSensor(sensorList.get(i));
-						Activator.i_TemperatureSensor.changeProperty(TemperatureSensor.PROPERTY_HAS_TEMPERATURE_SENSOR_DESCRIPTION, msg);
-						Activator.eSensorList.add(Activator.i_TemperatureSensor);
+						Activator.i_TemperatureSensor.changeProperty(TemperatureSensor_odd.PROPERTY_HAS_TEMPERATURE_SENSOR_DESCRIPTION, msg);
+						Activator.temperatureSensorOntologies.add(Activator.i_TemperatureSensor);
 						//String publisher_response = Activator.cpublisher.publishContextEvent("TemperatureSensor", msg);
 						//System.out.println("INFO: " + publisher_response + "\n");
 					}
@@ -121,7 +123,7 @@ public class Example implements Runnable {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} finally {
-			System.out.println(Activator.eSensorList.size());
+			System.out.println(Activator.temperatureSensorOntologies.size());
 		}
 		
 		

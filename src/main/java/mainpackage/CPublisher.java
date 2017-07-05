@@ -11,6 +11,8 @@ import org.universAAL.middleware.context.DefaultContextPublisher;
 import org.universAAL.middleware.context.owl.ContextProvider;
 import org.universAAL.middleware.context.owl.ContextProviderType;
 
+import old.TemperatureSensor_odd;
+
 public class CPublisher {
 
 	private ContextPublisher myContextPublisher;
@@ -182,7 +184,7 @@ public class CPublisher {
 			switch (message_type_ID) {
 			case "TemperatureSensor":
 				OntologyUpdater.updateOntology(message_type_ID, message);
-				ContextEvent event_TemperatureSensor = new ContextEvent(Activator.i_TemperatureSensor,TemperatureSensor.PROPERTY_HAS_TEMPERATURE_SENSOR_DESCRIPTION);
+				ContextEvent event_TemperatureSensor = new ContextEvent(Activator.i_TemperatureSensor,TemperatureSensor_odd.PROPERTY_HAS_TEMPERATURE_SENSOR_DESCRIPTION);
 				myContextPublisher.publish(event_TemperatureSensor);
 				break;
 			default:

@@ -11,7 +11,9 @@ import org.universAAL.middleware.context.ContextEventPattern;
 import org.universAAL.middleware.context.ContextSubscriber;
 import org.universAAL.middleware.owl.MergedRestriction;
 
-import utils.SerializeUtils;
+import old.EchonetSensor;
+import old.SerializeUtils;
+import old.TemperatureSensor_odd;
 
 public class CSubscriber extends ContextSubscriber {
 	Example example;
@@ -230,10 +232,10 @@ public class CSubscriber extends ContextSubscriber {
 			}
 		} if(theSubjectClass.contains("TemperatureSensor")) {	
 			theSubjectClass = "TemperatureSensor";
-			if(event.getRDFPredicate().equals(TemperatureSensor.PROPERTY_HAS_TEMPERATURE)) {
-				for(int i =0;i<Activator.eSensorList.size();i++) {
+			if(event.getRDFPredicate().equals(TemperatureSensor_odd.PROPERTY_HAS_TEMPERATURE)) {
+				for(int i =0;i<Activator.temperatureSensorOntologies.size();i++) {
 					String publisher_response = Activator.cpublisher.publishContextEvent("TemperatureSensor", 
-							Activator.eSensorList.get(i).getProperty(TemperatureSensor.PROPERTY_HAS_TEMPERATURE_SENSOR_DESCRIPTION).toString());
+							Activator.temperatureSensorOntologies.get(i).getProperty(TemperatureSensor_odd.PROPERTY_HAS_TEMPERATURE_SENSOR_DESCRIPTION).toString());
 					System.out.println("INFO: " + publisher_response + "\n");
 				}
 			}

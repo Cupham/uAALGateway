@@ -2,8 +2,8 @@ package mainpackage;
 
 import java.util.ArrayList;
 
-import utils.SerializeUtils;
 import echonet.objects.eTemperatureSensor;
+import old.SerializeUtils;
 
 /* ===========================================================================
  * This is where you can handle the inputs of the current CARESSES component

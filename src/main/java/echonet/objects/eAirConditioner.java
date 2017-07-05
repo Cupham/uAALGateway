@@ -71,11 +71,25 @@ public class eAirConditioner extends eDataObject{
 		this.instanceCode = rObj.getEOJ().getInstanceCode();
 	//	ObjectData data = rObj.getData(EPC.x9F);
 	//	PropertyMap propertyMap = new PropertyMap(data.toBytes());
+		if(rObj.isGettable(EPC.x8F)) {
+			ObjectData data = rObj.getData(EPC.x8F);
+			if (EchonetDataConverter.dataToInteger(data) == 65) {
+				setOperationPowerSaving(true);
+			} else {
+				setOperationPowerSaving(false);
+			}
+		}
 		if(rObj.isGettable(EPC.xB0)) {
 			this.setOperationModeSetting(EchonetDataConverter.dataToAirConditionerOperationMode(rObj.getData(EPC.xB0)));
 		}
 		if(rObj.isGettable(EPC.xB3)) {
 			this.setCurrentSettingTemperature(EchonetDataConverter.dataToInteger(rObj.getData(EPC.xB3)));
+		}
+		if(rObj.isGettable(EPC.xBB)) {
+			this.setCurrentSettingTemperature(EchonetDataConverter.dataToInteger(rObj.getData(EPC.xBB)));
+		}
+		if(rObj.isGettable(EPC.xA0)) {
+			this.setAirFlowRate(EchonetDataConverter.dataToAirConditionerFlowRate(rObj.getData(EPC.xA0)));
 		}
 		
 	}

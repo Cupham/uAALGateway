@@ -197,6 +197,49 @@ public class EchonetDataConverter {
 		
 		return rs;
 	}
+	
+	public static String dataToAirConditionerFlowRate(ObjectData data) {
+		int dataSize = data.size();
+		String rs = "";
+		if (dataSize != 1) {
+			rs =  "Invalid";
+		}
+
+		switch (data.get(0)) {
+			case (byte)0x41:
+				rs = "Automatic";
+				break;
+			case (byte) 0x31:
+				rs = "Level: 1";
+				break;
+			case (byte) 0x32:
+				rs = "Level: 2";
+				break;
+			case (byte) 0x33:
+				rs = "Level: 3";
+				break;
+			case (byte) 0x34:
+				rs = "Level: 4";
+			break;
+			case (byte) 0x35:
+				rs = "Level: 5";
+			break;
+			case (byte) 0x36:
+				rs = "Level: 6";
+				break;
+			case (byte) 0x37:
+				rs = "Level: 7";
+			break;
+			case (byte) 0x38:
+				rs = "Level: 8";
+			break;
+			default:
+				rs = "OFF";
+				break;
+		}
+		
+		return rs;
+	}
 
 	/**
 	 * Get bit in byte by index

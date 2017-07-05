@@ -3,6 +3,16 @@ package mainpackage;
 import org.universAAL.middleware.rdf.Resource;
 import org.universAAL.middleware.rdf.ResourceFactory;
 
+import old.EchonetAirConditioner;
+import old.EchonetSensor;
+import old.TemperatureSensor_odd;
+import ontologies.AirConditionerRelatedOntology;
+import ontologies.AudioVisualRelatedOntology;
+import ontologies.CookingHouseholdRelatedOntology;
+import ontologies.EchonetDevice;
+import ontologies.HealthRelatedOntology;
+import ontologies.SensorRelatedOntology;
+
 public class CaressesFactory implements ResourceFactory {
 	
 	public static final int CARESSES_COMPONENT = 0;
@@ -10,8 +20,8 @@ public class CaressesFactory implements ResourceFactory {
 	public static final int CKB                = 1;
 	public static final int CSPEM              = 2;
 	public static final int CAHRIM             = 3;
-	public static final int AALEnvironment     = 100;
 	public static final int DATA_MESSAGE       = 4;
+	public static final int SMART_FACILITY     = 100;
 	
 	public static final int D1                 = 5;
 	public static final int D2                 = 6;
@@ -24,10 +34,6 @@ public class CaressesFactory implements ResourceFactory {
 	public static final int D9                 = 13;
 	public static final int D10                = 14;
 	public static final int D11                = 15;
-	public static final int EchonetSensor      = 150;
-	public static final int TemperatureSensor = 151;
-	public static final int EchonetAirconditioner      = 160;
-	public static final int HomeAirconditioner      = 161;
 	
 	public static final int D1_1               = 16;
 	public static final int D1_2               = 17;
@@ -62,6 +68,21 @@ public class CaressesFactory implements ResourceFactory {
 	public static final int D11_4              = 38;
 	
 	public static final int DATA_MESSAGE_SERVICE = 39;
+	public static final int ECHONET_SERVICE 	 = 101;
+	
+	public static final int ECHONET_DEVICE       = 102;
+	public static final int SENSOR_RELATED_ONT   = 103;
+	public static final int AIRCONDITIONER_RELATED_ONT   = 104;
+	public static final int AUDIO_VISUAL_RELARED_ONT   = 105;
+	public static final int COOKING_HOUSEHOLD_RELATED_ONT   = 106;
+	public static final int HEALTH_RELATED_ONT   = 107;
+	public static final int HOUSING_FACILITY_RELARED_ONT   = 108;
+	public static final int MANAGEMENT_OPERATION_RELATED_ONT   = 109;
+	
+	public static final int TEMPERATURE_SENSOR   = 110;
+	public static final int HOME_AIRCONDITIONER   = 111;
+	
+	
 	
 	public Resource createInstance(String classURI, String instanceURI, int factoryIndex){
 		switch(factoryIndex){
@@ -74,8 +95,8 @@ public class CaressesFactory implements ResourceFactory {
 				return new Cspem(instanceURI);
 			case CAHRIM:
 				return new Cahrim(instanceURI);
-			case AALEnvironment:
-				return new AALEnvironment(instanceURI);
+			case SMART_FACILITY:
+				return new SmartFacility(instanceURI);
 				
 			case DATA_MESSAGE:
 				return new DataMessage(instanceURI);
@@ -101,17 +122,24 @@ public class CaressesFactory implements ResourceFactory {
 				return new D10(instanceURI);
 			case D11:
 				return new D11(instanceURI);
-			case EchonetSensor:
-				return new EchonetSensor(instanceURI);
 				
-			case TemperatureSensor:
-				return new TemperatureSensor(instanceURI);
+			case ECHONET_DEVICE:
+				return new EchonetDevice(instanceURI);				
+			case SENSOR_RELATED_ONT:
+				return new SensorRelatedOntology(instanceURI);	
+			case AIRCONDITIONER_RELATED_ONT:
+				return new AirConditionerRelatedOntology(instanceURI);
+			case AUDIO_VISUAL_RELARED_ONT:
+				return new AudioVisualRelatedOntology(instanceURI);	
+			case COOKING_HOUSEHOLD_RELATED_ONT:
+				return new CookingHouseholdRelatedOntology(instanceURI);			
+			case HEALTH_RELATED_ONT:
+				return new HealthRelatedOntology(instanceURI);
+			case HOUSING_FACILITY_RELARED_ONT:
+				return new CookingHouseholdRelatedOntology(instanceURI);			
+			case MANAGEMENT_OPERATION_RELATED_ONT:
+				return new HealthRelatedOntology(instanceURI);
 				
-			case EchonetAirconditioner:
-				return new EchonetAirConditioner(instanceURI);
-			
-			case HomeAirconditioner:
-				return new HomeAirConditioner(instanceURI);
 			case D1_1:
 				return new D1_1(instanceURI);
 			case D1_2:
@@ -166,9 +194,17 @@ public class CaressesFactory implements ResourceFactory {
 				return new D11_3(instanceURI);
 			case D11_4:
 				return new D11_4(instanceURI);
+			
+			case TEMPERATURE_SENSOR:
+				return new ontologies.TemperatureSensor(instanceURI);
+				
+			case HOME_AIRCONDITIONER:
+				return new ontologies.HomeAirConditioner(instanceURI);
 				
 			case DATA_MESSAGE_SERVICE:
 				return new DataMessageService(instanceURI);
+			case ECHONET_SERVICE:
+				return new EchonetService(instanceURI);
 		}
 		
 		return null;

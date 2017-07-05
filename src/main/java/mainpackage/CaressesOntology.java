@@ -9,6 +9,17 @@ import org.universAAL.middleware.service.owl.Service;
 import org.universAAL.middleware.service.owl.ServiceBusOntology;
 import org.universAAL.ontology.phThing.Device;
 
+import ontologies.AirConditionerRelatedOntology;
+import ontologies.AudioVisualRelatedOntology;
+import ontologies.CookingHouseholdRelatedOntology;
+import ontologies.EchonetDevice;
+import ontologies.HealthRelatedOntology;
+import ontologies.HomeAirConditioner;
+import ontologies.HousingFacilitiesRelatedOntology;
+import ontologies.ManagementOperationRelatedOntology;
+import ontologies.SensorRelatedOntology;
+import ontologies.TemperatureSensor;
+
 public class CaressesOntology extends Ontology{
 	
 	public static final String NAMESPACE = "http://CARESSESuniversAALskeleton.org/CaressesOntology.owl#";
@@ -59,11 +70,11 @@ public class CaressesOntology extends Ontology{
 			oci.addObjectProperty(Cahrim.PROPERTY_HAS_CAHRIM_OUTPUT);
 			
 			// : load AALEnvironment
-			oci = createNewOntClassInfo(AALEnvironment.MY_URI,factory,factory.AALEnvironment);
+			oci = createNewOntClassInfo(SmartFacility.MY_URI,factory,factory.SMART_FACILITY);
 			oci.setResourceComment("iHouse class");
 			oci.setResourceLabel("iHouse");
 			oci.addSuperClass(CaressesComponent.MY_URI);
-			oci.addObjectProperty(AALEnvironment.PROPERTY_HAS_AALENVIRONMENT_OUTPUT);
+			oci.addObjectProperty(SmartFacility.PROPERTY_HAS_SMART_FACILITY_OUTPUT);
 		// : Load DataMessage
 		oci = createNewOntClassInfo(DataMessage.MY_URI, factory, factory.DATA_MESSAGE);
 		oci.setResourceComment("Data Message class");
@@ -307,6 +318,7 @@ public class CaressesOntology extends Ontology{
 				oci.addSuperClass(D11.MY_URI);
 				oci.addDatatypeProperty(D11_4.PROPERTY_HAS_D11_4_DESCRIPTION);
 			// : Load DataMessageService
+				
 		oci = createNewOntClassInfo(DataMessageService.MY_URI, factory, factory.DATA_MESSAGE_SERVICE);
 		oci.setResourceComment("Data message service");
 		oci.setResourceLabel("DataMessageService");
@@ -358,32 +370,102 @@ public class CaressesOntology extends Ontology{
 		oci.addRestriction(MergedRestriction.getAllValuesRestriction(DataMessageService.PROP_PROVIDES_D11_2_MESSAGE, D11_2.MY_URI));
 		oci.addRestriction(MergedRestriction.getAllValuesRestriction(DataMessageService.PROP_PROVIDES_D11_3_MESSAGE, D11_3.MY_URI));
 		oci.addRestriction(MergedRestriction.getAllValuesRestriction(DataMessageService.PROP_PROVIDES_D11_4_MESSAGE, D11_4.MY_URI));
+		
+		
+					// : Load EchonetDevice
+		oci = createNewOntClassInfo(EchonetDevice.MY_URI, factory, factory.ECHONET_DEVICE);
+		oci.setResourceComment("Echonet Device class");
+		oci.setResourceLabel("EchonetDevice");
+		oci.addSuperClass(Device.MY_URI);	
+		oci.addObjectProperty(EchonetDevice.PROPERTY_HAS_IP_ADDRESS);
+		oci.addObjectProperty(EchonetDevice.PROPERTY_IS_SMART_FACILITY_COMPONENT);
+		oci.addObjectProperty(EchonetDevice.PROPERTY_HAS_OPERATION_STATUS);
+		oci.addObjectProperty(EchonetDevice.PROPERTY_HAS_DATA_OBJECT);
+		oci.addObjectProperty(EchonetDevice.PROPERTY_HAS_PROFILE_OBJECT);
 
-			// : Load EchonetSensor
-			oci = createNewOntClassInfo(EchonetSensor.MY_URI, factory, factory.EchonetSensor);
-			oci.setResourceComment("Echonet Sensor class");
-			oci.setResourceLabel("Echonet Sensor");
-			oci.addSuperClass(DataMessage.MY_URI);	
-			oci.addObjectProperty(EchonetSensor.PROPERTY_IS_AALENVIRONMENT_INPUT);
+			// : Load SensorRelatedOntoloty
+			oci = createNewOntClassInfo(SensorRelatedOntology.MY_URI, factory, factory.SENSOR_RELATED_ONT);
+			oci.setResourceComment("Echonet Sensor Related classes");
+			oci.setResourceLabel("EchonetSensorRelated");
+			oci.addSuperClass(EchonetDevice.MY_URI);	
+			oci.addObjectProperty(SensorRelatedOntology.PROPERTY_HAS_PROFILE_OBJECT);	
+			
+			// : Load AirConditionerRelatedOntology		
+			oci = createNewOntClassInfo(AirConditionerRelatedOntology.MY_URI, factory,factory.AIRCONDITIONER_RELATED_ONT);
+			oci.setResourceComment("Echonet Air-Conditioner Related class");
+			oci.setResourceLabel("EchonetAirConditionerRelated");
+			oci.addSuperClass(EchonetDevice.MY_URI);	
+			oci.addObjectProperty(AirConditionerRelatedOntology.PROPERTY_HAS_PROFILE_OBJECT);
+			
+			// : Load AudioVisualRelatedOntology		
+			oci = createNewOntClassInfo(AudioVisualRelatedOntology.MY_URI, factory,factory.AUDIO_VISUAL_RELARED_ONT);
+			oci.setResourceComment("Audio Visual Related class");
+			oci.setResourceLabel("AudioVisualRelated");
+			oci.addSuperClass(EchonetDevice.MY_URI);	
+			oci.addObjectProperty(AudioVisualRelatedOntology.PROPERTY_HAS_PROFILE_OBJECT);
+			
+			// : Load CookingHouseholdRelatedOntology		
+			oci = createNewOntClassInfo(CookingHouseholdRelatedOntology.MY_URI, factory,factory.COOKING_HOUSEHOLD_RELATED_ONT);
+			oci.setResourceComment("Cooking Household Related class");
+			oci.setResourceLabel("CookingHouseholdRelated");
+			oci.addSuperClass(EchonetDevice.MY_URI);	
+			oci.addObjectProperty(CookingHouseholdRelatedOntology.PROPERTY_HAS_PROFILE_OBJECT);
+			
+			// : Load HealthRelatedOntology		
+			oci = createNewOntClassInfo(HealthRelatedOntology.MY_URI, factory,factory.HEALTH_RELATED_ONT);
+			oci.setResourceComment("Health Related class");
+			oci.setResourceLabel("HealthRelated");
+			oci.addSuperClass(EchonetDevice.MY_URI);	
+			oci.addObjectProperty(HealthRelatedOntology.PROPERTY_HAS_PROFILE_OBJECT);
+
+			// : Load HousingFacilitiesRelatedOntology		
+			oci = createNewOntClassInfo(HousingFacilitiesRelatedOntology.MY_URI, factory,factory.HOUSING_FACILITY_RELARED_ONT);
+			oci.setResourceComment("Housing Facilities Related class");
+			oci.setResourceLabel("HousingFacilitiesRelated");
+			oci.addSuperClass(EchonetDevice.MY_URI);	
+			oci.addObjectProperty(HousingFacilitiesRelatedOntology.PROPERTY_HAS_PROFILE_OBJECT);
+			
+			// : Load ManagementOperationRelatedOntology		
+			oci = createNewOntClassInfo(ManagementOperationRelatedOntology.MY_URI, factory,factory.MANAGEMENT_OPERATION_RELATED_ONT);
+			oci.setResourceComment("Management Operation Related class");
+			oci.setResourceLabel("ManagementOperationRelated");
+			oci.addSuperClass(EchonetDevice.MY_URI);	
+			oci.addObjectProperty(ManagementOperationRelatedOntology.PROPERTY_HAS_PROFILE_OBJECT);
+			
+				//Load Temperature Sensor
+				oci = createNewOntClassInfo(TemperatureSensor.MY_URI, factory, factory.TEMPERATURE_SENSOR);
+				oci.setResourceComment("Echonet Temperature Sensor Ontology");
+				oci.setResourceLabel("EchonetTemperatureSensor");
+				oci.addSuperClass(SensorRelatedOntology.MY_URI);	
+				oci.addObjectProperty(TemperatureSensor.PROPERTY_HAS_MEASURED_TEMPERATURE_VALUE);	
+				oci.addObjectProperty(TemperatureSensor.PROPERTY_HAS_OPERATION_STATUS);
 				
-				// : Load TemperatureSensor
-				oci = createNewOntClassInfo(TemperatureSensor.MY_URI, factory, factory.TemperatureSensor);
-				oci.setResourceComment("Temperature Sensor class");
-				oci.setResourceLabel("Temperature Sensor");
-				oci.addSuperClass(EchonetSensor.MY_URI);	
-				oci.addObjectProperty(TemperatureSensor.PROPERTY_HAS_TEMPERATURE_SENSOR_DESCRIPTION);	
-			
-			oci = createNewOntClassInfo(EchonetAirConditioner.MY_URI, factory,factory.EchonetAirconditioner);
-			oci.setResourceComment("Echonet Air-Conditioner class");
-			oci.setResourceLabel("Echonet Air-Conditioner");
-			oci.addSuperClass(DataMessage.MY_URI);	
-			oci.addObjectProperty(EchonetAirConditioner.PROPERTY_IS_AALENVIRONMENT_INPUT);
-			
-				oci = createNewOntClassInfo(HomeAirConditioner.MY_URI, factory, factory.HomeAirconditioner);
-				oci.setResourceComment("Echonet Home Air-Conditioner class");
-				oci.setResourceLabel("Home Air-Conditioner");
-				oci.addSuperClass(EchonetAirConditioner.MY_URI);	
-				oci.addObjectProperty(HomeAirConditioner.PROPERTY_HAS_HOME_AIRCONDITIONER_DESCRIPTION);	
+				//Load Home Airconditioner
+				oci = createNewOntClassInfo(HomeAirConditioner.MY_URI, factory, factory.HOME_AIRCONDITIONER);
+				oci.setResourceComment("Echonet Home Airconditioner  Ontology");
+				oci.setResourceLabel("EchonetHomeAirconditioner");
+				oci.addSuperClass(AirConditionerRelatedOntology.MY_URI);	
+				oci.addObjectProperty(HomeAirConditioner.PROPERTY_HAS_OPERATION_STATUS);
+				oci.addObjectProperty(HomeAirConditioner.PROPERTY_HAS_OPERATION_POWER_SAVING);
+				oci.addObjectProperty(HomeAirConditioner.PROPERTY_HAS_AIR_FLOW_RATE_SETTING);
+				oci.addObjectProperty(HomeAirConditioner.PROPERTY_HAS_OPERATION_MODE_SETTING);
+				oci.addObjectProperty(HomeAirConditioner.PROPERTY_HAS_MEASURED_ROOM_TEMPERATURE_VALUE);
+				oci.addObjectProperty(HomeAirConditioner.PROPERTY_HAS_SETTING_TEMPERATURE_VALUE);
+				
+		// Load Echonet Service
+		oci = createNewOntClassInfo(EchonetService.MY_URI, factory, factory.ECHONET_SERVICE);
+		oci.setResourceComment("Echonet service");
+		oci.setResourceLabel("EchonetService");
+		oci.addSuperClass(Service.MY_URI);
+		oci.addObjectProperty(EchonetService.PROP_PROVIDES_AIRCONDTIONER_SERVICE).setFunctional();
+		oci.addObjectProperty(EchonetService.PROP_PROVIDES_TEMPERATURE_SENSOR_SERVICE).setFunctional();
+				
+		oci.addRestriction(MergedRestriction.getAllValuesRestriction(EchonetService.PROP_PROVIDES_TEMPERATURE_SENSOR_SERVICE, TemperatureSensor.MY_URI));
+		oci.addRestriction(MergedRestriction.getAllValuesRestriction(EchonetService.PROP_PROVIDES_AIRCONDTIONER_SERVICE, HomeAirConditioner.MY_URI));
+								
+		// end echonet service
+				
+
 		}
 
 }
