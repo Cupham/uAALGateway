@@ -11,7 +11,10 @@ import org.universAAL.middleware.context.DefaultContextPublisher;
 import org.universAAL.middleware.context.owl.ContextProvider;
 import org.universAAL.middleware.context.owl.ContextProviderType;
 
-import old.TemperatureSensor_odd;
+import ontologies.HomeAirConditioner;
+import ontologies.SensorRelatedOntology;
+import ontologies.TemperatureSensor;
+
 
 public class CPublisher {
 
@@ -28,8 +31,49 @@ public class CPublisher {
 		System.out.println("Initialized ContextPublisher Successfully");
 		
 	}
-	
-	
+	public void publishCE(TemperatureSensor temp)  {
+		if(temp != null) {
+			ContextEvent ce = new ContextEvent(temp,TemperatureSensor.MY_URI);
+			myContextPublisher.publish(ce);
+			System.out.println("Published: " +ce.getRDFSubject().toString());
+		} else {
+			System.out.println("it is null");
+		}
+	}
+	public String publishHomeResource() {
+		String answer = "Message type was valid. Message has been published!";
+		boolean published = true;
+		if(Activator.temperatureSensorOntologies != null) {
+			for(TemperatureSensor temp : Activator.temperatureSensorOntologies) {
+				ContextEvent event_temp = new ContextEvent(temp, TemperatureSensor.MY_URI);
+				myContextPublisher.publish(event_temp);
+			}
+			published = true;
+		} else {
+			answer = "ERROR: There is no Temperature Sensor!";
+			published = false;
+		}
+		
+		if(Activator.homeAirconditionerOntologies != null) {
+			for(HomeAirConditioner airCon : Activator.homeAirconditionerOntologies) {
+				ContextEvent event_airCon = new ContextEvent(airCon, HomeAirConditioner.MY_URI);
+				myContextPublisher.publish(event_airCon);
+			}
+			published = true;
+		} else {
+			answer = "ERROR: There is no Home Airconditioner!";
+			if(published) {
+				
+			} else {
+				published = false;
+			}
+		}
+		if (published == true){
+			System.out.println(Component.component_ID + " PUBLISHER: I've just published TemperatureSensor and HomeAirconditioner resources");
+		}
+					
+		return answer;
+	}
 	public String publishContextEvent(String message_type_ID, String message){
 		
 		String answer = "Message type was valid. Message has been published!";
@@ -184,7 +228,7 @@ public class CPublisher {
 			switch (message_type_ID) {
 			case "TemperatureSensor":
 				OntologyUpdater.updateOntology(message_type_ID, message);
-				ContextEvent event_TemperatureSensor = new ContextEvent(Activator.i_TemperatureSensor,TemperatureSensor_odd.PROPERTY_HAS_TEMPERATURE_SENSOR_DESCRIPTION);
+				ContextEvent event_TemperatureSensor = new ContextEvent(Activator.i_TemperatureSensor,TemperatureSensor.PROPERTY_HAS_MEASURED_TEMPERATURE_VALUE);
 				myContextPublisher.publish(event_TemperatureSensor);
 				break;
 			default:

@@ -380,57 +380,72 @@ public class CaressesOntology extends Ontology{
 		oci.addObjectProperty(EchonetDevice.PROPERTY_HAS_IP_ADDRESS);
 		oci.addObjectProperty(EchonetDevice.PROPERTY_IS_SMART_FACILITY_COMPONENT);
 		oci.addObjectProperty(EchonetDevice.PROPERTY_HAS_OPERATION_STATUS);
-		oci.addObjectProperty(EchonetDevice.PROPERTY_HAS_DATA_OBJECT);
-		oci.addObjectProperty(EchonetDevice.PROPERTY_HAS_PROFILE_OBJECT);
-
+		oci.addObjectProperty(EchonetDevice.PROPERTY_HAS_BUSINESS_FACILITY_CODE);
+		oci.addObjectProperty(EchonetDevice.PROPERTY_HAS_CUMULATIVE_OPERATING_TIME);
+		oci.addObjectProperty(EchonetDevice.PROPERTY_HAS_CURRENT_DATE_SETTING);
+		oci.addObjectProperty(EchonetDevice.PROPERTY_HAS_CURRENT_LIMIT_SETTING);
+		oci.addObjectProperty(EchonetDevice.PROPERTY_HAS_CURRENT_TIME_SETTING);
+		oci.addObjectProperty(EchonetDevice.PROPERTY_HAS_FAULT_DESCRIPTION);
+		oci.addObjectProperty(EchonetDevice.PROPERTY_HAS_FAULT_STATUS);
+		oci.addObjectProperty(EchonetDevice.PROPERTY_HAS_IDENTIFICATION_NUMBER);
+		oci.addObjectProperty(EchonetDevice.PROPERTY_HAS_INSTALLATION_LOCATION);
+		oci.addObjectProperty(EchonetDevice.PROPERTY_HAS_MANUFACTURER_CODE);
+		oci.addObjectProperty(EchonetDevice.PROPERTY_HAS_MANUFACTURER_FAULT_CODE);
+		oci.addObjectProperty(EchonetDevice.PROPERTY_HAS_MEASURED_CUMULATIVE_POWER_CONSUMPTION);
+		oci.addObjectProperty(EchonetDevice.PROPERTY_HAS_MEASURED_INSTANTANEOUS_POWER_CONSUMPTION);
+		oci.addObjectProperty(EchonetDevice.PROPERTY_HAS_POWER_LIMIT_SETTING);
+		oci.addObjectProperty(EchonetDevice.PROPERTY_HAS_POWER_SAVING_OPERATION_SETTING);
+		oci.addObjectProperty(EchonetDevice.PROPERTY_HAS_PRODUCT_CODE);
+		oci.addObjectProperty(EchonetDevice.PROPERTY_HAS_PRODUCTION_DATE);
+		oci.addObjectProperty(EchonetDevice.PROPERTY_HAS_PRODUCTION_NUMBER);
+		oci.addObjectProperty(EchonetDevice.PROPERTY_HAS_REMOTE_CONTROL_SETTING);
+		oci.addObjectProperty(EchonetDevice.PROPERTY_STANDARD_VERSION_INFORMATION);
+		
 			// : Load SensorRelatedOntoloty
 			oci = createNewOntClassInfo(SensorRelatedOntology.MY_URI, factory, factory.SENSOR_RELATED_ONT);
 			oci.setResourceComment("Echonet Sensor Related classes");
 			oci.setResourceLabel("EchonetSensorRelated");
 			oci.addSuperClass(EchonetDevice.MY_URI);	
-			oci.addObjectProperty(SensorRelatedOntology.PROPERTY_HAS_PROFILE_OBJECT);	
 			
 			// : Load AirConditionerRelatedOntology		
 			oci = createNewOntClassInfo(AirConditionerRelatedOntology.MY_URI, factory,factory.AIRCONDITIONER_RELATED_ONT);
 			oci.setResourceComment("Echonet Air-Conditioner Related class");
 			oci.setResourceLabel("EchonetAirConditionerRelated");
 			oci.addSuperClass(EchonetDevice.MY_URI);	
-			oci.addObjectProperty(AirConditionerRelatedOntology.PROPERTY_HAS_PROFILE_OBJECT);
 			
 			// : Load AudioVisualRelatedOntology		
 			oci = createNewOntClassInfo(AudioVisualRelatedOntology.MY_URI, factory,factory.AUDIO_VISUAL_RELARED_ONT);
 			oci.setResourceComment("Audio Visual Related class");
 			oci.setResourceLabel("AudioVisualRelated");
 			oci.addSuperClass(EchonetDevice.MY_URI);	
-			oci.addObjectProperty(AudioVisualRelatedOntology.PROPERTY_HAS_PROFILE_OBJECT);
+			oci.addObjectProperty(AudioVisualRelatedOntology.MY_URI);
 			
 			// : Load CookingHouseholdRelatedOntology		
 			oci = createNewOntClassInfo(CookingHouseholdRelatedOntology.MY_URI, factory,factory.COOKING_HOUSEHOLD_RELATED_ONT);
 			oci.setResourceComment("Cooking Household Related class");
 			oci.setResourceLabel("CookingHouseholdRelated");
 			oci.addSuperClass(EchonetDevice.MY_URI);	
-			oci.addObjectProperty(CookingHouseholdRelatedOntology.PROPERTY_HAS_PROFILE_OBJECT);
+			oci.addObjectProperty(CookingHouseholdRelatedOntology.MY_URI);
 			
 			// : Load HealthRelatedOntology		
 			oci = createNewOntClassInfo(HealthRelatedOntology.MY_URI, factory,factory.HEALTH_RELATED_ONT);
 			oci.setResourceComment("Health Related class");
 			oci.setResourceLabel("HealthRelated");
 			oci.addSuperClass(EchonetDevice.MY_URI);	
-			oci.addObjectProperty(HealthRelatedOntology.PROPERTY_HAS_PROFILE_OBJECT);
 
 			// : Load HousingFacilitiesRelatedOntology		
 			oci = createNewOntClassInfo(HousingFacilitiesRelatedOntology.MY_URI, factory,factory.HOUSING_FACILITY_RELARED_ONT);
 			oci.setResourceComment("Housing Facilities Related class");
 			oci.setResourceLabel("HousingFacilitiesRelated");
 			oci.addSuperClass(EchonetDevice.MY_URI);	
-			oci.addObjectProperty(HousingFacilitiesRelatedOntology.PROPERTY_HAS_PROFILE_OBJECT);
+			oci.addObjectProperty(HousingFacilitiesRelatedOntology.MY_URI);
 			
 			// : Load ManagementOperationRelatedOntology		
 			oci = createNewOntClassInfo(ManagementOperationRelatedOntology.MY_URI, factory,factory.MANAGEMENT_OPERATION_RELATED_ONT);
 			oci.setResourceComment("Management Operation Related class");
 			oci.setResourceLabel("ManagementOperationRelated");
 			oci.addSuperClass(EchonetDevice.MY_URI);	
-			oci.addObjectProperty(ManagementOperationRelatedOntology.PROPERTY_HAS_PROFILE_OBJECT);
+			oci.addObjectProperty(ManagementOperationRelatedOntology.MY_URI);
 			
 				//Load Temperature Sensor
 				oci = createNewOntClassInfo(TemperatureSensor.MY_URI, factory, factory.TEMPERATURE_SENSOR);

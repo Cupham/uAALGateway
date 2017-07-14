@@ -5,7 +5,7 @@ public class Component {
 	protected static final String CAHRIM = "CAHRIM";
 	protected static final String CKB    = "CKB";
 	protected static final String CSPEM  = "CSPEM";
-	protected static final String SMART_FACILYTY  = "Smart Facility";
+	protected static final String SMART_FACILITY  = "Smart Facility";
 	
 	protected static boolean is_Cahrim;
 	protected static boolean is_Ckb;
@@ -49,13 +49,13 @@ public class Component {
 			
 			component_ID = "[" + CSPEM + " ]";
 
-		} else if(component.equals(SMART_FACILYTY)) {
+		} else if(component.equals(SMART_FACILITY)) {
 			is_Cahrim = false;
 			is_Ckb    = false;
 			is_Cspem  = false;
 			is_AALEnviroment = true;
 			
-			component_ID = "[" + SMART_FACILYTY + " ]";
+			component_ID = "[" + SMART_FACILITY + " ]";
 		}
 		
 	}

@@ -23,8 +23,7 @@ import echowand.net.SubnetException;
 import echowand.object.EchonetObjectException;
 import echowand.object.ObjectData;
 import echowand.service.ObjectNotFoundException;
-import old.HomeAirConditioner_old;
-import old.TemperatureSensor_odd;
+import ontologies.HomeAirConditioner;
 import ontologies.TemperatureSensor;
 
 
@@ -67,7 +66,7 @@ public class TemperatureServiceCallee extends ServiceCallee {
 		}
 		//System.out.println("	RDFObjectList<TemperatureSensor>.Size="+Activator.eSensorList.size());
 		System.out.println("	RDFObjectList<TemperatureSensor>.get(0):");
-		System.out.println("		URI:"+Activator.temperatureSensorOntologies.get(0).getProperty(TemperatureSensor_odd.MY_URI));
+		System.out.println("		URI:"+Activator.temperatureSensorOntologies.get(0).getProperty(TemperatureSensor.MY_URI));
 		//System.out.println("		Message:"+Activator.temperatureSensorOntologies.get(0).getMessage());
 		
 		return sr;
@@ -98,7 +97,7 @@ public class TemperatureServiceCallee extends ServiceCallee {
 		System.out.println("	RDFObjectList<Airconditioner>.Size="+Activator.homeAirconditionerOntologies.size());
 		System.out.println("	RDFObjectList<Airconditioner>.get(0):");
 		System.out.println("		ClassURI:"+Activator.homeAirconditionerOntologies.get(0).getClassURI());
-		System.out.println("		URI:"+Activator.homeAirconditionerOntologies.get(0).getProperty(TemperatureSensor_odd.MY_URI));
+		System.out.println("		URI:"+Activator.homeAirconditionerOntologies.get(0).getProperty(TemperatureSensor.MY_URI));
 		//System.out.println("		Message:"+Activator.homeAirconditionerOntologies.get(0).getMessage());
 		return sr;
 	}
@@ -128,7 +127,7 @@ public class TemperatureServiceCallee extends ServiceCallee {
 			System.out.println(call.getInputValue(TemperatureServiceCalleeProvidedService.AIRCONDITIONER_STATUS));
 			System.out.println(call.getInputValue(DeviceService.PROP_CONTROLS));
 			System.out.println(call.getInputValue(TemperatureServiceCalleeProvidedService.PROP_CONTROLS)+"");
-			System.out.println(call.getInputValue(HomeAirConditioner_old.PROPERTY_OPERATION_STATUS)+"");
+			System.out.println(call.getInputValue(HomeAirConditioner.PROPERTY_HAS_OPERATION_STATUS)+"");
 		}
 		return null;
 	}

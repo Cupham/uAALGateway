@@ -10,8 +10,6 @@ import echowand.logic.TooManyObjectsException;
 import echowand.net.SubnetException;
 import echowand.object.EchonetObjectException;
 import homegateway.services.EchonetDeviceScanner;
-import old.SerializeUtils;
-import old.TemperatureSensor_odd;
 import ontologies.TemperatureSensor;
 import echonet.objects.*;
 
@@ -79,64 +77,6 @@ public class Example implements Runnable {
 	EchonetDeviceScanner deviceScanner = new EchonetDeviceScanner(Activator.echonetService);
 	ArrayList<eTemperatureSensor> sensorList = new ArrayList<eTemperatureSensor>();
 	public void run() {
-		try {
-			echonetDeviceList = deviceScanner.scanEDevices();
-			
-			if(echonetDeviceList.size() == 0) {
-				System.out.println("INFO: There is no device in iHouse");
-			} else {
-				for (EchonetLiteDevice dev : echonetDeviceList) {				
-					eTemperatureSensor temperatureSensor =SerializeUtils.temperatureSensorFromEDataObjects(dev.getDataObjList());
-					if(temperatureSensor != null) {
-						//temperatureSensor.setProfile(dev.getProfileObj());
-						sensorList.add(temperatureSensor);					
-					}		
-				}
-				
-				if(sensorList.size()>0) {
-					for(int i=0; i< sensorList.size();i++) {
-						Activator.i_TemperatureSensor = new TemperatureSensor(CaressesOntology.NAMESPACE +"I_TemperatureSensor"+sensorList.get(i).getDeviceIP()+"@"+sensorList.get(i).getInstanceCode());
-						String msg = SerializeUtils.messageFromTemperatureSensor(sensorList.get(i));
-						Activator.i_TemperatureSensor.changeProperty(TemperatureSensor_odd.PROPERTY_HAS_TEMPERATURE_SENSOR_DESCRIPTION, msg);
-						Activator.temperatureSensorOntologies.add(Activator.i_TemperatureSensor);
-						//String publisher_response = Activator.cpublisher.publishContextEvent("TemperatureSensor", msg);
-						//System.out.println("INFO: " + publisher_response + "\n");
-					}
-					 
-				} else {
-					System.out.println("INFO: There is no temperature sensor in iHouse");
-				}			
-			}		
-		} catch (SocketException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (SubnetException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (TooManyObjectsException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (EchonetObjectException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} finally {
-			System.out.println(Activator.temperatureSensorOntologies.size());
-		}
-		
-		
-		
-
-		//for (int i = 0; i < example_messages.length; i++){
-		//	
-		//	String publisher_response = Activator.cpublisher.publishContextEvent(datatypes[i], example_messages[i]);
-		//	System.out.println("INFO: " + publisher_response + "\n");
-		//}
-		
 	}
-
-
-
 }
+

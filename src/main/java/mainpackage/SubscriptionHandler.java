@@ -3,8 +3,6 @@ package mainpackage;
 import java.util.ArrayList;
 
 import echonet.objects.eTemperatureSensor;
-import old.SerializeUtils;
-
 /* ===========================================================================
  * This is where you can handle the inputs of the current CARESSES component
  * as soon as they are received on the Context Bus. Just put inside the

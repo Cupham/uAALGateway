@@ -13,8 +13,8 @@ import org.universAAL.middleware.rdf.TypeMapper;
 import org.universAAL.middleware.service.owls.profile.ServiceProfile;
 import org.universAAL.ontology.phThing.DeviceService;
 
-import old.HomeAirConditioner_old;
-import old.TemperatureSensor_odd;
+import ontologies.HomeAirConditioner;
+import ontologies.TemperatureSensor;
 
 import java.util.Hashtable;
 
@@ -55,36 +55,36 @@ public class TemperatureServiceCalleeProvidedService extends DeviceService{
 						}));
 		
 		String[] ppControls = new String[] { DeviceService.PROP_CONTROLS};
-		String[] ppCurrentSettingTemperuture = new String[] {DeviceService.PROP_CONTROLS,HomeAirConditioner_old.PROPERTY_OPERATION_STATUS};
+		String[] ppCurrentSettingTemperuture = new String[] {DeviceService.PROP_CONTROLS,TemperatureSensor.PROPERTY_HAS_MEASURED_TEMPERATURE_VALUE};
 		
-		String[] ppTemperatureValue = new String[]{DeviceService.PROP_CONTROLS,TemperatureSensor_odd.MY_URI,TemperatureSensor_odd.PROPERTY_HAS_TEMPERATURE};
-		String[] ppTemperatureLocation = new String[]{DeviceService.PROP_CONTROLS,TemperatureSensor_odd.MY_URI,TemperatureSensor_odd.PROPERTY_HAS_LOCATION};
+		String[] ppTemperatureValue = new String[]{DeviceService.PROP_CONTROLS,TemperatureSensor.MY_URI,TemperatureSensor.PROPERTY_HAS_MEASURED_TEMPERATURE_VALUE};
+		String[] ppTemperatureLocation = new String[]{DeviceService.PROP_CONTROLS,TemperatureSensor.MY_URI,TemperatureSensor.PROPERTY_HAS_MEASURED_TEMPERATURE_VALUE};
 		
 		
 		String[] ppTemperatureSensor = new String[] { DeviceService.PROP_CONTROLS,
-				TemperatureSensor_odd.MY_URI,TemperatureSensor_odd.PROPERTY_HAS_TEMPERATURE_SENSOR_DESCRIPTION};
+				TemperatureSensor.MY_URI,TemperatureSensor.PROPERTY_HAS_MEASURED_TEMPERATURE_VALUE};
 		
 		String[] ppAirConditioner = new String[] { DeviceService.PROP_CONTROLS,
-				HomeAirConditioner_old.MY_URI,HomeAirConditioner_old.PROPERTY_HAS_HOME_AIRCONDITIONER_DESCRIPTION};
+				TemperatureSensor.MY_URI,HomeAirConditioner.PROPERTY_HAS_OPERATION_POWER_SAVING};
 		
 		
-		addRestriction((MergedRestriction) TemperatureSensor_odd
+		addRestriction((MergedRestriction) HomeAirConditioner
 				.getClassRestrictionsOnProperty(DeviceService.MY_URI,
 				DeviceService.PROP_CONTROLS).copy(),ppTemperatureSensor,
 				serverLevelRestrictions);
 		
 		TemperatureServiceCalleeProvidedService getControlledTemperatureSensor = new TemperatureServiceCalleeProvidedService(GET_CONTROLLED_TEMPERATURE_SENSORS);
 		getControlledTemperatureSensor.addOutput(OUTPUT_CONTROLLED_TEMPERATURE_SENSORS
-				, TemperatureSensor_odd.MY_URI, 0, 0, ppTemperatureSensor);
+				, HomeAirConditioner.MY_URI, 0, 0, ppTemperatureSensor);
 		profiles[0] = getControlledTemperatureSensor.myProfile;
 		
 		TemperatureServiceCalleeProvidedService getControlledAirConditioner = new TemperatureServiceCalleeProvidedService(GET_CONTROLLED_AIRCONDTIONER);
 		getControlledAirConditioner.addOutput(OUTPUT_CONTROLLED_AIRCONDTIONER
-				, HomeAirConditioner_old.MY_URI, 0, 0, ppAirConditioner);
+				, HomeAirConditioner.MY_URI, 0, 0, ppAirConditioner);
 		profiles[1] = getControlledAirConditioner.myProfile;
 		
 		TemperatureServiceCalleeProvidedService setAirconditionerTemperature = new TemperatureServiceCalleeProvidedService(SET_AIRCONDTIONER_TEMPERATURE);
-		setAirconditionerTemperature.addFilteringInput(AIRCONDITIONER_URI, HomeAirConditioner_old.MY_URI, 1, 1, ppControls);
+		setAirconditionerTemperature.addFilteringInput(AIRCONDITIONER_URI, HomeAirConditioner.MY_URI, 1, 1, ppControls);
 		setAirconditionerTemperature.addInputWithChangeEffect(AIRCONDITIONER_STATUS, TypeMapper.
 				getDatatypeURI(Boolean.class), 1, 1, ppCurrentSettingTemperuture);
 		//setAirconditionerTemperature.myProfile.addChangeEffect(ppCurrentSettingTemperuture, new Boolean(true));

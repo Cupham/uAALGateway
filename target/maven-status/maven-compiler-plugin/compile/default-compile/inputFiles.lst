@@ -23,8 +23,6 @@
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echowand/net/TCPConnectionObserver.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/mainpackage/D2_1.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/mainpackage/CaressesComponent.java
-/home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/ontologies/EchonetDeviceSuperOntology.java
-/home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/ServiceBus/SCallee_SmartFacilityProvidedService.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/utils/EchonetDataConverter.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/mainpackage/Cahrim.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echowand/service/PropertyUpdaterThread.java
@@ -46,7 +44,6 @@
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/mainpackage/SCallee_CSPEM.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echowand/info/PropertyConstraintTemperature.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/mainpackage/DataMessageService.java
-/home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/ServiceBus/SCallee_SmartFacility.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echowand/net/Connection.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echowand/object/AnnounceRequestProcessor.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/mainpackage/D7_1.java
@@ -121,6 +118,7 @@
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echowand/service/PropertyDelegate.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echowand/service/CaptureSubnetObserver.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echowand/object/LocalObjectDateTimeDelegate.java
+/home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/ServiceBus/SCallee_SmartEnvironmentProvidedService.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/mainpackage/D8.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echowand/net/InetSubnetUDPReceiverThread.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/mainpackage/OntologyUpdater.java
@@ -128,6 +126,7 @@
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echowand/object/LocalSetGetAtomic.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/mainpackage/SmartFacility.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echowand/net/Node.java
+/home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/ServiceBus/SCallee_SmartEnvironment.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echowand/util/ReadableConverterUpdate.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/mainpackage/D6_1.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/mainpackage/D8_1.java
@@ -151,6 +150,7 @@
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echowand/info/BasicObjectInfo.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echowand/object/LocalObjectDelegate.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echowand/logic/Listener.java
+/home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/ontologies/OntologyHelper.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/mainpackage/DataMessage.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echowand/net/Payload.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echowand/net/InetNode.java

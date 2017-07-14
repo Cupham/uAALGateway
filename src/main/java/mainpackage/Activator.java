@@ -8,11 +8,13 @@ import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 import org.universAAL.middleware.container.ModuleContext;
 import org.universAAL.middleware.container.osgi.uAALBundleContainer;
+import org.universAAL.middleware.context.ContextEvent;
 import org.universAAL.middleware.owl.OntologyManagement;
 import org.universAAL.ontology.location.indoor.Home;
 import org.universAAL.ontology.phThing.Device;
+import org.universAAL.ontology.profile.HWSubProfile;
 
-import ServiceBus.SCallee_SmartFacility;
+import ServiceBus.SCallee_SmartEnvironment;
 import echonet.objects.EchonetLiteDevice;
 import echonet.objects.eAirConditioner;
 import echonet.objects.eDataObject;
@@ -25,10 +27,8 @@ import echowand.service.Core;
 import echowand.service.Service;
 import homegateway.services.EchonetDeviceScanner;
 import homegateway.services.EchonetDeviceUpdater;
-import old.HomeAirConditioner_old;
-import old.SerializeUtils;
-import old.TemperatureSensor_odd;
 import ontologies.HomeAirConditioner;
+import ontologies.OntologyHelper;
 import ontologies.TemperatureSensor;
 
 
@@ -47,7 +47,7 @@ public class Activator implements BundleActivator {
 	public static SCallee_CAHRIM scallee_CAHRIM;
 	public static SCallee_CKB    scallee_CKB;
 	public static SCallee_CSPEM  scallee_CSPEM;
-	public static SCallee_SmartFacility scalle_SF = null;
+	public static SCallee_SmartEnvironment scalle_SF = null;
 	public static SCaller scaller;
 	
 	public static CSubscriber csubscriber = null;
@@ -110,7 +110,7 @@ public class Activator implements BundleActivator {
 		// : Set to which component this bundle refer (Component.CAHRIM, Component.CKB, Component.CSPEM)
 		using_socket = false;		
 		//Component.setThisComponentAs(Component.CKB); 
-		Component.setThisComponentAs(Component.SMART_FACILYTY);
+		Component.setThisComponentAs(Component.SMART_FACILITY);
 		System.out.println(Component.component_ID + " ACTIVATOR: Application started\n");
 		
 		// initialize echonet interface
@@ -137,9 +137,9 @@ public class Activator implements BundleActivator {
 		scaller     = new SCaller(context);
 //		scallee     = new SCallee(context);
 //		scaller     = new SCaller(context);
-		//csubscriber = new CSubscriber(context);
-		//cpublisher  = new CPublisher(context);
-		scalle_SF = new SCallee_SmartFacility(context);
+		csubscriber = new CSubscriber(context);
+		cpublisher  = new CPublisher(context);
+		
 		//serviceCallee = new SCallee_SmartFacility(context);
 		
 		i_cahrim = new Cahrim(CaressesOntology.NAMESPACE + "I_CAHRIM");
@@ -174,8 +174,9 @@ public class Activator implements BundleActivator {
 		
 		getHomeResource();
 		
-		
-		
+		//System.out.println(cpublisher.publishHomeResource());
+		scalle_SF = new SCallee_SmartEnvironment(context);
+		/*
 		if (using_socket){
 			socketpublisher = new SocketPublisher(context);
 			socketpublisher.startServer();
@@ -184,6 +185,7 @@ public class Activator implements BundleActivator {
 			Thread t = new Thread(main_class);
 			t.start();
 		}
+		*/
 				
 	}
 	
@@ -303,11 +305,11 @@ public class Activator implements BundleActivator {
 					String uriSuffix =  temperatureSensor.getDeviceIP() + "_"+temperatureSensor.getInstanceCode(); 
 					System.out.println("Translating uAAL objects(TemperatureSensor "+temperatureSensor.getInstanceCode()+") with IP "+temperatureSensor.getDeviceIP() +" to uAAL objects...");
 					Activator.i_TemperatureSensor = new TemperatureSensor(CaressesOntology.NAMESPACE +"I_TemperatureSensor"+uriSuffix);
-					Activator.i_TemperatureSensor.initOntology(
-							temperatureSensor.isOperationStatus(), 
-							temperatureSensor.getTemperature(), 
-							temperatureSensor.getInstallLocation());
+					OntologyHelper.initTemperatureSensorOntology(temperatureSensor, Activator.i_TemperatureSensor);	
 					Activator.temperatureSensorOntologies.add(Activator.i_TemperatureSensor);
+					//ContextEvent temp  = new ContextEvent(, TemperatureSensor.MY_URI);
+					cpublisher.publishCE(Activator.i_TemperatureSensor);
+					
 				}
 			}
 			
@@ -319,15 +321,12 @@ public class Activator implements BundleActivator {
 					String uriSuffix =  airconditioner.getDeviceIP() + "_"+airconditioner.getInstanceCode(); 
 					System.out.println("Translating uAAL objects(Airconditioner "+airconditioner.getInstanceCode()+") with IP "+airconditioner.getDeviceIP() +" to uAAL objects...");
 					Activator.i_HomeAirConditoner = new HomeAirConditioner(CaressesOntology.NAMESPACE +"I_Airconditioner"+uriSuffix);
-					Activator.i_HomeAirConditoner.initOntology(
-							airconditioner.isOperationStatus(),
-							airconditioner.isOperationPowerSaving(),
-							airconditioner.getOperationModeSetting(),
-							airconditioner.getCurrentSettingTemperature(),
-							airconditioner.getRoomTemperature(),
-							airconditioner.getAirFlowRate(),
-							airconditioner.getInstallLocation());
+					OntologyHelper.initHomeAirconditionerOntology(airconditioner, Activator.i_HomeAirConditoner);
 					Activator.homeAirconditionerOntologies.add(Activator.i_HomeAirConditoner);
+					//ContextEvent air  = new ContextEvent(Activator.i_HomeAirConditoner, HomeAirConditioner.MY_URI);
+					//cpublisher.publishCE(air);
+					//System.out.println("Published: " + Activator.i_HomeAirConditoner.getProperty(TemperatureSensor.MY_URI));
+					
 				}
 			}
 		} catch (SocketException e) {
@@ -347,7 +346,15 @@ public class Activator implements BundleActivator {
 			e.printStackTrace();
 		} finally {
 			System.out.println(Activator.temperatureSensorOntologies.size() + " temperature sensor");
+			System.out.println("	RDFObjectList<TemperatureSensor>.get(0)ne :");
+			System.out.println("		URI:"+Activator.temperatureSensorOntologies.get(0).getURI());
+			System.out.println("		OP:"+Activator.temperatureSensorOntologies.get(0).getOperationStatus());
+			System.out.println("		LOC:"+Activator.temperatureSensorOntologies.get(0).getMesuredTemperatureValue());
+			
 			System.out.println(Activator.homeAirconditionerOntologies.size() + " AirConditioner");
+			System.out.println("	RDFObjectList<homeAirconditionerOntologies>.get(0)aaaaa:");
+			System.out.println("		URI:"+Activator.homeAirconditionerOntologies.get(0).getClassURI());
+			System.out.println("		OP:"+Activator.homeAirconditionerOntologies.get(0).getAirFlowRateSetting());
 		}
 	}
 

@@ -1,5 +1,5 @@
 Manifest-Version: 1.0
-Bnd-LastModified: 1499495238951
+Bnd-LastModified: 1500011016879
 Build-Jdk: 1.8.0_131
 Built-By: elite
 Bundle-Activator: mainpackage.Activator
@@ -35,9 +35,9 @@ Export-Package: ServiceBus;uses:="org.universAAL.middleware.service.owls
  gy.phThing,org.universAAL.middleware.service.owl,utils,org.universAAL.m
  iddleware.service.owls.profile,org.universAAL.middleware.service,org.un
  iversAAL.middleware.service.owls.process,echowand.common";version="1.0.
- 0",ontologies;uses:="mainpackage,org.universAAL.ontology.phThing,org.un
- iversAAL.middleware.rdf,org.universAAL.ontology.profile";version="1.0.0
- ",utils;uses:="echowand.common,echowand.object";version="1.0.0"
+ 0",ontologies;uses:="mainpackage,org.universAAL.ontology.phThing,echone
+ t.objects";version="1.0.0",utils;uses:="echowand.common,echowand.object
+ ";version="1.0.0"
 Import-Package: org.osgi.framework;version="[1,2)",org.universAAL.middle
  ware.container;version="[3.4,4)",org.universAAL.middleware.container.os
  gi;version="[3.4,4)",org.universAAL.middleware.context;version="[3.4,4)
@@ -46,5 +46,5 @@ Import-Package: org.osgi.framework;version="[1,2)",org.universAAL.middle
  n="[3.4,4)",org.universAAL.middleware.service,org.universAAL.middleware
  .service.owl,org.universAAL.middleware.service.owls.process,org.univers
  AAL.middleware.service.owls.profile,org.universAAL.ontology.phThing;ver
- sion="[3.4,4)",org.universAAL.ontology.profile;version="[3.4,4)"
+ sion="[3.4,4)"
 Tool: Bnd-1.50.0

@@ -60,7 +60,7 @@ public class eSuperClass {
 	/**
 	 * EPC: 0x86 Manufacturer-defined fault code
 	 */
-	private String manufactureerFaultCode;
+	private String manufacturerFaultCode;
 	/**
 	 * EPC: 0x87 Current limit setting Value betwee: 0x00–0x64 (=0–100%)
 	 */
@@ -193,7 +193,7 @@ public class eSuperClass {
 		}
 
 		if (rObj.isGettable(EPC.x86)) { // Manufacturer's fault code
-			this.manufactureerFaultCode = EchonetDataConverter.dataToFaultCode(rObj.getData(EPC.x86)) + "";
+			this.manufacturerFaultCode = EchonetDataConverter.dataToFaultCode(rObj.getData(EPC.x86)) + "";
 		}
 
 		if (rObj.isGettable(EPC.x87)) { // Current limit setting
@@ -323,7 +323,7 @@ public class eSuperClass {
 			return false;
 		if (!compareObject(this.cumulativePower, checkObj.cumulativePower))
 			return false;
-		if (!compareObject(this.manufactureerFaultCode, checkObj.manufactureerFaultCode))
+		if (!compareObject(this.manufacturerFaultCode, checkObj.manufacturerFaultCode))
 			return false;
 		if (!compareObject(this.currentLimitSetting, checkObj.currentLimitSetting))
 			return false;
@@ -367,7 +367,7 @@ public class eSuperClass {
 		rs.append(" Identify number: " + this.identificationNumber + ",");
 		rs.append(" Measure instantaneous power consumption: " + this.instantaneousPower + "W,");
 		rs.append(" Measured cumulative power consumption: " + (this.cumulativePower / 1000) + "kWh,");
-		rs.append(" Manufacturer’s fault code: " + this.manufactureerFaultCode + ",");
+		rs.append(" Manufacturer’s fault code: " + this.manufacturerFaultCode + ",");
 		rs.append(" Current limit setting: " + this.currentLimitSetting + "%,");
 		rs.append(" Fault status: " + ((this.faultStatus) ? "Fault occurred" : "No fault has occurred") + ",");
 		rs.append(" Fault description: " + this.faultDescription + ",");
@@ -490,11 +490,11 @@ public class eSuperClass {
 	public void setCumulativePower(long cumulativePower) {
 		this.cumulativePower = cumulativePower;
 	}
-	public String getManufactureerFaultCode() {
-		return manufactureerFaultCode;
+	public String getManufacturerFaultCode() {
+		return manufacturerFaultCode;
 	}
 	public void setManufactureerFaultCode(String manufactureerFaultCode) {
-		this.manufactureerFaultCode = manufactureerFaultCode;
+		this.manufacturerFaultCode = manufactureerFaultCode;
 	}
 	public int getCurrentLimitSetting() {
 		return currentLimitSetting;

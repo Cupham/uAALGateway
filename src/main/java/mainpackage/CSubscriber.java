@@ -11,9 +11,9 @@ import org.universAAL.middleware.context.ContextEventPattern;
 import org.universAAL.middleware.context.ContextSubscriber;
 import org.universAAL.middleware.owl.MergedRestriction;
 
-import old.EchonetSensor;
-import old.SerializeUtils;
-import old.TemperatureSensor_odd;
+import ontologies.SensorRelatedOntology;
+import ontologies.TemperatureSensor;
+
 
 public class CSubscriber extends ContextSubscriber {
 	Example example;
@@ -70,7 +70,7 @@ public class CSubscriber extends ContextSubscriber {
 		} else if(Component.is_AALEnviroment) {
 			ContextEventPattern cep_Echonet_Sensor = new ContextEventPattern();
 			
-			cep_Echonet_Sensor.addRestriction(MergedRestriction.getAllValuesRestriction(ContextEvent.PROP_RDF_SUBJECT, EchonetSensor.MY_URI));
+			cep_Echonet_Sensor.addRestriction(MergedRestriction.getAllValuesRestriction(ContextEvent.PROP_RDF_SUBJECT, SensorRelatedOntology.MY_URI));
 			
 			return new ContextEventPattern[] {cep_Echonet_Sensor};
 		}
@@ -232,10 +232,10 @@ public class CSubscriber extends ContextSubscriber {
 			}
 		} if(theSubjectClass.contains("TemperatureSensor")) {	
 			theSubjectClass = "TemperatureSensor";
-			if(event.getRDFPredicate().equals(TemperatureSensor_odd.PROPERTY_HAS_TEMPERATURE)) {
+			if(event.getRDFPredicate().equals(TemperatureSensor.PROPERTY_HAS_MEASURED_TEMPERATURE_VALUE)) {
 				for(int i =0;i<Activator.temperatureSensorOntologies.size();i++) {
 					String publisher_response = Activator.cpublisher.publishContextEvent("TemperatureSensor", 
-							Activator.temperatureSensorOntologies.get(i).getProperty(TemperatureSensor_odd.PROPERTY_HAS_TEMPERATURE_SENSOR_DESCRIPTION).toString());
+							Activator.temperatureSensorOntologies.get(i).getProperty(TemperatureSensor.PROPERTY_HAS_MEASURED_TEMPERATURE_VALUE).toString());
 					System.out.println("INFO: " + publisher_response + "\n");
 				}
 			}

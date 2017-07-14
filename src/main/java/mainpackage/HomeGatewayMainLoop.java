@@ -15,6 +15,7 @@ import echowand.service.Core;
 import echowand.service.Service;
 import homegateway.services.EchonetDeviceScanner;
 import ontologies.HomeAirConditioner;
+import ontologies.OntologyHelper;
 import ontologies.TemperatureSensor;
 import utils.InputValidator;
 
@@ -116,10 +117,7 @@ public class HomeGatewayMainLoop {
 								String uriSuffix =  temperatureSensor.getDeviceIP() + "_"+temperatureSensor.getInstanceCode(); 
 								System.out.println("Translating uAAL objects(TemperatureSensor "+temperatureSensor.getInstanceCode()+") with IP "+temperatureSensor.getDeviceIP() +" to uAAL objects...");
 								Activator.i_TemperatureSensor = new TemperatureSensor(CaressesOntology.NAMESPACE +"I_TemperatureSensor"+uriSuffix);
-								Activator.i_TemperatureSensor.initOntology(
-										temperatureSensor.isOperationStatus(), 
-										temperatureSensor.getTemperature(), 
-										temperatureSensor.getInstallLocation());
+								OntologyHelper.initTemperatureSensorOntology(temperatureSensor, Activator.i_TemperatureSensor);
 								Activator.temperatureSensorOntologies.add(Activator.i_TemperatureSensor);
 							}
 						}
@@ -132,20 +130,14 @@ public class HomeGatewayMainLoop {
 								String uriSuffix =  airconditioner.getDeviceIP() + "_"+airconditioner.getInstanceCode(); 
 								System.out.println("Translating uAAL objects(Airconditioner "+airconditioner.getInstanceCode()+") with IP "+airconditioner.getDeviceIP() +" to uAAL objects...");
 								Activator.i_HomeAirConditoner = new HomeAirConditioner(CaressesOntology.NAMESPACE +"I_Airconditioner"+uriSuffix);
-								Activator.i_HomeAirConditoner.initOntology(
-										airconditioner.isOperationStatus(),
-										airconditioner.isOperationPowerSaving(),
-										airconditioner.getOperationModeSetting(),
-										airconditioner.getCurrentSettingTemperature(),
-										airconditioner.getRoomTemperature(),
-										airconditioner.getAirFlowRate(),
-										airconditioner.getInstallLocation());
+								OntologyHelper.initHomeAirconditionerOntology(airconditioner, Activator.i_HomeAirConditoner);
 								Activator.homeAirconditionerOntologies.add(Activator.i_HomeAirConditoner);
+								
 							}
 						}
 						
 					} catch (Exception e) {
-						
+						System.out.println(e.toString());
 					}
 					
 				}

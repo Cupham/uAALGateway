@@ -3,9 +3,6 @@ package mainpackage;
 import org.universAAL.middleware.rdf.Resource;
 import org.universAAL.middleware.rdf.ResourceFactory;
 
-import old.EchonetAirConditioner;
-import old.EchonetSensor;
-import old.TemperatureSensor_odd;
 import ontologies.AirConditionerRelatedOntology;
 import ontologies.AudioVisualRelatedOntology;
 import ontologies.CookingHouseholdRelatedOntology;
