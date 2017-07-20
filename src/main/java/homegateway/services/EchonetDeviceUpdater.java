@@ -33,7 +33,6 @@ public class EchonetDeviceUpdater {
 			return true;
 		}
 		return false;
-}
-	
+	}
 
 }

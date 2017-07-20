@@ -15,9 +15,9 @@ import echowand.service.Core;
 import echowand.service.Service;
 import homegateway.services.EchonetDeviceScanner;
 import ontologies.HomeAirConditioner;
-import ontologies.OntologyHelper;
 import ontologies.TemperatureSensor;
 import utils.InputValidator;
+import utils.OntologyHelper;
 
 public class HomeGatewayMainLoop {
 	

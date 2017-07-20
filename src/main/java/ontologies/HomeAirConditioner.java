@@ -18,6 +18,7 @@ public class HomeAirConditioner extends AirConditionerRelatedOntology{
 	}
 	public HomeAirConditioner(String uri) {
 		super(uri);
+		setClassCode((byte) 0x30);
 	}
 	public String getClassURI(){
 		return MY_URI;

@@ -377,95 +377,101 @@ public class CaressesOntology extends Ontology{
 		oci.setResourceComment("Echonet Device class");
 		oci.setResourceLabel("EchonetDevice");
 		oci.addSuperClass(Device.MY_URI);	
-		oci.addObjectProperty(EchonetDevice.PROPERTY_HAS_IP_ADDRESS);
-		oci.addObjectProperty(EchonetDevice.PROPERTY_IS_SMART_FACILITY_COMPONENT);
-		oci.addObjectProperty(EchonetDevice.PROPERTY_HAS_OPERATION_STATUS);
-		oci.addObjectProperty(EchonetDevice.PROPERTY_HAS_BUSINESS_FACILITY_CODE);
-		oci.addObjectProperty(EchonetDevice.PROPERTY_HAS_CUMULATIVE_OPERATING_TIME);
-		oci.addObjectProperty(EchonetDevice.PROPERTY_HAS_CURRENT_DATE_SETTING);
-		oci.addObjectProperty(EchonetDevice.PROPERTY_HAS_CURRENT_LIMIT_SETTING);
-		oci.addObjectProperty(EchonetDevice.PROPERTY_HAS_CURRENT_TIME_SETTING);
-		oci.addObjectProperty(EchonetDevice.PROPERTY_HAS_FAULT_DESCRIPTION);
-		oci.addObjectProperty(EchonetDevice.PROPERTY_HAS_FAULT_STATUS);
-		oci.addObjectProperty(EchonetDevice.PROPERTY_HAS_IDENTIFICATION_NUMBER);
-		oci.addObjectProperty(EchonetDevice.PROPERTY_HAS_INSTALLATION_LOCATION);
-		oci.addObjectProperty(EchonetDevice.PROPERTY_HAS_MANUFACTURER_CODE);
-		oci.addObjectProperty(EchonetDevice.PROPERTY_HAS_MANUFACTURER_FAULT_CODE);
-		oci.addObjectProperty(EchonetDevice.PROPERTY_HAS_MEASURED_CUMULATIVE_POWER_CONSUMPTION);
-		oci.addObjectProperty(EchonetDevice.PROPERTY_HAS_MEASURED_INSTANTANEOUS_POWER_CONSUMPTION);
-		oci.addObjectProperty(EchonetDevice.PROPERTY_HAS_POWER_LIMIT_SETTING);
-		oci.addObjectProperty(EchonetDevice.PROPERTY_HAS_POWER_SAVING_OPERATION_SETTING);
-		oci.addObjectProperty(EchonetDevice.PROPERTY_HAS_PRODUCT_CODE);
-		oci.addObjectProperty(EchonetDevice.PROPERTY_HAS_PRODUCTION_DATE);
-		oci.addObjectProperty(EchonetDevice.PROPERTY_HAS_PRODUCTION_NUMBER);
-		oci.addObjectProperty(EchonetDevice.PROPERTY_HAS_REMOTE_CONTROL_SETTING);
-		oci.addObjectProperty(EchonetDevice.PROPERTY_STANDARD_VERSION_INFORMATION);
+		oci.addDatatypeProperty(EchonetDevice.PROPERTY_HAS_CLASS_CODE);
+		oci.addDatatypeProperty(EchonetDevice.PROPERTY_HAS_CLASS_GROUP_CODE);
+		oci.addDatatypeProperty(EchonetDevice.PROPERTY_HAS_INSTANCE_CODE);
+		oci.addDatatypeProperty(EchonetDevice.PROPERTY_HAS_IP_ADDRESS);
+		oci.addDatatypeProperty(EchonetDevice.PROPERTY_IS_SMART_FACILITY_COMPONENT);
+		oci.addDatatypeProperty(EchonetDevice.PROPERTY_HAS_OPERATION_STATUS);
+		oci.addDatatypeProperty(EchonetDevice.PROPERTY_HAS_BUSINESS_FACILITY_CODE);
+		oci.addDatatypeProperty(EchonetDevice.PROPERTY_HAS_CUMULATIVE_OPERATING_TIME);
+		oci.addDatatypeProperty(EchonetDevice.PROPERTY_HAS_CURRENT_DATE_SETTING);
+		oci.addDatatypeProperty(EchonetDevice.PROPERTY_HAS_CURRENT_LIMIT_SETTING);
+		oci.addDatatypeProperty(EchonetDevice.PROPERTY_HAS_CURRENT_TIME_SETTING);
+		oci.addDatatypeProperty(EchonetDevice.PROPERTY_HAS_FAULT_DESCRIPTION);
+		oci.addDatatypeProperty(EchonetDevice.PROPERTY_HAS_FAULT_STATUS);
+		oci.addDatatypeProperty(EchonetDevice.PROPERTY_HAS_IDENTIFICATION_NUMBER);
+		oci.addDatatypeProperty(EchonetDevice.PROPERTY_HAS_INSTALLATION_LOCATION);
+		oci.addDatatypeProperty(EchonetDevice.PROPERTY_HAS_MANUFACTURER_CODE);
+		oci.addDatatypeProperty(EchonetDevice.PROPERTY_HAS_MANUFACTURER_FAULT_CODE);
+		oci.addDatatypeProperty(EchonetDevice.PROPERTY_HAS_MEASURED_CUMULATIVE_POWER_CONSUMPTION);
+		oci.addDatatypeProperty(EchonetDevice.PROPERTY_HAS_MEASURED_INSTANTANEOUS_POWER_CONSUMPTION);
+		oci.addDatatypeProperty(EchonetDevice.PROPERTY_HAS_POWER_LIMIT_SETTING);
+		oci.addDatatypeProperty(EchonetDevice.PROPERTY_HAS_POWER_SAVING_OPERATION_SETTING);
+		oci.addDatatypeProperty(EchonetDevice.PROPERTY_HAS_PRODUCT_CODE);
+		oci.addDatatypeProperty(EchonetDevice.PROPERTY_HAS_PRODUCTION_DATE);
+		oci.addDatatypeProperty(EchonetDevice.PROPERTY_HAS_PRODUCTION_NUMBER);
+		oci.addDatatypeProperty(EchonetDevice.PROPERTY_HAS_REMOTE_CONTROL_SETTING);
+		oci.addDatatypeProperty(EchonetDevice.PROPERTY_STANDARD_VERSION_INFORMATION);
 		
 			// : Load SensorRelatedOntoloty
 			oci = createNewOntClassInfo(SensorRelatedOntology.MY_URI, factory, factory.SENSOR_RELATED_ONT);
 			oci.setResourceComment("Echonet Sensor Related classes");
 			oci.setResourceLabel("EchonetSensorRelated");
 			oci.addSuperClass(EchonetDevice.MY_URI);	
+			oci.addDatatypeProperty(SensorRelatedOntology.MY_URI);
 			
 			// : Load AirConditionerRelatedOntology		
 			oci = createNewOntClassInfo(AirConditionerRelatedOntology.MY_URI, factory,factory.AIRCONDITIONER_RELATED_ONT);
 			oci.setResourceComment("Echonet Air-Conditioner Related class");
 			oci.setResourceLabel("EchonetAirConditionerRelated");
 			oci.addSuperClass(EchonetDevice.MY_URI);	
+			oci.addDatatypeProperty(AirConditionerRelatedOntology.MY_URI);
 			
 			// : Load AudioVisualRelatedOntology		
 			oci = createNewOntClassInfo(AudioVisualRelatedOntology.MY_URI, factory,factory.AUDIO_VISUAL_RELARED_ONT);
 			oci.setResourceComment("Audio Visual Related class");
 			oci.setResourceLabel("AudioVisualRelated");
 			oci.addSuperClass(EchonetDevice.MY_URI);	
-			oci.addObjectProperty(AudioVisualRelatedOntology.MY_URI);
+			oci.addDatatypeProperty(AudioVisualRelatedOntology.MY_URI);
 			
 			// : Load CookingHouseholdRelatedOntology		
 			oci = createNewOntClassInfo(CookingHouseholdRelatedOntology.MY_URI, factory,factory.COOKING_HOUSEHOLD_RELATED_ONT);
 			oci.setResourceComment("Cooking Household Related class");
 			oci.setResourceLabel("CookingHouseholdRelated");
 			oci.addSuperClass(EchonetDevice.MY_URI);	
-			oci.addObjectProperty(CookingHouseholdRelatedOntology.MY_URI);
+			oci.addDatatypeProperty(CookingHouseholdRelatedOntology.MY_URI);
 			
 			// : Load HealthRelatedOntology		
 			oci = createNewOntClassInfo(HealthRelatedOntology.MY_URI, factory,factory.HEALTH_RELATED_ONT);
 			oci.setResourceComment("Health Related class");
 			oci.setResourceLabel("HealthRelated");
 			oci.addSuperClass(EchonetDevice.MY_URI);	
-
+			oci.addDatatypeProperty(HealthRelatedOntology.MY_URI);
+			
 			// : Load HousingFacilitiesRelatedOntology		
 			oci = createNewOntClassInfo(HousingFacilitiesRelatedOntology.MY_URI, factory,factory.HOUSING_FACILITY_RELARED_ONT);
 			oci.setResourceComment("Housing Facilities Related class");
 			oci.setResourceLabel("HousingFacilitiesRelated");
 			oci.addSuperClass(EchonetDevice.MY_URI);	
-			oci.addObjectProperty(HousingFacilitiesRelatedOntology.MY_URI);
+			oci.addDatatypeProperty(HousingFacilitiesRelatedOntology.MY_URI);
 			
 			// : Load ManagementOperationRelatedOntology		
 			oci = createNewOntClassInfo(ManagementOperationRelatedOntology.MY_URI, factory,factory.MANAGEMENT_OPERATION_RELATED_ONT);
 			oci.setResourceComment("Management Operation Related class");
 			oci.setResourceLabel("ManagementOperationRelated");
 			oci.addSuperClass(EchonetDevice.MY_URI);	
-			oci.addObjectProperty(ManagementOperationRelatedOntology.MY_URI);
+			oci.addDatatypeProperty(ManagementOperationRelatedOntology.MY_URI);
 			
 				//Load Temperature Sensor
 				oci = createNewOntClassInfo(TemperatureSensor.MY_URI, factory, factory.TEMPERATURE_SENSOR);
 				oci.setResourceComment("Echonet Temperature Sensor Ontology");
 				oci.setResourceLabel("EchonetTemperatureSensor");
 				oci.addSuperClass(SensorRelatedOntology.MY_URI);	
-				oci.addObjectProperty(TemperatureSensor.PROPERTY_HAS_MEASURED_TEMPERATURE_VALUE);	
-				oci.addObjectProperty(TemperatureSensor.PROPERTY_HAS_OPERATION_STATUS);
+				oci.addDatatypeProperty(TemperatureSensor.PROPERTY_HAS_MEASURED_TEMPERATURE_VALUE);	
+				oci.addDatatypeProperty(TemperatureSensor.PROPERTY_HAS_OPERATION_STATUS);
 				
 				//Load Home Airconditioner
 				oci = createNewOntClassInfo(HomeAirConditioner.MY_URI, factory, factory.HOME_AIRCONDITIONER);
 				oci.setResourceComment("Echonet Home Airconditioner  Ontology");
 				oci.setResourceLabel("EchonetHomeAirconditioner");
 				oci.addSuperClass(AirConditionerRelatedOntology.MY_URI);	
-				oci.addObjectProperty(HomeAirConditioner.PROPERTY_HAS_OPERATION_STATUS);
-				oci.addObjectProperty(HomeAirConditioner.PROPERTY_HAS_OPERATION_POWER_SAVING);
-				oci.addObjectProperty(HomeAirConditioner.PROPERTY_HAS_AIR_FLOW_RATE_SETTING);
-				oci.addObjectProperty(HomeAirConditioner.PROPERTY_HAS_OPERATION_MODE_SETTING);
-				oci.addObjectProperty(HomeAirConditioner.PROPERTY_HAS_MEASURED_ROOM_TEMPERATURE_VALUE);
-				oci.addObjectProperty(HomeAirConditioner.PROPERTY_HAS_SETTING_TEMPERATURE_VALUE);
+				oci.addDatatypeProperty(HomeAirConditioner.PROPERTY_HAS_OPERATION_STATUS);
+				oci.addDatatypeProperty(HomeAirConditioner.PROPERTY_HAS_OPERATION_POWER_SAVING);
+				oci.addDatatypeProperty(HomeAirConditioner.PROPERTY_HAS_AIR_FLOW_RATE_SETTING);
+				oci.addDatatypeProperty(HomeAirConditioner.PROPERTY_HAS_OPERATION_MODE_SETTING);
+				oci.addDatatypeProperty(HomeAirConditioner.PROPERTY_HAS_MEASURED_ROOM_TEMPERATURE_VALUE);
+				oci.addDatatypeProperty(HomeAirConditioner.PROPERTY_HAS_SETTING_TEMPERATURE_VALUE);
 				
 		// Load Echonet Service
 		oci = createNewOntClassInfo(EchonetService.MY_URI, factory, factory.ECHONET_SERVICE);

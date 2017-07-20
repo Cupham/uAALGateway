@@ -12,7 +12,6 @@ import org.universAAL.middleware.context.owl.ContextProvider;
 import org.universAAL.middleware.context.owl.ContextProviderType;
 
 import ontologies.HomeAirConditioner;
-import ontologies.SensorRelatedOntology;
 import ontologies.TemperatureSensor;
 
 
@@ -31,9 +30,8 @@ public class CPublisher {
 		System.out.println("Initialized ContextPublisher Successfully");
 		
 	}
-	public void publishCE(TemperatureSensor temp)  {
-		if(temp != null) {
-			ContextEvent ce = new ContextEvent(temp,TemperatureSensor.MY_URI);
+	public void publishCE(ContextEvent ce)  {
+		if(ce != null) {
 			myContextPublisher.publish(ce);
 			System.out.println("Published: " +ce.getRDFSubject().toString());
 		} else {

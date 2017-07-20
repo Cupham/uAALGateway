@@ -1,7 +1,9 @@
-package ontologies;
+package utils;
 
 import echonet.objects.eAirConditioner;
 import echonet.objects.eTemperatureSensor;
+import ontologies.HomeAirConditioner;
+import ontologies.TemperatureSensor;
 
 
 public class OntologyHelper {
@@ -12,6 +14,7 @@ public class OntologyHelper {
 		ont.setMesuredTemperatureValue(dev.getTemperature());
 
 		//Profile object
+		ont.setInscanceCode(dev.getInstanceCode());
 		ont.setIPAddress(dev.getDeviceIP());
 		ont.setBusinessFacilityCode(dev.getBusinessFacilityCode());
 		ont.setCumulativeOperatingTime(dev.getCumulativeTime());
@@ -35,6 +38,7 @@ public class OntologyHelper {
 	
 	public static void  initHomeAirconditionerOntology(eAirConditioner dev, HomeAirConditioner ont) {
 		//Data object
+		ont.changeProperty(HomeAirConditioner.MY_URI, ont.getURI());
 		ont.setOperationStatus(dev.isOperationStatus());
 		ont.setOperationPowerSaving(dev.isOperationPowerSaving());
 		ont.setOperationModeSetting(dev.getOperationModeSetting());
@@ -43,6 +47,7 @@ public class OntologyHelper {
 
 		
 		//Profile object
+		ont.setInscanceCode(dev.getInstanceCode());
 		ont.setIPAddress(dev.getDeviceIP());
 		ont.setBusinessFacilityCode(dev.getBusinessFacilityCode());
 		ont.setCumulativeOperatingTime(dev.getCumulativeTime());
@@ -63,6 +68,7 @@ public class OntologyHelper {
 		ont.setProductionNumber(dev.getProductNumber());
 		ont.setRemoteControlSetting(dev.isThroughPublicNetwork());
 	}
+	
 
 
 }

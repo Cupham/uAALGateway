@@ -363,7 +363,60 @@ public class EchonetDataConverter {
 			}
 		}
 	}
-
+	public static ObjectData installLocationtoDataObj(String installation) {
+		ObjectData data = null;
+		switch (installation.trim()) {
+		case "Living room":
+			data = new ObjectData((byte)0x08);
+			break;
+		case "Dining room":
+			data = new ObjectData((byte)0x10);
+			break;
+		case "Kitchen":
+			data = new ObjectData((byte)0x18);
+			break;
+		case "Bathroom":
+			data = new ObjectData((byte)0x20);
+			break;
+		case "Lavatory":
+			data = new ObjectData((byte)0x28);
+			break;
+		case "Washroom":		
+		case "changing room":
+			data = new ObjectData((byte)0x30);
+			break;
+		case "Passageway":
+			data = new ObjectData((byte)0x38);
+			break;
+		case "Room":
+			data = new ObjectData((byte)0x40);
+			break;
+		case "Stairway":
+			data = new ObjectData((byte)0x48);
+			break;
+		case "Front door":
+			data = new ObjectData((byte)0x50);
+			break;
+		case "Storeroom":
+			data = new ObjectData((byte)0x58);
+			break;
+		case "Garden":			
+		case "perimeter":
+			data = new ObjectData((byte)0x60);
+			break;	
+		case "Garage":
+			data = new ObjectData((byte)0x68);
+			break;
+		case "Veranda":
+		case "balcony":
+			data = new ObjectData((byte)0x70);
+			break;
+		default:
+			data = new ObjectData((byte)0x78);
+			break;
+		}
+		return data;
+	}
 	public static Date dataDateTime(ObjectData odata) {
 		try {
 			Calendar calendar = Calendar.getInstance();

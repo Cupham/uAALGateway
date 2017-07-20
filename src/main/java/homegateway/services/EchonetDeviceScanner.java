@@ -25,49 +25,20 @@ import echowand.service.result.UpdateRemoteInfoResult;
 public class EchonetDeviceScanner {
 	private Service service;
 	
-	public EchonetDeviceScanner(Service ser) {
-		this.service = ser;
+	public EchonetDeviceScanner(Service service) {
+		this.service = service;
 	}
 	
 	public static EchonetLiteDevice getDeviceResources(Service service, Node node) 
 			throws EchonetObjectException, SubnetException {
 
-		/*
-		// GetResult getResult = service.doGet(service.getGroupNode(), new EOJ("0ef001"), EPC.xD6, 5000);
-		
-		try {
-			service.doUpdateRemoteInfo(5000).join();
-		} catch (InterruptedException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		
-		for (Node node1 : service.getRemoteNodes()) {
-			for (EOJ eoj: service.getRemoteEOJs(node)) {
-				System.out.println(node1 + " " + eoj);
-			}
-		}
-
-		
-		GetResult getResult = service.doGet(service.getGroupNode(), new EOJ("001100"), EPC.xE0, 5000);
-		
-		try {
-			getResult.join();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		for (ResultData resultData : getResult.getDataList()) {
-			System.out.println(resultData.node + ": " + resultData.eoj + " " + resultData.data);
-		}
-		*/
 		
 		EchonetLiteDevice eDevice = new EchonetLiteDevice();
 		List<EOJ> eojs = service.getRemoteEOJs(node);
 		for(EOJ eoj : eojs) {
 			RemoteObject remoteobject = service.getRemoteObject(node, eoj);
 			if (eoj.isNodeProfileObject()) {
+				// TODO: Replace remoteObject by doGet to reduce the time.
 				/*
 				Node node = remoteobject.getNode();
 				EOJ eoj = remoteobject.getEOJ();

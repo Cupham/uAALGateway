@@ -15,6 +15,8 @@ public class TemperatureSensor extends SensorRelatedOntology{
 	}
 	public TemperatureSensor(String URI) {
 		super(URI);
+		setProperty(PROPERTY_HAS_CLASS_CODE, (byte)0x11);
+		
 	}
 	public String getClassURI(){
 		return MY_URI;

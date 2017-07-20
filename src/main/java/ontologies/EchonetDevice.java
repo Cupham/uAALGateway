@@ -9,6 +9,9 @@ import mainpackage.CaressesOntology;
 public class EchonetDevice extends Device{
 	public static final String MY_URI = CaressesOntology.NAMESPACE + "echonet_device";
 	public static final String PROPERTY_IS_SMART_FACILITY_COMPONENT = CaressesOntology.NAMESPACE + "is_smart_facility_component";
+	public static final String PROPERTY_HAS_CLASS_GROUP_CODE = CaressesOntology.NAMESPACE + "echonet_device_has_class_group_code";
+	public static final String PROPERTY_HAS_CLASS_CODE = CaressesOntology.NAMESPACE + "echonet_device_has_class_code";
+	public static final String PROPERTY_HAS_INSTANCE_CODE = CaressesOntology.NAMESPACE + "echonet_device_has_instance_code";
 	public static final String PROPERTY_HAS_OPERATION_STATUS = CaressesOntology.NAMESPACE +"echonet_device_has_operation_status";
 	public static final String PROPERTY_HAS_IP_ADDRESS = CaressesOntology.NAMESPACE + "echonet_device_has_IP_address";
 	public static final String PROPERTY_HAS_INSTALLATION_LOCATION = CaressesOntology.NAMESPACE +"echonet_device_has_installation_ocation";
@@ -44,6 +47,30 @@ public class EchonetDevice extends Device{
 
 	public  String getClassURI() {
 		return MY_URI;
+	}
+	
+	public byte getClassGroupCode(){
+		Byte cg_Code = (Byte) getProperty(PROPERTY_HAS_CLASS_GROUP_CODE);
+		return (cg_Code == null) ? null : cg_Code.byteValue(); 
+	}	
+	public void setClassGroupCode(byte msg) {
+		changeProperty(PROPERTY_HAS_CLASS_GROUP_CODE, new Byte(msg));	
+	}
+	
+	public byte getClassCode(){
+		Byte c_Code = (Byte) getProperty(PROPERTY_HAS_CLASS_CODE);
+		return (c_Code == null) ? null : c_Code.byteValue(); 
+	}	
+	public void setClassCode(byte msg) {
+		changeProperty(PROPERTY_HAS_CLASS_CODE, new Byte(msg));	
+	}
+	
+	public byte getInstanceCode(){
+		Byte i_Code = (Byte) getProperty(PROPERTY_HAS_INSTANCE_CODE);
+		return (i_Code == null) ? null : i_Code.byteValue(); 
+	}	
+	public void setInscanceCode(byte msg) {
+		changeProperty(PROPERTY_HAS_INSTANCE_CODE, new Byte(msg));	
 	}
 	
 	

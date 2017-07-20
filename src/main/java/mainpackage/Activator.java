@@ -28,8 +28,8 @@ import echowand.service.Service;
 import homegateway.services.EchonetDeviceScanner;
 import homegateway.services.EchonetDeviceUpdater;
 import ontologies.HomeAirConditioner;
-import ontologies.OntologyHelper;
 import ontologies.TemperatureSensor;
+import utils.OntologyHelper;
 
 
 
@@ -43,6 +43,7 @@ public class Activator implements BundleActivator {
 	public static Core echonetCore;
 	public static Service echonetService = null;
 	public static EchonetDeviceUpdater deviceUpdater = null;
+	public static EchonetDeviceScanner deviceScanner = null;
 
 	public static SCallee_CAHRIM scallee_CAHRIM;
 	public static SCallee_CKB    scallee_CKB;
@@ -256,6 +257,7 @@ public class Activator implements BundleActivator {
 			echonetCore = new Core(Inet4Subnet.startSubnet(nif));
 			echonetCore.startService();
 			echonetService = new Service(echonetCore);
+			deviceScanner = new EchonetDeviceScanner(Activator.echonetService);
 			deviceUpdater = new EchonetDeviceUpdater(echonetService);
 			isSuccessed = true;
 		} 
@@ -266,7 +268,6 @@ public class Activator implements BundleActivator {
 	}
 	public void getHomeResource() {
 		System.out.println("Getting Device Resources...");
-		EchonetDeviceScanner deviceScanner = new EchonetDeviceScanner(Activator.echonetService);
 		ArrayList<eTemperatureSensor> sensorList = new ArrayList<eTemperatureSensor>();
 		ArrayList<eAirConditioner> airConditionerList =  new ArrayList<eAirConditioner>();
 		try {
@@ -307,8 +308,10 @@ public class Activator implements BundleActivator {
 					Activator.i_TemperatureSensor = new TemperatureSensor(CaressesOntology.NAMESPACE +"I_TemperatureSensor"+uriSuffix);
 					OntologyHelper.initTemperatureSensorOntology(temperatureSensor, Activator.i_TemperatureSensor);	
 					Activator.temperatureSensorOntologies.add(Activator.i_TemperatureSensor);
+				    ContextEvent sen  = new ContextEvent(Activator.i_TemperatureSensor, TemperatureSensor.MY_URI);
+					cpublisher.publishCE(sen);
 					//ContextEvent temp  = new ContextEvent(, TemperatureSensor.MY_URI);
-					cpublisher.publishCE(Activator.i_TemperatureSensor);
+					//cpublisher.publishCE(Activator.i_TemperatureSensor);
 					
 				}
 			}
@@ -323,8 +326,8 @@ public class Activator implements BundleActivator {
 					Activator.i_HomeAirConditoner = new HomeAirConditioner(CaressesOntology.NAMESPACE +"I_Airconditioner"+uriSuffix);
 					OntologyHelper.initHomeAirconditionerOntology(airconditioner, Activator.i_HomeAirConditoner);
 					Activator.homeAirconditionerOntologies.add(Activator.i_HomeAirConditoner);
-					//ContextEvent air  = new ContextEvent(Activator.i_HomeAirConditoner, HomeAirConditioner.MY_URI);
-					//cpublisher.publishCE(air);
+					ContextEvent air  = new ContextEvent(Activator.i_HomeAirConditoner, HomeAirConditioner.MY_URI);
+					cpublisher.publishCE(air);
 					//System.out.println("Published: " + Activator.i_HomeAirConditoner.getProperty(TemperatureSensor.MY_URI));
 					
 				}
