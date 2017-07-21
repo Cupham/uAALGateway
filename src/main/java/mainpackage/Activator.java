@@ -308,10 +308,8 @@ public class Activator implements BundleActivator {
 					Activator.i_TemperatureSensor = new TemperatureSensor(CaressesOntology.NAMESPACE +"I_TemperatureSensor"+uriSuffix);
 					OntologyHelper.initTemperatureSensorOntology(temperatureSensor, Activator.i_TemperatureSensor);	
 					Activator.temperatureSensorOntologies.add(Activator.i_TemperatureSensor);
-				    ContextEvent sen  = new ContextEvent(Activator.i_TemperatureSensor, TemperatureSensor.MY_URI);
-					cpublisher.publishCE(sen);
-					//ContextEvent temp  = new ContextEvent(, TemperatureSensor.MY_URI);
-					//cpublisher.publishCE(Activator.i_TemperatureSensor);
+				   // ContextEvent sen  = new ContextEvent(Activator.i_TemperatureSensor, TemperatureSensor.MY_URI);
+					//cpublisher.publishCE(sen);
 					
 				}
 			}
@@ -326,9 +324,8 @@ public class Activator implements BundleActivator {
 					Activator.i_HomeAirConditoner = new HomeAirConditioner(CaressesOntology.NAMESPACE +"I_Airconditioner"+uriSuffix);
 					OntologyHelper.initHomeAirconditionerOntology(airconditioner, Activator.i_HomeAirConditoner);
 					Activator.homeAirconditionerOntologies.add(Activator.i_HomeAirConditoner);
-					ContextEvent air  = new ContextEvent(Activator.i_HomeAirConditoner, HomeAirConditioner.MY_URI);
-					cpublisher.publishCE(air);
-					//System.out.println("Published: " + Activator.i_HomeAirConditoner.getProperty(TemperatureSensor.MY_URI));
+					//ContextEvent air  = new ContextEvent(Activator.i_HomeAirConditoner, HomeAirConditioner.MY_URI);
+					//cpublisher.publishCE(air);
 					
 				}
 			}
@@ -348,16 +345,8 @@ public class Activator implements BundleActivator {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} finally {
-			System.out.println(Activator.temperatureSensorOntologies.size() + " temperature sensor");
-			System.out.println("	RDFObjectList<TemperatureSensor>.get(0)ne :");
-			System.out.println("		URI:"+Activator.temperatureSensorOntologies.get(0).getURI());
-			System.out.println("		OP:"+Activator.temperatureSensorOntologies.get(0).getOperationStatus());
-			System.out.println("		LOC:"+Activator.temperatureSensorOntologies.get(0).getMesuredTemperatureValue());
-			
+			System.out.println(Activator.temperatureSensorOntologies.size() + " temperature sensor");		
 			System.out.println(Activator.homeAirconditionerOntologies.size() + " AirConditioner");
-			System.out.println("	RDFObjectList<homeAirconditionerOntologies>.get(0)aaaaa:");
-			System.out.println("		URI:"+Activator.homeAirconditionerOntologies.get(0).getClassURI());
-			System.out.println("		OP:"+Activator.homeAirconditionerOntologies.get(0).getAirFlowRateSetting());
 		}
 	}
 

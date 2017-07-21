@@ -69,7 +69,7 @@ public class EchonetDevice extends Device{
 		Byte i_Code = (Byte) getProperty(PROPERTY_HAS_INSTANCE_CODE);
 		return (i_Code == null) ? null : i_Code.byteValue(); 
 	}	
-	public void setInscanceCode(byte msg) {
+	public void setInstanceCode(byte msg) {
 		changeProperty(PROPERTY_HAS_INSTANCE_CODE, new Byte(msg));	
 	}
 	
@@ -88,7 +88,7 @@ public class EchonetDevice extends Device{
 		return (ipAddr == null) ? "EMPTY_MSG" : ipAddr; 
 	}	
 	public void setIPAddress(String msg) {
-		changeProperty(PROPERTY_HAS_OPERATION_STATUS, msg);	
+		changeProperty(PROPERTY_HAS_IP_ADDRESS, msg);	
 	}
 
 	

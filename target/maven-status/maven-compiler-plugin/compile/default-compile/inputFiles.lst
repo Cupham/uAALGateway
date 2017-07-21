@@ -98,6 +98,7 @@
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echonet/objects/eLighting.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echowand/info/HumiditySensorInfo.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/mainpackage/D1_1.java
+/home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/utils/OntologyHelper.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echowand/service/result/ResultDataSelector.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echonet/objects/eAirConditioner.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/mainpackage/D2_2.java
@@ -150,7 +151,6 @@
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echowand/info/BasicObjectInfo.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echowand/object/LocalObjectDelegate.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echowand/logic/Listener.java
-/home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/ontologies/OntologyHelper.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/mainpackage/DataMessage.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echowand/net/Payload.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echowand/net/InetNode.java

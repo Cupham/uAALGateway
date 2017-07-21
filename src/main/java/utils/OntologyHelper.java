@@ -14,9 +14,18 @@ public class OntologyHelper {
 		ont.setMesuredTemperatureValue(dev.getTemperature());
 
 		//Profile object
-		ont.setInscanceCode(dev.getInstanceCode());
+		if(dev.getInstanceCode() == (byte)0x01) {
+			System.out.println("awesome");
+		}
+		ont.setInstanceCode( dev.getInstanceCode());
+		if(ont.getInstanceCode() == (byte)0x01) {
+			System.out.println("awesome");
+		}
+		System.out.println(dev.getInstanceCode() + "  GroupCode" + ont.getInstanceCode());
 		ont.setIPAddress(dev.getDeviceIP());
+		System.out.println(dev.getDeviceIP() + "  IP" + ont.getIPAddress());
 		ont.setBusinessFacilityCode(dev.getBusinessFacilityCode());
+		System.out.println(dev.getBusinessFacilityCode() + "  Facility" + ont.getBusinessFacilityCode());
 		ont.setCumulativeOperatingTime(dev.getCumulativeTime());
 		ont.setCurrentDateSetting(ont.getCurrentDateSetting());
 		ont.setCurrentLimitSetting(ont.getCurrentLimitSetting());
@@ -47,7 +56,7 @@ public class OntologyHelper {
 
 		
 		//Profile object
-		ont.setInscanceCode(dev.getInstanceCode());
+		ont.setInstanceCode(dev.getInstanceCode());
 		ont.setIPAddress(dev.getDeviceIP());
 		ont.setBusinessFacilityCode(dev.getBusinessFacilityCode());
 		ont.setCumulativeOperatingTime(dev.getCumulativeTime());

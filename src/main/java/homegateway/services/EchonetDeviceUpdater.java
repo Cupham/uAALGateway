@@ -34,5 +34,22 @@ public class EchonetDeviceUpdater {
 		}
 		return false;
 	}
+	
+	public boolean setDevice(String nodeIP, EOJ eoj, EPC epc, ObjectData value)
+			throws SocketException, SubnetException, TooManyObjectsException, EchonetObjectException,
+			ObjectNotFoundException, InterruptedException {
+
+		System.out.println(String.format("[UPDATE] Start updating device: IP: %s" + ", EOJ:%s, EPC:%s, Value: %s",
+				nodeIP, eoj.toString(), epc.toString(), value.toString()));
+		long startTime = System.currentTimeMillis();
+		// update execute
+		Node node = service.getRemoteNode(nodeIP);
+		if (service.setRemoteData(node, eoj, epc, value)) {
+			long updateTime = System.currentTimeMillis() - startTime;
+			System.out.println("[UPDATE] Time update device: " + updateTime + " ms");
+			return true;
+		}
+		return false;
+	}
 
 }

@@ -65,7 +65,7 @@ public class SCallee_SmartEnvironmentProvidedService extends EchonetService{
 
 		String[] ppTemperature_Sensors = new String[]{EchonetService.PROP_PROVIDES_TEMPERATURE_SENSOR_SERVICE};
 		String[] ppTemperature_Sensor_OperationStatus = new String[]{EchonetService.PROP_PROVIDES_TEMPERATURE_SENSOR_SERVICE,TemperatureSensor.PROPERTY_HAS_OPERATION_STATUS};
-		String[] ppTemperature_Sensor_InstallationLocation = new String[]{EchonetService.PROP_PROVIDES_TEMPERATURE_SENSOR_SERVICE,TemperatureSensor.PROPERTY_HAS_OPERATION_STATUS};
+		String[] ppTemperature_Sensor_InstallationLocation = new String[]{EchonetService.PROP_PROVIDES_TEMPERATURE_SENSOR_SERVICE,TemperatureSensor.PROPERTY_HAS_INSTALLATION_LOCATION};
 
 		
 		String[] ppAirconditioner = new String[]{EchonetService.PROP_PROVIDES_AIRCONDTIONER_SERVICE};

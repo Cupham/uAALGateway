@@ -92,8 +92,7 @@ public class CSubscriber extends ContextSubscriber {
 		String thePredicate = event.getRDFPredicate().substring(CaressesOntology.NAMESPACE.length());
 		Object theObject    = event.getRDFObject();
 		String theSubjectClass = theSubject.substring(2);
-		System.out.println(event.getRDFSubject().toString());
-		/*
+		
 		if(theSubjectClass.equals("D1.1")){
 			if(event.getRDFPredicate().equals(D1_1.PROPERTY_HAS_D1_1_DESCRIPTION)){
 				
@@ -242,7 +241,7 @@ public class CSubscriber extends ContextSubscriber {
 			}
 		}
 		SubscriptionHandler.handleSubscribedMessage(theSubjectClass);
-	    
+	    /*
 		try {
 			ConnectionHandler.send(theSubjectClass, (String) theObject);
 		} catch (IOException e) {

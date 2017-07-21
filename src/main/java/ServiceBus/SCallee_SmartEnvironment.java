@@ -59,7 +59,6 @@ public class SCallee_SmartEnvironment extends ServiceCallee {
 
 		} else if(operation.startsWith(SCallee_SmartEnvironmentProvidedService.SERVICE_TURN_OFF_TEMPERATURE_SENSOR)){
 			TemperatureSensor inputSS = (TemperatureSensor) call.getInputValue(SCallee_SmartEnvironmentProvidedService.INPUT_TEMPERATURE_SENSOR_URI);
-			
 			System.out.println("Turning OFF a temperature sensor with URI: " + inputSS.toString());
 			try {
 				sr = turnOFFTemperatureSensor(inputSS);
@@ -89,35 +88,35 @@ public class SCallee_SmartEnvironment extends ServiceCallee {
 	
 	public ServiceResponse getTemperatureSensors() {
 		ServiceResponse sr = null;
-		System.out.println("	Getting RDF Objects from uAAL Objects (TemperatureSensor)");
+		System.out.println("SCallee_SmartEnvironment:	Returning all temperature sensors in iHouse");
 		if(Activator.temperatureSensorOntologies != null) {
-			System.out.println("	RDFObjectList<TemperatureSensor>.Size="+Activator.temperatureSensorOntologies.size());
-			System.out.println("	RDFObjectList<TemperatureSensor>.get(0)aaaaa:");
-			System.out.println("		URI:"+Activator.temperatureSensorOntologies.get(0).getProperty(TemperatureSensor.MY_URI));
-			System.out.println("		OP:"+Activator.temperatureSensorOntologies.get(0).getOperationStatus());
-			System.out.println("		LOC:"+Activator.temperatureSensorOntologies.get(0).getMesuredTemperatureValue());
-			
-
 			sr = new ServiceResponse(CallStatus.succeeded);
 			sr.addOutput(new ProcessOutput(
 					SCallee_SmartEnvironmentProvidedService.OUTPUT_TEMPERATURE_SENSORS
 					,Activator.temperatureSensorOntologies));
+			System.out.println("SCallee_SmartEnvironment:	Returned " +Activator.temperatureSensorOntologies.size() 
+					+" temperature sensors");
 		} else {
 			sr = new ServiceResponse(CallStatus.denied);
+			System.out.println("SCallee_SmartEnvironment:	Can not get temperature sensors from iHouse");
 		}	
 		return sr;
 	}
 	public ServiceResponse turnONTemperatureSensor(TemperatureSensor sensor) throws SocketException, SubnetException, TooManyObjectsException, EchonetObjectException, ObjectNotFoundException, InterruptedException {
 		ServiceResponse sr = null;
 		if(sensor != null) {
-			System.out.println("SCallee_SmartEnvironment:	Turning ON a temperature sensor with URI: " + sensor.getURI());
+			System.out.println("SCallee_SmartEnvironment:	Turning ON a temperature sensor with IP: " + sensor.getIPAddress());
+			System.out.println(sensor.getClassGroupCode() + " " + sensor.getClassCode() + "aadsd" + sensor.getInstanceCode());
 			EOJ eoj = new EOJ(sensor.getClassGroupCode(), sensor.getClassCode(), sensor.getInstanceCode());
+			System.out.println("EOJ: " + eoj.toString());
 			ObjectData data = new ObjectData((byte) 0x30);
 			boolean rs = Activator.deviceUpdater.updateDeviceAttribute(sensor.getIPAddress(), eoj,EPC.x80 , data);
 			if(rs) {
 				sr = new ServiceResponse(CallStatus.succeeded);
+				System.out.println("SCallee_SmartEnvironment:	Turned ON successfully");
 			} else {
 				sr = new ServiceResponse(CallStatus.denied);
+				System.out.println("SCallee_SmartEnvironment:	Can not turn ON specific device");
 			}
 		} else {
 			System.out.println("SCallee_SmartEnvironment:	Error input required!");
@@ -129,14 +128,18 @@ public class SCallee_SmartEnvironment extends ServiceCallee {
 	public ServiceResponse turnOFFTemperatureSensor(TemperatureSensor sensor) throws SocketException, SubnetException, TooManyObjectsException, EchonetObjectException, ObjectNotFoundException, InterruptedException {
 		ServiceResponse sr = null;
 		if(sensor != null) {
-			System.out.println("SCallee_SmartEnvironment:	Turning OFF a temperature sensor with URI: " + sensor.getURI());
+			System.out.println("SCallee_SmartEnvironment:	Turning OFF a temperature sensor with with IP: " + sensor.getIPAddress()
+			+sensor.getClassGroupCode() + sensor.getClassCode()+ sensor.getInstanceCode());
+			
 			EOJ eoj = new EOJ(sensor.getClassGroupCode(), sensor.getClassCode(), sensor.getInstanceCode());
 			ObjectData data = new ObjectData((byte) 0x31);
 			boolean rs = Activator.deviceUpdater.updateDeviceAttribute(sensor.getIPAddress(), eoj,EPC.x80 , data);
 			if(rs) {
 				sr = new ServiceResponse(CallStatus.succeeded);
+				System.out.println("SCallee_SmartEnvironment:	Turned OFF successfully");
 			} else {
 				sr = new ServiceResponse(CallStatus.denied);
+				System.out.println("SCallee_SmartEnvironment:	Can not turn OFF specific device");
 			}
 		} else {
 			System.out.println("SCallee_SmartEnvironment:	Error input required!");
@@ -150,15 +153,17 @@ public class SCallee_SmartEnvironment extends ServiceCallee {
 		ObjectData data = null;
 		data = EchonetDataConverter.installLocationtoDataObj(location.trim());
 		if(sensor != null && data !=null) {
-			System.out.println("SCallee_SmartEnvironment:	Change location of a temperature sensor with URI: " + sensor.getURI() 
+			System.out.println("SCallee_SmartEnvironment:	Change location of a temperature sensor with IP: " + sensor.getIPAddress() 
 			+ "by a new value: " + location);
 			
 			EOJ eoj = new EOJ(sensor.getClassGroupCode(), sensor.getClassCode(), sensor.getInstanceCode());
 			boolean rs = Activator.deviceUpdater.updateDeviceAttribute(sensor.getIPAddress(), eoj,EPC.x81 , data);
 			if(rs) {
 				sr = new ServiceResponse(CallStatus.succeeded);
+				System.out.println("SCallee_SmartEnvironment:	Set location successfully");
 			} else {
 				sr = new ServiceResponse(CallStatus.denied);
+				System.out.println("SCallee_SmartEnvironment:	Can not set location for this device");
 			}
 		} else {
 			System.out.println("SCallee_SmartEnvironment:	Error input required!");
@@ -166,31 +171,5 @@ public class SCallee_SmartEnvironment extends ServiceCallee {
 		}	
 		return sr;
 	}
-	/*
-	public ServiceResponse getTemperature() {
-		ServiceResponse sr = null;
-		System.out.println("	Getting RDF Objects from uAAL Objects (TemperatureSensor)");
-		if(Activator.temperatureSensorOntologies != null) {
-			System.out.println("	RDFObjectList<TemperatureSensor>.Size="+Activator.temperatureSensorOntologies.size());
-			System.out.println("	RDFObjectList<TemperatureSensor>.get(0)aaaaa:");
-			System.out.println("		URI:"+Activator.temperatureSensorOntologies.get(0).getClassURI());
-			System.out.println("		OP:"+Activator.temperatureSensorOntologies.get(0).getOperationStatus());
-			System.out.println("		LOC:"+Activator.temperatureSensorOntologies.get(0).getMesuredTemperatureValue());
-			ArrayList<Float> respData = new ArrayList<Float>();
-			for(int i =0; i <Activator.temperatureSensorOntologies.size();i++) {
-				respData.add(Activator.temperatureSensorOntologies.get(i).getMesuredTemperatureValue());
-				;
-			}
-			sr = new ServiceResponse(CallStatus.succeeded);
-			sr.addOutput(new ProcessOutput(
-					SCallee_SmartEnvironmentProvidedService.OUTPUT_TEMPERATURE_SENSOR_TEMPERATURE
-					,respData));
-		} else {
-			sr = new ServiceResponse(CallStatus.denied);
-		}
-		//System.out.println("		Message:"+Activator.temperatureSensorOntologies.get(0).getMessage());
-		
-		return sr;
-	}*/
 
 }
