@@ -1,6 +1,6 @@
 package echowand.net;
 /*
- * @author HiepNguyen
+ * @author CuPham
  */
 public interface Connection {
 	public NodeInfo getLocalNodeInfo();

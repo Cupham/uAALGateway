@@ -1,7 +1,7 @@
 package echowand.util;
 
 /*
- * @author HiepNguyen
+ * @author CuPham
  */
 public interface Constraint {
 	public boolean isValid(byte[] data);

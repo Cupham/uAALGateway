@@ -19,7 +19,7 @@ import echowand.object.RemoteObjectManager;
 import echowand.object.SetGetRequestProcessor;
 
 /**
- * @author HIEP NGUYEN
+ * @author CuPham
  */
 public class Core {
     private static final Logger LOGGER = Logger.getLogger(Core.class.getName());

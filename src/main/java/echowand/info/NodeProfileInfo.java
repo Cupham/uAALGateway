@@ -7,7 +7,7 @@ import echowand.util.ConstraintSize;
 import echowand.util.ConstraintUnion;
 
 /*
- * @author HiepNguyen
+ * @author CuPham
  */
 public class NodeProfileInfo extends BasicObjectInfo {
 	private byte[] versionBytes = {0x01, 0x01, 0x01, 0x00};

@@ -5,7 +5,7 @@ import java.util.Arrays;
 import echowand.common.PropertyMap;
 import echowand.util.ConstraintSize;
 /*
- * @author HiepNguyen
+ * @author CuPham
  */
 public class PropertyConstraintMap extends ConstraintSize {
 	public PropertyConstraintMap() {

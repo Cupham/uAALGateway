@@ -66,7 +66,7 @@ public class EchonetDevice extends Device{
 	}
 	
 	public byte getInstanceCode(){
-		Byte i_Code = (Byte) getProperty(PROPERTY_HAS_INSTANCE_CODE);
+		Byte i_Code = Byte.parseByte(getProperty(PROPERTY_HAS_INSTANCE_CODE).toString());
 		return (i_Code == null) ? null : i_Code.byteValue(); 
 	}	
 	public void setInstanceCode(byte msg) {

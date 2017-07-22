@@ -1,7 +1,7 @@
 package echowand.util;
 
 /*
- * @author HiepNguyen
+ * @author CuPham
  */
 public class ConstraintUnion implements Constraint {
 	Constraint constraint1;

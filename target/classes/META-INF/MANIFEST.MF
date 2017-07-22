@@ -1,5 +1,5 @@
 Manifest-Version: 1.0
-Bnd-LastModified: 1500619743001
+Bnd-LastModified: 1500710709230
 Build-Jdk: 1.8.0_131
 Built-By: elite
 Bundle-Activator: mainpackage.Activator

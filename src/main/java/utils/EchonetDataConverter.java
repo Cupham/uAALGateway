@@ -198,6 +198,33 @@ public class EchonetDataConverter {
 		return rs;
 	}
 	
+	public static ObjectData dataFromAirConditionerOperationMode(String mode) {
+		ObjectData rs = null;
+
+		switch (mode.toLowerCase().trim()) {
+			case "automatic":
+				rs = new ObjectData((byte)0x41);
+				break;
+			case "cooling":
+				rs = new ObjectData((byte)0x42);
+				break;
+			case "heating":
+				rs = new ObjectData((byte)0x43);
+				break;
+			case "dehumidification":
+				rs = new ObjectData((byte)0x44);
+				break;
+			case "air circulator":
+				rs = new ObjectData((byte)0x45);
+			break;
+			default:
+				rs = new ObjectData((byte)0x40);
+				break;
+		}
+		
+		return rs;
+	}
+	
 	public static String dataToAirConditionerFlowRate(ObjectData data) {
 		int dataSize = data.size();
 		String rs = "";
@@ -210,35 +237,72 @@ public class EchonetDataConverter {
 				rs = "Automatic";
 				break;
 			case (byte) 0x31:
-				rs = "Level: 1";
+				rs = "Level 1";
 				break;
 			case (byte) 0x32:
-				rs = "Level: 2";
+				rs = "Level 2";
 				break;
 			case (byte) 0x33:
-				rs = "Level: 3";
+				rs = "Level 3";
 				break;
 			case (byte) 0x34:
-				rs = "Level: 4";
+				rs = "Level 4";
 			break;
 			case (byte) 0x35:
-				rs = "Level: 5";
+				rs = "Level 5";
 			break;
 			case (byte) 0x36:
-				rs = "Level: 6";
+				rs = "Level 6";
 				break;
 			case (byte) 0x37:
-				rs = "Level: 7";
+				rs = "Level 7";
 			break;
 			case (byte) 0x38:
-				rs = "Level: 8";
+				rs = "Level 8";
 			break;
 			default:
-				rs = "OFF";
+				rs = "Automatic";
 				break;
 		}
 		
 		return rs;
+	}
+	
+	public static ObjectData dataFromAirConditionerFlowRate(String airFlowRate) {
+		ObjectData data = null;
+		switch (airFlowRate.trim().toLowerCase()) {
+		case "automatic":
+			data = new ObjectData((byte)0x41);
+			break;
+		case "level 1":
+			data = new ObjectData((byte)0x31);
+			break;
+		case "level 2":
+			data = new ObjectData((byte)0x32);
+			break;
+		case "level 3":
+			data = new ObjectData((byte)0x33);
+			break;
+		case "level 4":
+			data = new ObjectData((byte)0x34);
+			break;
+		case "level 5":		
+			data = new ObjectData((byte)0x35);
+			break;
+		case "level 6":
+			data = new ObjectData((byte)0x36);
+			break;
+		case "level 7":
+			data = new ObjectData((byte)0x37);
+			break;
+		case "level 8":
+			data = new ObjectData((byte)0x38);
+			break;
+		default:
+			data = new ObjectData((byte)0x41);
+			break;
+		}
+		return data;
 	}
 
 	/**

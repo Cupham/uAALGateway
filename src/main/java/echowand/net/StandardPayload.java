@@ -8,7 +8,7 @@ import echowand.common.EOJ;
 import echowand.common.ESV;
 
 /*
- * @author HiepNguyen
+ * @author CuPham
  */
 public class StandardPayload implements Payload {
 	private EOJ seoj;

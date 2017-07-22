@@ -2,7 +2,7 @@ package echowand.util;
 
 import echowand.util.ConstraintSize;
 /*
- * @author HiepNguyen
+ * @author CuPham
  */
 public class ConstraintByte extends ConstraintSize {
 	private boolean isSigned;

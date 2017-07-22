@@ -3,7 +3,7 @@ package echowand.info;
 import echowand.common.ClassEOJ;
 import echowand.common.EPC;
 /*
- * @author HiepNguyen
+ * @author CuPham
  */
 public interface ObjectInfo {
 	public ClassEOJ getClassEOJ();

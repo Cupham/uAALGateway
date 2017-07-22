@@ -3,7 +3,7 @@ package echowand.net;
 import java.util.Arrays;
 
 /*
- * @author HiepNguyen
+ * @author CuPham
  */
 
 public class SimplePayload implements Payload {

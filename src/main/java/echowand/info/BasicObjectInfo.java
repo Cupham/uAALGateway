@@ -11,7 +11,7 @@ import echowand.common.EPC;
 import echowand.common.PropertyMap;
 import echowand.util.Constraint;
 /*
- * @author HiepNguyen
+ * @author CuPham
  */
 public class BasicObjectInfo implements ObjectInfo {
 	private static final Logger logger = Logger.getLogger(DeviceObjectInfo.class.getName());

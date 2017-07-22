@@ -5,7 +5,7 @@ import echowand.util.ConstraintByte;
 import echowand.util.ConstraintUnion;
 
 /**
- * @author HIEP NGUYEN
+ * @author CuPham
  */
 public class PropertyConstraintHumidity implements Constraint {
     private static final byte MIN_VALUE = (byte)0x00;
