@@ -10,6 +10,7 @@ import org.universAAL.middleware.rdf.TypeMapper;
 /* More on how to use this class at: 
  * http://forge.universaal.org/wiki/support:Developer_Handbook_5#Ontologies_in_universAAL */
 import org.universAAL.middleware.service.owls.profile.ServiceProfile;
+import org.universAAL.ontology.phThing.DeviceService;
 
 import mainpackage.Activator;
 import mainpackage.EchonetService;
@@ -20,11 +21,11 @@ import java.util.Hashtable;
 
 public class SCallee_SmartEnvironmentProvidedService extends EchonetService{
 
-	public static ServiceProfile[] profiles = new ServiceProfile[15];
+	public static ServiceProfile[] profiles = new ServiceProfile[12];
 	private static Hashtable serverLevelRestrictions = new Hashtable();
 	
-	public static final String NAMESPACE = "http://CARESSESuniversAALskeleton.org/Callee_SmartFacility.owl#";
-	public static final String MY_URI    = NAMESPACE + "Smart_Facility_Service";
+	public static final String NAMESPACE = "http://CARESSESuniversAALskeleton.org/Callee_SmartEnvironment.owl#";
+	public static final String MY_URI    = NAMESPACE + "Smart_Environment_Service";
 	
 	// : Services
 		//Temperature Sensor
@@ -73,17 +74,17 @@ public class SCallee_SmartEnvironmentProvidedService extends EchonetService{
 			}
 		}));
 
-		String[] ppTemperature_Sensors = new String[]{EchonetService.PROP_PROVIDES_TEMPERATURE_SENSOR_SERVICE};
-		String[] ppTemperature_Sensor_OperationStatus = new String[]{EchonetService.PROP_PROVIDES_TEMPERATURE_SENSOR_SERVICE,TemperatureSensor.PROPERTY_HAS_OPERATION_STATUS};
-		String[] ppTemperature_Sensor_InstallationLocation = new String[]{EchonetService.PROP_PROVIDES_TEMPERATURE_SENSOR_SERVICE,TemperatureSensor.PROPERTY_HAS_INSTALLATION_LOCATION};
+		String[] ppTemperature_Sensors = new String[]{EchonetService.PROP_PROVIDES_TEMPERATURE_SENSOR_SERVICE,TemperatureSensor.MY_URI};
+		String[] ppTemperature_Sensor_OperationStatus = new String[]{DeviceService.PROP_CONTROLS,EchonetService.PROP_PROVIDES_TEMPERATURE_SENSOR_SERVICE,TemperatureSensor.PROPERTY_HAS_OPERATION_STATUS};
+		String[] ppTemperature_Sensor_InstallationLocation = new String[]{DeviceService.PROP_CONTROLS,EchonetService.PROP_PROVIDES_TEMPERATURE_SENSOR_SERVICE,TemperatureSensor.PROPERTY_HAS_INSTALLATION_LOCATION};
 		
-		String[] ppAirconditioners = new String[]{EchonetService.PROP_PROVIDES_AIRCONDTIONER_SERVICE};
-		String[] ppAirconditioner_OperationStatus = new String[]{EchonetService.PROP_PROVIDES_AIRCONDTIONER_SERVICE,HomeAirConditioner.PROPERTY_HAS_OPERATION_STATUS};
-		String[] ppAirconditioner_InstallationLocation = new String[]{EchonetService.PROP_PROVIDES_AIRCONDTIONER_SERVICE,HomeAirConditioner.PROPERTY_HAS_INSTALLATION_LOCATION};
-		String[] ppAirconditioner_OperationPowerSaving = new String[]{EchonetService.PROP_PROVIDES_AIRCONDTIONER_SERVICE,HomeAirConditioner.PROPERTY_HAS_POWER_SAVING_OPERATION_SETTING};
-		String[] ppAirconditioner_OperationMode = new String[]{EchonetService.PROP_PROVIDES_AIRCONDTIONER_SERVICE,HomeAirConditioner.PROPERTY_HAS_OPERATION_MODE_SETTING};
-		String[] ppAirconditioner_TemperatureValue = new String[]{EchonetService.PROP_PROVIDES_AIRCONDTIONER_SERVICE,HomeAirConditioner.PROPERTY_HAS_SETTING_TEMPERATURE_VALUE};
-		String[] ppAirconditioner_AirFlowRate = new String[]{EchonetService.PROP_PROVIDES_AIRCONDTIONER_SERVICE,HomeAirConditioner.PROPERTY_HAS_AIR_FLOW_RATE_SETTING};
+		String[] ppAirconditioners = new String[]{EchonetService.PROP_PROVIDES_AIRCONDTIONER_SERVICE,HomeAirConditioner.MY_URI};
+		String[] ppAirconditioner_OperationStatus = new String[]{DeviceService.PROP_CONTROLS,EchonetService.PROP_PROVIDES_AIRCONDTIONER_SERVICE,HomeAirConditioner.PROPERTY_HAS_OPERATION_STATUS};
+		String[] ppAirconditioner_InstallationLocation = new String[]{DeviceService.PROP_CONTROLS,EchonetService.PROP_PROVIDES_AIRCONDTIONER_SERVICE,HomeAirConditioner.PROPERTY_HAS_INSTALLATION_LOCATION};
+		String[] ppAirconditioner_OperationPowerSaving = new String[]{DeviceService.PROP_CONTROLS,EchonetService.PROP_PROVIDES_AIRCONDTIONER_SERVICE,HomeAirConditioner.PROPERTY_HAS_POWER_SAVING_OPERATION_SETTING};
+		String[] ppAirconditioner_OperationMode = new String[]{DeviceService.PROP_CONTROLS,EchonetService.PROP_PROVIDES_AIRCONDTIONER_SERVICE,HomeAirConditioner.PROPERTY_HAS_OPERATION_MODE_SETTING};
+		String[] ppAirconditioner_TemperatureValue = new String[]{DeviceService.PROP_CONTROLS,EchonetService.PROP_PROVIDES_AIRCONDTIONER_SERVICE,HomeAirConditioner.PROPERTY_HAS_SETTING_TEMPERATURE_VALUE};
+		String[] ppAirconditioner_AirFlowRate = new String[]{DeviceService.PROP_CONTROLS,EchonetService.PROP_PROVIDES_AIRCONDTIONER_SERVICE,HomeAirConditioner.PROPERTY_HAS_AIR_FLOW_RATE_SETTING};
 		
 		
 		addRestriction((MergedRestriction)EchonetService.getClassRestrictionsOnProperty(
