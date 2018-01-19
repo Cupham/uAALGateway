@@ -1,18 +1,30 @@
 package echowand.service.result;
 
-import java.util.logging.Logger;
-
 import echowand.common.ESV;
 import echowand.net.Property;
 import echowand.net.StandardPayload;
+import echowand.service.TimestampManager;
+import java.util.logging.Logger;
 
 /**
  *
  * @author ymakino
  */
-public class SetGetResult extends ResultBase {
+public class SetGetResult extends ResultBase<SetGetResult> {
     private static final Logger LOGGER = Logger.getLogger(SetGetResult.class.getName());
     private static final String CLASS_NAME = SetGetResult.class.getName();
+    
+    public SetGetResult(TimestampManager timestampManager) {
+        super(SetGetResult.class, timestampManager);
+    }
+    
+    public synchronized void setSetGetListener(SetGetListener listener) {
+        LOGGER.entering(CLASS_NAME, "setSetGetListener", listener);
+        
+        setResultListener(listener);
+        
+        LOGGER.exiting(CLASS_NAME, "setSetGetListener");
+    }
     
     @Override
     public boolean isSuccessPayload(StandardPayload payload) {
@@ -49,7 +61,7 @@ public class SetGetResult extends ResultBase {
     public boolean isValidSecondProperty(Property property) {
         LOGGER.entering(CLASS_NAME, "isValidProperty", property);
         
-        boolean result = (property.getPDC() > 0);
+        boolean result = (property.getPDC() != 0);
         
         LOGGER.exiting(CLASS_NAME, "isValidProperty", result);
         return result;

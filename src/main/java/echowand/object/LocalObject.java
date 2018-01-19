@@ -1,15 +1,18 @@
 package echowand.object;
 
-import java.util.EnumMap;
-import java.util.LinkedList;
-import java.util.logging.Logger;
-
 import echowand.common.EOJ;
 import echowand.common.EPC;
 import echowand.info.ObjectInfo;
 import echowand.info.PropertyInfo;
 import echowand.util.Constraint;
+import java.util.EnumMap;
+import java.util.LinkedList;
+import java.util.logging.Logger;
 
+/**
+ * ローカルに存在するECHONETオブジェクト
+ * @author Yoshiki Makino
+ */
 public class LocalObject implements EchonetObject {
     private static final Logger logger = Logger.getLogger(LocalObject.class.getName());
     private static final String className = LocalObject.class.getName();
@@ -18,7 +21,11 @@ public class LocalObject implements EchonetObject {
     private ObjectInfo objectInfo;
     private EnumMap<EPC, ObjectData> propertyData;
     private LinkedList<LocalObjectDelegate> delegates;
-
+    
+    /**
+     * 指定されたオブジェクト情報を用いてLocaObjectを生成
+     * @param objectInfo 作成するLocalObjectのオブジェクト情報
+     */
     public LocalObject(ObjectInfo objectInfo) {
         logger.entering(className, "LocalObject", objectInfo);
         
@@ -39,7 +46,11 @@ public class LocalObject implements EchonetObject {
     private synchronized LinkedList<LocalObjectDelegate> cloneDelegates() {
         return new LinkedList<LocalObjectDelegate>(delegates);
     }
-
+    
+    /**
+     * EOJのインスタンスコードを新たに設定する。
+     * @param instanceCode 設定するインスタンスコード
+     */
     public void setInstanceCode(byte instanceCode) {
         logger.entering(className, "setInstanceCode", instanceCode);
         
@@ -47,7 +58,13 @@ public class LocalObject implements EchonetObject {
         
         logger.exiting(className, "setInstanceCode");
     }
-
+    
+    /**
+     * 指定されたEPCのプロパティのためにLocalObjectが内部で管理しているデータの内容を設定する。
+     * @param epc 設定するデータのEPC
+     * @param data 設定するデータの内容
+     * @return 設定に成功したらtrue、そうでなければfalse
+     */
     public synchronized boolean setInternalData(EPC epc, ObjectData data) {
         logger.entering(className, "setInternalData", new Object[]{epc, data});
         
@@ -62,7 +79,17 @@ public class LocalObject implements EchonetObject {
         return true;
     }
 
-    public boolean forceSetData(EPC epc, ObjectData data) {
+    /**
+     * 指定されたEPCのプロパティの内容をSetの許可がなくても強制的に変更する。
+     * LocalObject内部のデータと新たに指定されたデータを設定したSetResultオブジェクトをDelegateに順番に渡して行く。
+     * 最終的にSetResultが保持している新たに指定された値にLocalObject内部のデータを変更する。
+     * もしも、Delegateが処理に失敗した場合にはnullを返す。
+     *
+     * @param epc 設定するデータのEPC
+     * @param data 設定するデータの内容
+     * @return 設定に成功したらtrue、そうでなければfalse
+     */
+    public synchronized boolean forceSetData(EPC epc, ObjectData data) {
         logger.entering(className, "forceSetData", new Object[]{epc, data});
         
         ObjectData oldData = this.getData(epc);
@@ -84,8 +111,18 @@ public class LocalObject implements EchonetObject {
         return true;
     }
 
+    /**
+     * 指定されたEPCのプロパティの内容を変更する。 Setの許可がないプロパティへの操作や、データの制約に従わない操作は失敗する。
+     * LocalObject内部のデータと新たに指定されたデータを設定したSetResultオブジェクトをDelegateに順番に渡して行く。
+     * 最終的にSetResultが保持している新たに指定された値にLocalObject内部のデータを変更する。
+     * もしも、Delegateが処理に失敗した場合にはfalseを返す。
+     *
+     * @param epc 設定するデータのEPC
+     * @param data 設定するデータの内容
+     * @return 設定に成功したらtrue、そうでなければfalse
+     */
     @Override
-    public boolean setData(EPC epc, ObjectData data) {
+    public synchronized boolean setData(EPC epc, ObjectData data) {
         logger.entering(className, "setData", new Object[]{epc, data});
         
         if (!this.isSettable(epc)) {
@@ -105,6 +142,12 @@ public class LocalObject implements EchonetObject {
         return ret;
     }
 
+    /**
+     * 指定されたEPCのプロパティのためにLocalObjectが内部で管理しているデータの内容を返す。
+     *
+     * @param epc データのEPC
+     * @return プロパティのデータ、存在しない場合にはnull
+     */
     public synchronized ObjectData getInternalData(EPC epc) {
         logger.entering(className, "getInternalData", epc);
         
@@ -115,7 +158,16 @@ public class LocalObject implements EchonetObject {
         return data;
     }
 
-    public ObjectData forceGetData(EPC epc) {
+    /**
+     * 指定されたEPCのプロパティの内容をGetの許可がなくても強制的に返す。
+     * LocalObject内部のデータを設定したGetResultオブジェクトをDelegateに順番に渡して行く。
+     * 最終的にGetResultが保持している値を返す。
+     * もしも、Delegateが処理に失敗した場合にはnullを返す。
+     *
+     * @param epc データのEPC
+     * @return プロパティのデータ、存在しない場合にはnull
+     */
+    public synchronized ObjectData forceGetData(EPC epc) {
         logger.entering(className, "forceGetData", epc);
         
         LocalObjectDelegate.GetState result = getDataDelegate(epc);
@@ -129,8 +181,17 @@ public class LocalObject implements EchonetObject {
         return result.getGetData();
     }
 
+    /**
+     * 指定されたEPCのプロパティの内容を返す。 Getの許可がない場合にはnullを返す。
+     * LocalObject内部のデータを設定したGetResultオブジェクトをDelegateに順番に渡して行く。
+     * 最終的にGetResultが保持している値を返す。
+     * もしも、Delegateが処理に失敗した場合にはnullを返す。
+     *
+     * @param epc データのEPC
+     * @return プロパティのデータ、存在しない場合にはnull
+     */
     @Override
-    public ObjectData getData(EPC epc) {
+    public synchronized ObjectData getData(EPC epc) {
         logger.entering(className, "getData", epc);
         
         if (!this.isGettable(epc)) {
@@ -144,26 +205,50 @@ public class LocalObject implements EchonetObject {
         return data;
     }
 
+    /**
+     * このオブジェクトのEOJを返す。
+     * @return このオブジェクトのEOJ
+     */
     @Override
     public EOJ getEOJ() {
         return eoj;
     }
-
+    
+    /**
+     * 指定されたEPCのプロパティが存在するかを返す。
+     * @param epc EPCの指定
+     * @return 存在していればtrue、そうでなければfalse
+     */
     @Override
     public synchronized boolean contains(EPC epc) {
         return propertyData.containsKey(epc);
     }
-
+    
+    /**
+     * 指定されたEPCがGet可能であるかを返す。
+     * @param epc EPCの指定
+     * @return Get可能であればtrue、そうでなければfalse
+     */
     @Override
     public boolean isGettable(EPC epc) {
         return objectInfo.get(epc).gettable;
     }
-
+    
+    /**
+     * 指定されたEPCがSet可能であるかを返す。
+     * @param epc EPCの指定
+     * @return Set可能であればtrue、そうでなければfalse
+     */
     @Override
     public boolean isSettable(EPC epc) {
         return objectInfo.get(epc).settable;
     }
-
+    
+    /**
+     * 指定されたEPCが通知を行うかを返す。
+     * @param epc EPCの指定
+     * @return 通知を行うのであればtrue、そうでなければfalse
+     */
     @Override
     public boolean isObservable(EPC epc) {
         return objectInfo.get(epc).observable;
@@ -175,7 +260,14 @@ public class LocalObject implements EchonetObject {
             logger.info(state.getMessage(i));
         }
     }
-
+    
+    /**
+     * 指定されたEPCのプロパティデータが変化したことを通知する。
+     * @param epc 変化したプロパティのEPC
+     * @param curData 現在のプロパティデータ
+     * @param oldData 以前のプロパティデータ
+     * @return 処理中にエラーが発生しなかった場合にはtrue、そうでなければfalse
+     */
     public boolean notifyDataChanged(EPC epc, ObjectData curData, ObjectData oldData) {
         logger.entering(className, "notifyDataChanged", new Object[]{epc, curData, oldData});
         
@@ -235,7 +327,12 @@ public class LocalObject implements EchonetObject {
         logger.entering(className, "countDelegates", count);
         return count;
     }
-
+    
+    /**
+     * Delegateを登録する。
+     * @param delegate 登録するDelegate
+     * @return 登録が成功した場合にはtrue、そうでなければfalse
+     */
     public synchronized boolean addDelegate(LocalObjectDelegate delegate) {
         logger.entering(className, "addDelegate", delegate);
         
@@ -250,7 +347,12 @@ public class LocalObject implements EchonetObject {
         logger.entering(className, "addDelegate", result);
         return result;
     }
-
+    
+    /**
+     * Delegateの登録を抹消する。
+     * @param delegate 抹消するDelegate
+     * @return 登録の抹消が成功した場合にはtrue、そうでなければfalse
+     */
     public synchronized boolean removeDelegate(LocalObjectDelegate delegate) {
         logger.entering(className, "removeDelegate", delegate);
         

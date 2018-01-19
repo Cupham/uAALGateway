@@ -1,9 +1,5 @@
 package echowand.service;
 
-import java.util.LinkedList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import echowand.logic.Listener;
 import echowand.logic.MainLoop;
 import echowand.logic.RequestDispatcher;
@@ -17,9 +13,13 @@ import echowand.object.LocalObject;
 import echowand.object.LocalObjectManager;
 import echowand.object.RemoteObjectManager;
 import echowand.object.SetGetRequestProcessor;
+import java.util.LinkedList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
- * @author CuPham
+ * Serviceを利用するために必要なechowandクラス群を管理
+ * @author ymakino
  */
 public class Core {
     private static final Logger LOGGER = Logger.getLogger(Core.class.getName());
@@ -35,6 +35,9 @@ public class Core {
     private SetGetRequestProcessor setGetRequestProcessor;
     private AnnounceRequestProcessor announceRequestProcessor;
     private ObserveResultProcessor observeResultProcessor;
+    
+    private TimestampManager timestampManager;
+    private TimestampObserver timestampObserver;
     private CaptureResultObserver captureResultObserver;
     
     private NodeProfileObjectConfig nodeProfileObjectConfig;
@@ -45,13 +48,20 @@ public class Core {
     private boolean inService = false;
     private boolean captureEnabled = false;
     
+    private Thread mainLoopThread;
+    
+    private boolean managedSubnet;
+    
     /**
-     * @throws SubnetException Inet4Subnet
+     * Inet4Subnetを利用するCoreを作成する。
+     * startServiceメソッドを呼び出すまでは、特に処理を行なわない。
+     * @throws SubnetException Inet4Subnetの生成に失敗した場合
      */
     public Core() throws SubnetException {
         LOGGER.entering(CLASS_NAME, "Core");
         
-        this.subnet = new CaptureSubnet(Inet4Subnet.startSubnet());
+        subnet = new CaptureSubnet(new Inet4Subnet());
+        managedSubnet = true;
         nodeProfileObjectConfig = new NodeProfileObjectConfig();
         localObjectConfigs = new LinkedList<LocalObjectConfig>();
         localObjectUpdaters = new LinkedList<LocalObjectUpdater>();
@@ -60,12 +70,16 @@ public class Core {
     }
     
     /**
-     * 
+     * 指定されたSubnetを利用するCoreを作成する。
+     * startServiceメソッドを呼び出すまでは、特に処理を行なわない。
+     * sunbetはこのCoreで管理され、startServiceとstopServiceが自動的に呼び出される。
+     * @param subnet 構築するCoreが利用するsubnet
      */
     public Core(Subnet subnet) {
         LOGGER.entering(CLASS_NAME, "Core", subnet);
         
         this.subnet = subnet;
+        managedSubnet = true;
         nodeProfileObjectConfig = new NodeProfileObjectConfig();
         localObjectConfigs = new LinkedList<LocalObjectConfig>();
         localObjectUpdaters = new LinkedList<LocalObjectUpdater>();
@@ -74,14 +88,37 @@ public class Core {
     }
     
     /**
-     * 
+     * 指定されたSubnetを利用するCoreを作成する。
+     * startServiceメソッドを呼び出すまでは、特に処理を行なわない。
+     * このCoreがSubnetの管理を行う場合にはmanagedSubnetにtrueを指定する。
+     * @param subnet 構築するCoreが利用するSubnet
+     * @param managedSubnet 指定されたSubnetを管理する場合にはtrue、そうでなければfalse
+     */
+    public Core(Subnet subnet, boolean managedSubnet) {
+        LOGGER.entering(CLASS_NAME, "Core", new Object[]{subnet, managedSubnet});
+        
+        this.subnet = subnet;
+        this.managedSubnet = managedSubnet;
+        
+        nodeProfileObjectConfig = new NodeProfileObjectConfig();
+        localObjectConfigs = new LinkedList<LocalObjectConfig>();
+        localObjectUpdaters = new LinkedList<LocalObjectUpdater>();
+        
+        LOGGER.exiting(CLASS_NAME, "Core");
+    }
+    
+    /**
+     * ノードプロファイルオブジェクト作成に利用するNodeProfileObjectConfigを返す。
+     * @return ノードプロファイルオブジェクト作成に利用するNodeProfileObjectConfig
      */
     public NodeProfileObjectConfig getNodeProfileObjectConfig() {
         return nodeProfileObjectConfig;
     }
     
     /**
-     * 
+     * 指定されたLocalObjectConfigを追加する。
+     * @param config 追加するLocalObjectConfig
+     * @return 追加に成功したらtrue、そうでなければfalse
      */
     public boolean addLocalObjectConfig(LocalObjectConfig config) {
         LOGGER.entering(CLASS_NAME, "addLocalObjectConfig", config);
@@ -93,9 +130,9 @@ public class Core {
     }
     
     /**
-     * æŒ‡å®šã�•ã‚Œã�ŸLocalObjectConfigã‚’æŠ¹æ¶ˆã�™ã‚‹ã€‚
-     * @param config æŠ¹æ¶ˆã�™ã‚‹LocalObjectConfig
-     * @return æŠ¹æ¶ˆã�«æˆ�åŠŸã�—ã�Ÿã‚‰trueã€�ã��ã�†ã�§ã�ªã�‘ã‚Œã�°false
+     * 指定されたLocalObjectConfigを抹消する。
+     * @param config 抹消するLocalObjectConfig
+     * @return 抹消に成功したらtrue、そうでなければfalse
      */
     public boolean removeLocalObjectConfig(LocalObjectConfig config) {
         LOGGER.entering(CLASS_NAME, "removeLocalObjectConfig", config);
@@ -107,80 +144,92 @@ public class Core {
     }
     
     /**
-     * åˆ©ç”¨ã�—ã�¦ã�„ã‚‹Subnetã‚’è¿”ã�™
-     * @return åˆ©ç”¨ã�—ã�¦ã�„ã‚‹Subnet
+     * 利用しているSubnetを返す
+     * @return 利用しているSubnet
      */
     public Subnet getSubnet() {
         return subnet;
     }
     
     /**
-     * åˆ©ç”¨ä¸­ã�®TransactionManagerã‚’è¿”ã�™ã€‚initializeãƒ¡ã‚½ãƒƒãƒ‰ã‚’å‘¼ã�³å‡ºã�™ã�¾ã�§ã�¯nullã‚’è¿”ã�™ã€‚
-     * @return åˆ©ç”¨ä¸­ã�®TransactionManager
+     * 利用中のTransactionManagerを返す。initializeメソッドを呼び出すまではnullを返す。
+     * @return 利用中のTransactionManager
      */
     public TransactionManager getTransactionManager() {
         return transactionManager;
     }
     
     /**
-     * åˆ©ç”¨ä¸­ã�®RemoteObjectManagerã‚’è¿”ã�™ã€‚initializeãƒ¡ã‚½ãƒƒãƒ‰ã‚’å‘¼ã�³å‡ºã�™ã�¾ã�§ã�¯nullã‚’è¿”ã�™ã€‚
-     * @return åˆ©ç”¨ä¸­ã�®RemoteObjectManager
+     * 利用中のRemoteObjectManagerを返す。initializeメソッドを呼び出すまではnullを返す。
+     * @return 利用中のRemoteObjectManager
      */
     public RemoteObjectManager getRemoteObjectManager() {
         return remoteManager;
     }
     
     /**
-     * åˆ©ç”¨ä¸­ã�®LocalObjectManagerã‚’è¿”ã�™ã€‚initializeãƒ¡ã‚½ãƒƒãƒ‰ã‚’å‘¼ã�³å‡ºã�™ã�¾ã�§ã�¯nullã‚’è¿”ã�™ã€‚
-     * @return åˆ©ç”¨ä¸­ã�®LocalObjectManager
+     * 利用中のLocalObjectManagerを返す。initializeメソッドを呼び出すまではnullを返す。
+     * @return 利用中のLocalObjectManager
      */
     public  LocalObjectManager getLocalObjectManager() {
         return localManager;
     }
     
     /**
-     * ãƒŽãƒ¼ãƒ‰ãƒ—ãƒ­ãƒ•ã‚¡ã‚¤ãƒ«ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã�¨ã�—ã�¦åˆ©ç”¨ä¸­ã�®LocalObjectã‚’è¿”ã�™ã€‚
-     * initializeãƒ¡ã‚½ãƒƒãƒ‰ã‚’å‘¼ã�³å‡ºã�™ã�¾ã�§ã�¯nullã‚’è¿”ã�™ã€‚
-     * @return ãƒŽãƒ¼ãƒ‰ãƒ—ãƒ­ãƒ•ã‚¡ã‚¤ãƒ«ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’è¡¨ã�™LocalObject
+     * ノードプロファイルオブジェクトとして利用中のLocalObjectを返す。
+     * initializeメソッドを呼び出すまではnullを返す。
+     * @return ノードプロファイルオブジェクトを表すLocalObject
      */
     public LocalObject getNodeProfileObject() {
         return nodeProfileObject;
     }
     
     /**
-     * åˆ©ç”¨ä¸­ã�®RequestDispatcherã‚’è¿”ã�™ã€‚initializeãƒ¡ã‚½ãƒƒãƒ‰ã‚’å‘¼ã�³å‡ºã�™ã�¾ã�§ã�¯nullã‚’è¿”ã�™ã€‚
-     * @return åˆ©ç”¨ä¸­ã�®RequestDispatcher
+     * 利用中のRequestDispatcherを返す。initializeメソッドを呼び出すまではnullを返す。
+     * @return 利用中のRequestDispatcher
      */
     public RequestDispatcher getRequestDispatcher() {
         return requestDispatcher;
     }
     
     /**
-     * åˆ©ç”¨ä¸­ã�®MainLoopã‚’è¿”ã�™ã€‚initializeãƒ¡ã‚½ãƒƒãƒ‰ã‚’å‘¼ã�³å‡ºã�™ã�¾ã�§ã�¯nullã‚’è¿”ã�™ã€‚
-     * @return åˆ©ç”¨ä¸­ã�®MainLoop
+     * 利用中のMainLoopを返す。initializeメソッドを呼び出すまではnullを返す。
+     * @return 利用中のMainLoop
      */
     public MainLoop getMainLoop() {
         return mainLoop;
     }
     
     /**
-     * åˆ©ç”¨ä¸­ã�®SetGetRequestProcessorã‚’è¿”ã�™ã€‚initializeãƒ¡ã‚½ãƒƒãƒ‰ã‚’å‘¼ã�³å‡ºã�™ã�¾ã�§ã�¯nullã‚’è¿”ã�™ã€‚
-     * @return åˆ©ç”¨ä¸­ã�®SetGetRequestProcessor
+     * 利用中のSetGetRequestProcessorを返す。initializeメソッドを呼び出すまではnullを返す。
+     * @return 利用中のSetGetRequestProcessor
      */
     public SetGetRequestProcessor getSetGetRequestProcessor() {
         return setGetRequestProcessor;
     }
     
     /**
-     * åˆ©ç”¨ä¸­ã�®AnnounceRequestProcessorã‚’è¿”ã�™ã€‚initializeãƒ¡ã‚½ãƒƒãƒ‰ã‚’å‘¼ã�³å‡ºã�™ã�¾ã�§ã�¯nullã‚’è¿”ã�™ã€‚
-     * @return åˆ©ç”¨ä¸­ã�®AnnounceRequestProcessor
+     * 利用中のAnnounceRequestProcessorを返す。initializeメソッドを呼び出すまではnullを返す。
+     * @return 利用中のAnnounceRequestProcessor
      */
     public AnnounceRequestProcessor getAnnounceRequestProcessor() {
         return announceRequestProcessor;
     }
     
+    /**
+     * 利用中のObserveResultProcessorを返す。initializeメソッドを呼び出すまではnullを返す。
+     * @return 利用中のObserveResultProcessor
+     */
     public ObserveResultProcessor getObserveResultProsessor() {
         return observeResultProcessor;
+    }
+    
+    public TimestampManager getTimestampManager() {
+        return timestampManager;
+    }
+    
+    public TimestampObserver getTimestampObserver() {
+        return timestampObserver;
     }
     
     public CaptureResultObserver getCaptureResultObserver() {
@@ -259,6 +308,15 @@ public class Core {
         return captureResultObserver;
     }
     
+    private TimestampObserver createTimestampObserver() {
+        LOGGER.entering(CLASS_NAME, "createTimestampObserver");
+        
+        TimestampObserver timestampObserver = new TimestampObserver(timestampManager);
+        
+        LOGGER.exiting(CLASS_NAME, "createTimestampObserver", timestampObserver);
+        return timestampObserver;
+    }
+    
     private MainLoop createMainLoop(Subnet subnet, Listener... listeners) {
         LOGGER.entering(CLASS_NAME, "createMainLoop", new Object[]{subnet, listeners});
         
@@ -273,16 +331,16 @@ public class Core {
     }
     
     /**
-     * Coreã�Œåˆ�æœŸåŒ–æ¸ˆã�¿ã�§ã�‚ã‚‹ã�‹è¿”ã�™ã€‚
-     * @return åˆ�æœŸåŒ–æ¸ˆã�¿ã�§ã�‚ã‚Œã�°trueã€�åˆ�æœŸåŒ–æ¸ˆã�¿ã�§ã�ªã�‘ã‚Œã�°false
+     * Coreが初期化済みであるか返す。
+     * @return 初期化済みであればtrue、初期化済みでなければfalse
      */
     public boolean isInitialized() {
         return initialized;
     }
     
     /**
-     * Coreã�Œå®Ÿè¡Œä¸­ã�§ã�‚ã‚‹ã�‹è¿”ã�™ã€‚
-     * @return å®Ÿè¡Œä¸­ã�§ã�‚ã‚Œã�°trueã€�å®Ÿè¡Œä¸­ã�§ã�ªã�‘ã‚Œã�°false
+     * Coreが実行中であるか返す。
+     * @return 実行中であればtrue、実行中でなければfalse
      */
     public boolean isInService() {
         return inService;
@@ -311,18 +369,17 @@ public class Core {
     }
 
     /**
-     * Coreã‚’åˆ�æœŸåŒ–ã�™ã‚‹ã€‚
-     * @return åˆ�æœŸåŒ–ã�Œæˆ�åŠŸã�™ã‚Œã�°trueã€�ã�™ã�§ã�«åˆ�æœŸåŒ–æ¸ˆã�¿ã�§ã�‚ã‚Œã�°false
-     * @throws TooManyObjectsException ãƒ­ãƒ¼ã‚«ãƒ«ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã�®æ•°ã�Œå¤šã�™ã�Žã‚‹å ´å�ˆ
+     * Coreを初期化する。
+     * @return 初期化が成功すればtrue、すでに初期化済みであればfalse
      */
-    public synchronized boolean initialize() throws TooManyObjectsException {
+    public synchronized boolean initialize() {
         LOGGER.entering(CLASS_NAME, "initialize");
         
         if (initialized) {
             LOGGER.exiting(CLASS_NAME, "initialize", false);
             return false;
         }
-
+        
         transactionManager = createTransactionManager(subnet);
         remoteManager = createRemoteObjectManager();
         localManager = createLocalObjectManager();
@@ -336,10 +393,13 @@ public class Core {
         requestDispatcher.addRequestProcessor(announceRequestProcessor);
         requestDispatcher.addRequestProcessor(observeResultProcessor);
 
+        timestampManager = new TimestampManager();
+        timestampObserver = createTimestampObserver();
         captureResultObserver = createCaptureResultObserver();
 
         CaptureSubnet captureSubnet = getCaptureSubnet();
         if (captureSubnet != null) {
+            captureSubnet.addObserver(timestampObserver);
             captureSubnet.addObserver(captureResultObserver);
             captureEnabled = true;
         }
@@ -361,14 +421,42 @@ public class Core {
     }
     
     private void startUpdateThreads() {
+        LOGGER.entering(CLASS_NAME, "startUpdateThreads");
+        
         for (LocalObjectUpdater updater : localObjectUpdaters) {
-            new Thread(updater).start();
+            updater.start();
         }
+        
+        LOGGER.exiting(CLASS_NAME, "startUpdateThreads");
+    }
+    
+    
+    private void stopUpdateThreads() {
+        LOGGER.entering(CLASS_NAME, "stopUpdateThreads");
+        
+        for (LocalObjectUpdater updater : localObjectUpdaters) {
+            updater.terminate();
+        }
+        
+        LOGGER.exiting(CLASS_NAME, "stopUpdateThreads");
     }
     
     private void startMainLoopThread() {
+        LOGGER.entering(CLASS_NAME, "startMainLoopThread");
+        
         mainLoop = createMainLoop(subnet, requestDispatcher, transactionManager);
-        new Thread(mainLoop).start();
+        mainLoopThread = new Thread(mainLoop);
+        mainLoopThread.start();
+        
+        LOGGER.exiting(CLASS_NAME, "startMainLoopThread");
+    }
+    
+    private void stopMainLoopThread() {
+        LOGGER.entering(CLASS_NAME, "stopMainLoopThread");
+        
+        mainLoopThread.interrupt();
+        
+        LOGGER.exiting(CLASS_NAME, "stopMainLoopThread");
     }
     
     private boolean startThreads() {
@@ -395,13 +483,14 @@ public class Core {
     }
     
     /**
-     * Coreã‚’å®Ÿè¡Œã�™ã‚‹ã€‚
-     * åˆ�æœŸåŒ–ã�•ã‚Œã�¦ã�„ã�ªã�„å ´å�ˆã�«ã�¯åˆ�æœŸåŒ–ã‚’å…ˆã�«è¡Œã�†ã€‚
-     * addLocalObjectConfigã�§ç™»éŒ²ã�•ã‚Œã�Ÿãƒ­ãƒ¼ã‚«ãƒ«ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã�®ç”Ÿæˆ�ã�¨ç™»éŒ²ã‚’è¡Œã�„ã€�å®Ÿè¡Œã�«å¿…è¦�ã�ªã‚¹ãƒ¬ãƒƒãƒ‰ã‚’é–‹å§‹ã�™ã‚‹ã€‚
-     * @return å®Ÿè¡Œã�Œæˆ�åŠŸã�™ã‚Œã�°trueã€�ã�™ã�§ã�«å®Ÿè¡Œæ¸ˆã�¿ã�§ã�‚ã‚Œã�°false
-     * @throws TooManyObjectsException ãƒ­ãƒ¼ã‚«ãƒ«ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã�®æ•°ã�Œå¤šã�™ã�Žã‚‹å ´å�ˆ
+     * Coreを実行する。
+     * 初期化されていない場合には初期化を先に行う。
+     * addLocalObjectConfigで登録されたローカルオブジェクトの生成と登録を行い、実行に必要なスレッドを開始する。
+     * @return 実行が成功すればtrue、すでに実行済みであればfalse
+     * @throws TooManyObjectsException ローカルオブジェクトの数が多すぎる場合
+     * @throws SubnetException 実行に失敗した場合
      */
-    public synchronized boolean startService() throws TooManyObjectsException {
+    public synchronized boolean startService() throws TooManyObjectsException, SubnetException {
         LOGGER.entering(CLASS_NAME, "startService");
         
         if (inService) {
@@ -418,9 +507,41 @@ public class Core {
 
         createLocalObjects();
         
+        if (managedSubnet) {
+            if (!subnet.startService()) {
+                LOGGER.logp(Level.WARNING, CLASS_NAME, "startService", "subnet has already started");
+            }
+        }
+        
         startThreads();
 
         LOGGER.exiting(CLASS_NAME, "startService", true);
+        return true;
+    }
+    
+    /**
+     * Coreを停止する。
+     * @return 停止に成功した場合にはtrue、すでに停止していた場合にはfalse
+     * @throws SubnetException 停止に失敗した場合
+     */
+    public synchronized boolean stopService() throws SubnetException {
+        LOGGER.entering(CLASS_NAME, "stopService");
+        
+        if (!inService) {
+            LOGGER.exiting(CLASS_NAME, "stopService", false);
+            return false;
+        }
+        
+        stopUpdateThreads();
+        stopMainLoopThread();
+        
+        if (managedSubnet) {
+            if (!subnet.stopService()) {
+                LOGGER.logp(Level.WARNING, CLASS_NAME, "startService", "has already stopped");
+            }
+        }
+        
+        LOGGER.exiting(CLASS_NAME, "stopService", true);
         return true;
     }
 }

@@ -10,7 +10,7 @@ public class Component {
 	protected static boolean is_Cahrim;
 	protected static boolean is_Ckb;
 	protected static boolean is_Cspem;
-	protected static boolean is_AALEnviroment;
+	protected static boolean is_SmartFacility;
 	protected volatile static boolean ontology_updated;
 	public volatile static String message_datatype_requested = "NO_REQUEST";
 	
@@ -27,7 +27,7 @@ public class Component {
 			is_Cahrim = true;
 			is_Ckb    = false;
 			is_Cspem  = false;
-			is_AALEnviroment = false;
+			is_SmartFacility = false;
 			
 			component_ID = "[" + CAHRIM + "]";
 			
@@ -36,7 +36,7 @@ public class Component {
 			is_Cahrim = false;
 			is_Ckb    = true;
 			is_Cspem  = false;
-			is_AALEnviroment = false;
+			is_SmartFacility = false;
 			
 			component_ID = "[" + CKB + "   ]";
 
@@ -45,7 +45,7 @@ public class Component {
 			is_Cahrim = false;
 			is_Ckb    = false;
 			is_Cspem  = true;
-			is_AALEnviroment = false;
+			is_SmartFacility = false;
 			
 			component_ID = "[" + CSPEM + " ]";
 
@@ -53,7 +53,7 @@ public class Component {
 			is_Cahrim = false;
 			is_Ckb    = false;
 			is_Cspem  = false;
-			is_AALEnviroment = true;
+			is_SmartFacility = true;
 			
 			component_ID = "[" + SMART_FACILITY + " ]";
 		}

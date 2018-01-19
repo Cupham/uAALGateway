@@ -1,10 +1,9 @@
 package echowand.object;
 
+import echowand.common.Data;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-
-import echowand.common.Data;
 
 class ExtraData {
     ArrayList<Data> extraDataList;
@@ -52,20 +51,37 @@ class ExtraData {
     }
 }
 
+/**
+ * オブジェクト内のプロパティのデータ表現
+ * @author Yoshiki Makino
+ */
 public class ObjectData {
     private Data data;
     private ExtraData extraData;
-
+    
+    /**
+     * 指定されたデータを用いてObjectDataを生成する。
+     * @param data データのバイト配列
+     */
     public ObjectData(Data data) {
         this.data = data;
         this.extraData = new ExtraData();
     }
-
+    
+    /**
+     * 指定されたバイト列を用いてObjectDataを生成する。
+     * @param data データのバイト配列
+     */
     public ObjectData(byte... data) {
         this.data = new Data(data);
         this.extraData = new ExtraData();
     }
-
+    
+    /**
+     * 指定されたバイト配列のリストを用いてObjectDataを生成する。
+     * リストの最初のバイト配列以外は拡張データ領域に保存する。
+     * @param dataList データのバイト配列リスト
+     */
     public ObjectData(List<Data> dataList) {
         if (dataList.isEmpty()) {
             this.data = new Data();
@@ -79,40 +95,81 @@ public class ObjectData {
             this.extraData = new ExtraData(extras);
         }
     }
-
+    
+    /**
+     * データを返す。
+     * @return データ
+     */
     public Data getData() {
         return data;
     }
-
+    /**
+     * 拡張データ領域のバイト列の数を返す。
+     * @return バイト列の数
+     */
     public int getExtraSize() {
         return extraData.size();
     }
-
+    
+    /**
+     * i番目の拡張データ領域のバイト列を返す。
+     * @param i 拡張データ領域のインデックス
+     * @return 拡張データ領域のバイト列
+     */
     public Data getExtraDataAt(int i) {
         return extraData.get(i);
     }
-
+    
+    /**
+     * データ長を返す。
+     * @return データ長
+     */
     public int size() {
         return data.size();
     }
-
+    
+    /**
+     * データが存在するかどうかを返す。
+     * @return データの有無
+     */
     public boolean isEmpty() {
         return data.isEmpty();
     }
-
+    
+    /**
+     * データのi番目のバイトを返す
+     * @param i バイトのインデックス
+     * @return i番目のバイト
+     */
     public byte get(int i) {
         return data.get(i);
     }
-
+    
+    /**
+     * データのバイト配列を返す。
+     * 拡張データ領域は無視をする。
+     * @return データのバイト配列
+     */
     public byte[] toBytes() {
         return data.toBytes();
     }
-
+    
+    /**
+     * データの文字列表現を返す。
+     * 拡張データ領域は無視をする。
+     * @return データの文字列表現
+     */
     @Override
     public String toString() {
         return data.toString();
     }
-
+    
+    /**
+     * このDataが指定されたオブジェクトと等しいかどうか調べる。
+     * 拡張データ領域も等しいかどうか調べる。
+     * @param otherObj 比較されるオブジェクト
+     * @return オブジェクトが等しい場合にはtrue、そうでない場合にはfalse
+     */
     @Override
     public boolean equals(Object otherObj) {
         if (!(otherObj instanceof ObjectData)) {
@@ -123,7 +180,11 @@ public class ObjectData {
         return this.data.equals(other.data)
                 && this.extraData.equals(other.extraData);
     }
-
+    
+    /**
+     * このObjectDataのハッシュコードを返す。
+     * @return このEOJのハッシュコード
+     */
     @Override
     public int hashCode() {
         int hash = 3;

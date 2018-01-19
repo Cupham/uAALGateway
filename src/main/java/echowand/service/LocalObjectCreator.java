@@ -1,12 +1,11 @@
 package echowand.service;
 
-import java.util.logging.Logger;
-
 import echowand.logic.TooManyObjectsException;
 import echowand.logic.TransactionManager;
 import echowand.net.Subnet;
 import echowand.object.LocalObject;
 import echowand.object.LocalObjectNotifyDelegate;
+import java.util.logging.Logger;
 
 /**
  * LocalObjectConfigからローカルオブジェクトを生成

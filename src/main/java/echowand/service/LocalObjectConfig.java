@@ -1,11 +1,10 @@
 package echowand.service;
 
-import java.util.LinkedList;
-import java.util.logging.Logger;
-
 import echowand.info.ObjectInfo;
 import echowand.object.LocalObject;
 import echowand.object.LocalObjectDelegate;
+import java.util.LinkedList;
+import java.util.logging.Logger;
 
 /**
  * CoreがLocalObjectを生成するための設定

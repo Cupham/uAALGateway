@@ -1,10 +1,5 @@
 package echowand.service.result;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.logging.Logger;
-
 import echowand.common.Data;
 import echowand.common.EOJ;
 import echowand.common.EPC;
@@ -14,14 +9,20 @@ import echowand.net.Frame;
 import echowand.net.Node;
 import echowand.net.Property;
 import echowand.net.StandardPayload;
+import echowand.service.TimestampManager;
 import echowand.util.Collector;
 import echowand.util.Selector;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
  * @author ymakino
  */
-public abstract class ResultBase {
+public abstract class ResultBase<ResultType extends ResultBase> {
     private static final Logger LOGGER = Logger.getLogger(ResultBase.class.getName());
     private static final String CLASS_NAME = ResultBase.class.getName();
     
@@ -117,10 +118,18 @@ public abstract class ResultBase {
     
     private HashMap<ResultData, ResultFrame> dataFrameMap;
     
-    public ResultBase() {
-        LOGGER.entering(CLASS_NAME, "ResultBase");
+    private Class<ResultType> cls;
+    private TimestampManager timestampManager;
+    private ResultListener<ResultType> listener;
+    
+    public ResultBase(Class<ResultType> cls, TimestampManager timestampManager) {
+        LOGGER.entering(CLASS_NAME, "ResultBase", new Object[]{cls, timestampManager});
         
         done = false;
+        
+        this.cls = cls;
+        this.timestampManager = timestampManager;
+        listener = null;
         
         requestFrameManager = new ResultListManager<ResultFrame>();
         invalidRequestFrameList = new LinkedList<ResultFrame>();
@@ -140,12 +149,34 @@ public abstract class ResultBase {
         LOGGER.exiting(CLASS_NAME, "ResultBase");
     }
     
+    private ResultType self() {
+        return cls.cast(this);
+    }
+    
+    protected synchronized void setResultListener(ResultListener<ResultType> listener) {
+        this.listener = listener;
+    }
+    
+    public synchronized void begin() {
+        LOGGER.entering(CLASS_NAME, "begin");
+        
+        if (listener != null) {
+            listener.begin(self());
+        }
+        
+        LOGGER.exiting(CLASS_NAME, "begin");
+    }
+    
     public synchronized void finish() {
         LOGGER.entering(CLASS_NAME, "finish");
         
         if (!done) {
             done = true;
             notifyAll();
+        }
+        
+        if (listener != null) {
+            listener.finish(self());
         }
         
         LOGGER.exiting(CLASS_NAME, "finish");
@@ -315,7 +346,7 @@ public abstract class ResultBase {
             EOJ eoj = payload.getSEOJ();
             EPC epc = property.getEPC();
             Data data = property.getEDT();
-            return new ResultData(node, esv, eoj, epc, data, resultFrame.time);
+            return new ResultData(node, esv, eoj, epc, data, resultFrame.getTimestamp());
     }
     
     public synchronized boolean addRequestFrame(ResultFrame resultFrame, boolean success) {
@@ -330,9 +361,7 @@ public abstract class ResultBase {
             return false;
         }
         
-        Frame frame = resultFrame.frame;
-        
-        if (!hasStandardPayload(frame)) {
+        if (!hasStandardPayload(resultFrame.getActualFrame())) {
             invalidRequestFrameList.add(resultFrame);
             LOGGER.exiting(CLASS_NAME, "addRequestFrame", false);
             return false;
@@ -340,12 +369,12 @@ public abstract class ResultBase {
         
         boolean result = requestFrameManager.add(resultFrame, success);
 
-        StandardPayload payload = frame.getCommonFrame().getEDATA(StandardPayload.class);
+        StandardPayload payload = resultFrame.getCommonFrame().getEDATA(StandardPayload.class);
 
         int count = payload.getFirstOPC();
         for (int i = 0; i < count; i++) {
             Property property = payload.getFirstPropertyAt(i);
-            ResultData resultData = createResultData(resultFrame, frame, payload, property);
+            ResultData resultData = createResultData(resultFrame, resultFrame.getActualFrame(), payload, property);
             
             result &= requestDataManager.add(resultData, success);
 
@@ -355,11 +384,25 @@ public abstract class ResultBase {
         int countSecond = payload.getSecondOPC();
         for (int i = 0; i < countSecond; i++) {
             Property property = payload.getSecondPropertyAt(i);
-            ResultData resultData = createResultData(resultFrame, frame, payload, property);
+            ResultData resultData = createResultData(resultFrame, resultFrame.getActualFrame(), payload, property);
             
             result &= requestSecondDataManager.add(resultData, success);
 
             requestDataFrameMap.put(resultData, resultFrame);
+        }
+            
+        if (listener != null) {
+            listener.send(self(), resultFrame, success);
+            
+            for (ResultData resultData : requestDataManager.getKeyList(requestDataFrameMap, resultFrame)) {
+                listener.send(self(), resultFrame, resultData, success);
+                listener.send(self(), resultFrame, resultData, success, false);
+            }
+            
+            for (ResultData resultData : requestSecondDataManager.getKeyList(requestDataFrameMap, resultFrame)) {
+                listener.send(self(), resultFrame, resultData, success);
+                listener.send(self(), resultFrame, resultData, success, true);
+            }
         }
         
         LOGGER.exiting(CLASS_NAME, "addRequestFrame", result);
@@ -388,15 +431,13 @@ public abstract class ResultBase {
         }
         
         try {
-            Frame frame = resultFrame.frame;
-
-            if (!hasStandardPayload(frame)) {
+            if (!hasStandardPayload(resultFrame.getActualFrame())) {
                 invalidFrameList.add(resultFrame);
                 LOGGER.exiting(CLASS_NAME, "addFrame", false);
                 return false;
             }
 
-            StandardPayload payload = frame.getCommonFrame().getEDATA(StandardPayload.class);
+            StandardPayload payload = resultFrame.getCommonFrame().getEDATA(StandardPayload.class);
 
             if (!isValidPayload(payload)) {
                 invalidFrameList.add(resultFrame);
@@ -409,7 +450,7 @@ public abstract class ResultBase {
             int count = payload.getFirstOPC();
             for (int i=0; i<count; i++) {
                 Property property = payload.getFirstPropertyAt(i);
-                ResultData resultData = createResultData(resultFrame, frame, payload, property);
+                ResultData resultData = createResultData(resultFrame, resultFrame.getActualFrame(), payload, property);
                 
                 result &= responseDataManager.add(resultData, isValidProperty(property));
 
@@ -419,11 +460,25 @@ public abstract class ResultBase {
             int countSecond = payload.getSecondOPC();
             for (int i=0; i<countSecond; i++) {
                 Property property = payload.getSecondPropertyAt(i);
-                ResultData resultData = createResultData(resultFrame, frame, payload, property);
+                ResultData resultData = createResultData(resultFrame, resultFrame.getActualFrame(), payload, property);
 
                 result &= responseSecondDataManager.add(resultData, isValidSecondProperty(property));
 
                 dataFrameMap.put(resultData, resultFrame);
+            }
+            
+            if (listener != null) {
+                listener.receive(self(), resultFrame);
+            
+                for (ResultData resultData : responseDataManager.getKeyList(dataFrameMap, resultFrame)) {
+                    listener.receive(self(), resultFrame, resultData);
+                    listener.receive(self(), resultFrame, resultData, false);
+                }
+            
+                for (ResultData resultData : responseSecondDataManager.getKeyList(dataFrameMap, resultFrame)) {
+                    listener.receive(self(), resultFrame, resultData);
+                    listener.receive(self(), resultFrame, resultData, true);
+                }
             }
 
             LOGGER.exiting(CLASS_NAME, "addFrame", result);
@@ -437,8 +492,8 @@ public abstract class ResultBase {
     private synchronized ResultFrame createResultFrame(Frame frame) {
         LOGGER.entering(CLASS_NAME, "createResultFrame", frame);
         
-        long time = System.currentTimeMillis();
-        ResultFrame resultFrame = new ResultFrame(frame, time);
+        long timestamp = timestampManager.get(frame, System.currentTimeMillis());
+        ResultFrame resultFrame = new ResultFrame(frame, timestamp);
         
         LOGGER.exiting(CLASS_NAME, "createResultFrame", resultFrame);
         return resultFrame;

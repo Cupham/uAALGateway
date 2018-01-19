@@ -1,15 +1,14 @@
 package echowand.service.result;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.logging.Logger;
-
 import echowand.common.ClassEOJ;
 import echowand.common.EOJ;
 import echowand.common.EPC;
 import echowand.net.Node;
 import echowand.util.Selector;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.logging.Logger;
 
 /**
  *
@@ -210,7 +209,7 @@ public class ResultDataSelector implements Selector<ResultData> {
             return true;
         }
         
-        if (nodes.contains(resultData.node)) {
+        if (nodes.contains(resultData.getNode())) {
             LOGGER.exiting(CLASS_NAME, "checkNodes", true);
             return true;
         }
@@ -227,12 +226,12 @@ public class ResultDataSelector implements Selector<ResultData> {
             return true;
         }
         
-        if (eojs.contains(resultData.eoj)) {
+        if (eojs.contains(resultData.getEOJ())) {
             LOGGER.exiting(CLASS_NAME, "checkEOJs", true);
             return true;
         }
         
-        if (eojs.contains(resultData.eoj.getAllInstanceEOJ())) {
+        if (eojs.contains(resultData.getEOJ().getAllInstanceEOJ())) {
             LOGGER.exiting(CLASS_NAME, "checkEOJs", true);
             return true;
         }
@@ -249,7 +248,7 @@ public class ResultDataSelector implements Selector<ResultData> {
             return true;
         }
         
-        if (epcs.contains(resultData.epc)) {
+        if (epcs.contains(resultData.getEPC())) {
             LOGGER.exiting(CLASS_NAME, "checkEPCs", true);
             return true;
         }

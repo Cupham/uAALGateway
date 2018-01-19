@@ -1,14 +1,14 @@
 package echowand.service.result;
 
+import echowand.util.SelectorMember;
+import echowand.net.Frame;
+import echowand.service.CaptureResultObserver;
+import echowand.service.TimestampManager;
+import echowand.util.Collector;
+import echowand.util.Selector;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Logger;
-
-import echowand.net.Frame;
-import echowand.service.CaptureResultObserver;
-import echowand.util.Collector;
-import echowand.util.Selector;
-import echowand.util.SelectorMember;
 
 /**
  *
@@ -19,24 +19,120 @@ public class CaptureResult {
     private static final String CLASS_NAME = CaptureResult.class.getName();
     
     private CaptureResultObserver observer;
+    private TimestampManager timestampManager;
     
     private LinkedList<ResultFrame> frameList;
     private LinkedList<ResultFrame> sentFrameList;
     private LinkedList<ResultFrame> receivedFrameList;
+    private boolean receivedFrameListEnabled = true;
+    private boolean sentFrameListEnabled = true;
     private boolean done;
     
-    public CaptureResult(CaptureResultObserver observer) {
-        LOGGER.entering(CLASS_NAME, "CaptureResult", new Object[]{observer});
+    private CaptureListener captureListener;
+    
+    public CaptureResult(CaptureResultObserver observer, TimestampManager timestampManager) {
+        LOGGER.entering(CLASS_NAME, "CaptureResult", new Object[]{observer, timestampManager});
         
         this.observer = observer;
+        this.timestampManager = timestampManager;
         
         frameList = new LinkedList<ResultFrame>();
         sentFrameList = new LinkedList<ResultFrame>();
         receivedFrameList = new LinkedList<ResultFrame>();
         
+        captureListener = null;
+        
         done = false;
         
         LOGGER.exiting(CLASS_NAME, "CaptureResult");
+    }
+    
+    public synchronized void setCaptureListener(CaptureListener captureListener) {
+        LOGGER.entering(CLASS_NAME, "setCaptureListener", captureListener);
+        
+        this.captureListener = captureListener;
+        
+        if (captureListener != null && !done) {
+            captureListener.begin(this);
+        }
+        
+        LOGGER.exiting(CLASS_NAME, "setCaptureListener");
+    }
+
+    public synchronized void enableFrameList() {
+        LOGGER.entering(CLASS_NAME, "enableFrameList");
+        
+        receivedFrameListEnabled = true;
+        sentFrameListEnabled = true;
+        
+        LOGGER.exiting(CLASS_NAME, "enableFrameList");
+    }
+
+    public synchronized void disableFrameList() {
+        LOGGER.entering(CLASS_NAME, "disableFrameList");
+        
+        removeAllFrames();
+        receivedFrameListEnabled = false;
+        sentFrameListEnabled = false;
+        
+        LOGGER.exiting(CLASS_NAME, "disableFrameList");
+    }
+
+    public synchronized boolean isFrameListEnabled() {
+        LOGGER.entering(CLASS_NAME, "isFrameListEnabled");
+        
+        boolean frameListEnabled =  receivedFrameListEnabled && sentFrameListEnabled;
+        
+        LOGGER.exiting(CLASS_NAME, "isFrameListEnabled", frameListEnabled);
+        return frameListEnabled;
+    }
+
+    public synchronized void enableReceivedFrameList() {
+        LOGGER.entering(CLASS_NAME, "enableReceivedFrameList");
+        
+        receivedFrameListEnabled = true;
+        
+        LOGGER.exiting(CLASS_NAME, "enableReceivedFrameList");
+    }
+
+    public synchronized void disableReceivedFrameList() {
+        LOGGER.entering(CLASS_NAME, "disableReceivedFrameList");
+        
+        removeAllReceivedFrames();
+        receivedFrameListEnabled = false;
+        
+        LOGGER.exiting(CLASS_NAME, "disableReceivedFrameList");
+    }
+
+    public synchronized boolean isReceivedFrameListEnabled() {
+        LOGGER.entering(CLASS_NAME, "isReceivedFrameListEnabled");
+        
+        LOGGER.exiting(CLASS_NAME, "isReceivedFrameListEnabled", receivedFrameListEnabled);
+        return receivedFrameListEnabled;
+    }
+
+    public synchronized void enableSentFrameList() {
+        LOGGER.entering(CLASS_NAME, "enableSentFrameList");
+        
+        sentFrameListEnabled = true;
+        
+        LOGGER.exiting(CLASS_NAME, "enableSentFrameList");
+    }
+
+    public synchronized void disableSentFrameList() {
+        LOGGER.entering(CLASS_NAME, "disableSentFrameList");
+        
+        removeAllSentFrames();
+        sentFrameListEnabled = false;
+        
+        LOGGER.exiting(CLASS_NAME, "disableSentFrameList");
+    }
+
+    public synchronized boolean isSentFrameListEnabled() {
+        LOGGER.entering(CLASS_NAME, "isSentFrameListEnabled");
+        
+        LOGGER.exiting(CLASS_NAME, "isSentFrameListEnabled", sentFrameListEnabled);
+        return sentFrameListEnabled;
     }
     
     public synchronized void stopCapture() {
@@ -45,6 +141,10 @@ public class CaptureResult {
         if (!done) {
             observer.removeCaptureResult(this);
             done = true;
+        
+            if (captureListener != null) {
+                captureListener.finish(this);
+            }
         }
         
         LOGGER.exiting(CLASS_NAME, "stopCapture");
@@ -81,8 +181,14 @@ public class CaptureResult {
         
         boolean result = true;
         
-        result &= frameList.add(resultFrame);
-        result &= sentFrameList.add(resultFrame);
+        if (sentFrameListEnabled) {
+            result &= frameList.add(resultFrame);
+            result &= sentFrameList.add(resultFrame);
+        }
+        
+        if (captureListener != null) {
+            captureListener.send(this, resultFrame);
+        }
         
         LOGGER.exiting(CLASS_NAME, "addSentFrame", result);
         return result;
@@ -112,8 +218,14 @@ public class CaptureResult {
         
         boolean result = true;
         
-        result &= frameList.add(resultFrame);
-        result &= receivedFrameList.add(resultFrame);
+        if (receivedFrameListEnabled) {
+            result &= frameList.add(resultFrame);
+            result &= receivedFrameList.add(resultFrame);
+        }
+        
+        if (captureListener != null) {
+            captureListener.receive(this, resultFrame);
+        }
         
         LOGGER.exiting(CLASS_NAME, "addReceivedFrame", result);
         return result;
@@ -122,8 +234,8 @@ public class CaptureResult {
     private synchronized ResultFrame createResultFrame(Frame frame) {
         LOGGER.entering(CLASS_NAME, "createResultFrame", frame);
         
-        long time = System.currentTimeMillis();
-        ResultFrame resultFrame = new ResultFrame(frame, time);
+        long timestamp = timestampManager.get(frame, System.currentTimeMillis());
+        ResultFrame resultFrame = new ResultFrame(frame, timestamp);
         
         LOGGER.exiting(CLASS_NAME, "createResultFrame", resultFrame);
         return resultFrame;

@@ -1,13 +1,18 @@
 package echonet.objects;
 
-public class NodeProfileObject extends eSuperClass{
+import echowand.common.EOJ;
+import echowand.net.Node;
 
+public class NodeProfileObject extends eSuperClass{
 	public NodeProfileObject() {
 		super();
 	}
 
-	public NodeProfileObject(String ip, String name) {
-		super(ip, name);
+	public NodeProfileObject(Node node, String name) {
+		super(node, name);
+	}
+	public NodeProfileObject(Node node, EOJ eoj) {
+		super(node, eoj);
 	}
 	
 

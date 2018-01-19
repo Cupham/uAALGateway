@@ -14,14 +14,17 @@ import org.universAAL.ontology.phThing.DeviceService;
 
 import mainpackage.Activator;
 import mainpackage.EchonetService;
+import ontologies.Curtain;
+import ontologies.ElectricConsent;
 import ontologies.HomeAirConditioner;
+import ontologies.Lighting;
 import ontologies.TemperatureSensor;
 
 import java.util.Hashtable;
 
 public class SCallee_SmartEnvironmentProvidedService extends EchonetService{
 
-	public static ServiceProfile[] profiles = new ServiceProfile[12];
+	public static ServiceProfile[] profiles = new ServiceProfile[21];
 	private static Hashtable serverLevelRestrictions = new Hashtable();
 	
 	public static final String NAMESPACE = "http://CARESSESuniversAALskeleton.org/Callee_SmartEnvironment.owl#";
@@ -42,6 +45,21 @@ public class SCallee_SmartEnvironmentProvidedService extends EchonetService{
 	static final String SERVICE_SET_AIRCONDITIONER_OPERATION_MODE= NAMESPACE + "set_airconditioner_operation_mode";
 	static final String SERVICE_SET_AIRCONDITIONER_TEMPERATURE= NAMESPACE + "set_airconditioner_temperature";
 	static final String SERVICE_SET_AIRCONDITIONER_AIR_FLOW_RATE= NAMESPACE + "set_airconditioner_air_low_rate";
+		//Lighting
+	static final String SERVICE_GET_LIGHTING_DEVICES= NAMESPACE + "get_lighting_devices";
+	static final String SERVICE_TURN_ON_LIGHTING_DEVICE= NAMESPACE + "turnon_lighting_devices";
+	static final String SERVICE_TURN_OFF_LIGHTING_DEVICE= NAMESPACE + "turnoff_lighting_devices";
+	static final String SERVICE_SET_LIGHTING_ILLUMINATION_LEVEL= NAMESPACE + "set_lighting_illumination_level";
+	
+		//Curtain
+	static final String SERVICE_GET_CURTAIN_CONTROLLERS= NAMESPACE + "get_curtains";
+	static final String SERVICE_OPEN_CURTAIN= NAMESPACE + "open_curtain";
+	static final String SERVICE_CLOSE_CURTAIN= NAMESPACE + "close_curtain";
+		//Consent
+	static final String SERVICE_GET_CONSENTS= NAMESPACE + "get_curtains";
+	static final String SERVICE_TURN_ON_CONSENTS= NAMESPACE + "turnon_consent";
+	static final String SERVICE_TURN_OFF_CONSENTS= NAMESPACE + "turnoff_consent";
+
 	// : Inputs
 	 	//Temperature Sensor Properties
 	static final String INPUT_TEMPERATURE_SENSOR_URI= NAMESPACE + "input_temperature_sensor_uri";
@@ -53,11 +71,27 @@ public class SCallee_SmartEnvironmentProvidedService extends EchonetService{
 	static final String INPUT_AIRCONDITIONER_OPERATION_MODE= NAMESPACE + "input_airconditioner_operation_mode";
 	static final String INPUT_AIRCONDITIONER_TEMPERATURE= NAMESPACE + "input_airconditioner_operation_temperature";
 	static final String INPUT_AIRCONDITIONER_AIR_FLOW_RATE= NAMESPACE + "input_airconditioner_operation_air_flow_rate";
+		// LIGHTING
+	static final String INPUT_LIGHTING_URI= NAMESPACE + "input_lighting_uri";
+	static final String INPUT_LIGHTING_STATUS= NAMESPACE + "input_lighting_status";
+	static final String INPUT_LIGHTING_ILLUMINATION_LEVEL = NAMESPACE + "input_lighting_illumination_level";
+		// CURTAIN
+	static final String INPUT_CURTAIN_URI= NAMESPACE + "input_curtain_uri";
+	static final String INPUT_CURTAIN_STATUS= NAMESPACE + "input_curtain_status";
+		// CONSENT
+	static final String INPUT_CONSENT_URI= NAMESPACE + "input_consent_uri";
+	static final String INPUT_CONSENT_STATUS= NAMESPACE + "input_consent_status";
 	// : Outputs
 		//Temperature Sensor
 	static final String OUTPUT_TEMPERATURE_SENSORS= NAMESPACE + "output_temperature_sensors";
 		// Airconditioner
 	static final String OUTPUT_AIRCONDTIONERS= NAMESPACE + "output_airconditioners";
+		// lightings
+	static final String OUTPUT_LIGHTINGS= NAMESPACE + "output_lightings";
+		// curtains
+	static final String OUTPUT_CURTAINS= NAMESPACE + "output_curtains";
+		// consent
+	static final String OUTPUT_CONSENTS= NAMESPACE + "output_consents";
 	
 	
 	public SCallee_SmartEnvironmentProvidedService (String uri) {
@@ -86,11 +120,26 @@ public class SCallee_SmartEnvironmentProvidedService extends EchonetService{
 		String[] ppAirconditioner_TemperatureValue = new String[]{DeviceService.PROP_CONTROLS,EchonetService.PROP_PROVIDES_AIRCONDTIONER_SERVICE,HomeAirConditioner.PROPERTY_HAS_SETTING_TEMPERATURE_VALUE};
 		String[] ppAirconditioner_AirFlowRate = new String[]{DeviceService.PROP_CONTROLS,EchonetService.PROP_PROVIDES_AIRCONDTIONER_SERVICE,HomeAirConditioner.PROPERTY_HAS_AIR_FLOW_RATE_SETTING};
 		
+		String[] ppLightings =  new String[]{EchonetService.PROP_PROVIDES_LIGHTING_SERVICE,Lighting.MY_URI};
+		String[] ppLighting_Operation_Status =  new String[]{DeviceService.PROP_CONTROLS,EchonetService.PROP_PROVIDES_LIGHTING_SERVICE,Lighting.PROPERTY_HAS_OPERATION_STATUS};
+		String[] ppLighting_Illumination_Level =  new String[]{DeviceService.PROP_CONTROLS,EchonetService.PROP_PROVIDES_LIGHTING_SERVICE,Lighting.PROPERTY_HAS_ILLUMINATION_LEVEL};
+		
+		String[] ppCurtains =  new String[]{EchonetService.PROP_PROVIDES_CURTAIN_SERVICE,Curtain.MY_URI};
+		String[] ppCurtains_Status =  new String[]{DeviceService.PROP_CONTROLS,EchonetService.PROP_PROVIDES_CURTAIN_SERVICE,Curtain.PROPERTY_HAS_STATUS};
+		
+		String[] ppConsents =  new String[]{EchonetService.PROP_PROVIDES_CONSENT_SERVICE,ElectricConsent.MY_URI};
+		String[] ppConsents_Status =  new String[]{DeviceService.PROP_CONTROLS,EchonetService.PROP_PROVIDES_CONSENT_SERVICE,ElectricConsent.PROPERTY_HAS_OPERATION_STATUS};
 		
 		addRestriction((MergedRestriction)EchonetService.getClassRestrictionsOnProperty(
 				EchonetService.MY_URI, EchonetService.PROP_PROVIDES_TEMPERATURE_SENSOR_SERVICE).copy(), ppTemperature_Sensors, serverLevelRestrictions);
 		addRestriction((MergedRestriction)EchonetService.getClassRestrictionsOnProperty(
 				EchonetService.MY_URI, EchonetService.PROP_PROVIDES_AIRCONDTIONER_SERVICE).copy(), ppAirconditioners, serverLevelRestrictions);
+		addRestriction((MergedRestriction)EchonetService.getClassRestrictionsOnProperty(
+				EchonetService.MY_URI, EchonetService.PROP_PROVIDES_LIGHTING_SERVICE).copy(), ppLightings, serverLevelRestrictions);
+		addRestriction((MergedRestriction)EchonetService.getClassRestrictionsOnProperty(
+				EchonetService.MY_URI, EchonetService.PROP_PROVIDES_CURTAIN_SERVICE).copy(), ppCurtains, serverLevelRestrictions);
+		addRestriction((MergedRestriction)EchonetService.getClassRestrictionsOnProperty(
+				EchonetService.MY_URI, EchonetService.PROP_PROVIDES_CONSENT_SERVICE).copy(), ppConsents, serverLevelRestrictions);
 		
 		SCallee_SmartEnvironmentProvidedService getTemperatureSensors = 
 				new SCallee_SmartEnvironmentProvidedService(SERVICE_GET_TEMPERATURE_SENSORS);
@@ -161,6 +210,63 @@ public class SCallee_SmartEnvironmentProvidedService extends EchonetService{
 		setAirconditionerAirFlowRate.addFilteringInput(INPUT_AIRCONDITIONER_URI, HomeAirConditioner.MY_URI, 1, 1, ppAirconditioners);
 		setAirconditionerAirFlowRate.addInputWithChangeEffect(INPUT_AIRCONDITIONER_AIR_FLOW_RATE, TypeMapper.getDatatypeURI(String.class), 1, 1, ppAirconditioner_AirFlowRate);
 		profiles[11] = setAirconditionerAirFlowRate.myProfile;
+		
+		SCallee_SmartEnvironmentProvidedService getLightings = 
+				new SCallee_SmartEnvironmentProvidedService(SERVICE_GET_LIGHTING_DEVICES);
+		getLightings.addOutput(OUTPUT_LIGHTINGS, Lighting.MY_URI, 0, 0, ppLightings);
+		profiles[12] = getLightings.myProfile;
+		
+		SCallee_SmartEnvironmentProvidedService turnOnLightingdevice = 
+				new SCallee_SmartEnvironmentProvidedService(SERVICE_TURN_ON_LIGHTING_DEVICE);
+		turnOnLightingdevice.addFilteringInput(INPUT_LIGHTING_URI, Lighting.MY_URI, 1, 1, ppLightings);
+		turnOnLightingdevice.myProfile.addChangeEffect(ppLighting_Operation_Status, new Boolean(true));
+		profiles[13] = turnOnLightingdevice.myProfile;
+		
+		SCallee_SmartEnvironmentProvidedService turnOffLightingdevice = 
+				new SCallee_SmartEnvironmentProvidedService(SERVICE_TURN_OFF_LIGHTING_DEVICE);
+		turnOffLightingdevice.addFilteringInput(INPUT_LIGHTING_URI, Lighting.MY_URI, 1, 1, ppLightings);
+		turnOffLightingdevice.myProfile.addChangeEffect(ppLighting_Operation_Status, new Boolean(false));
+		profiles[14] = turnOffLightingdevice.myProfile;
+		
+		SCallee_SmartEnvironmentProvidedService setLightingIlluminationLevel = 
+				new SCallee_SmartEnvironmentProvidedService(SERVICE_SET_LIGHTING_ILLUMINATION_LEVEL);
+		setLightingIlluminationLevel.addFilteringInput(INPUT_LIGHTING_URI, Lighting.MY_URI, 1, 1, ppLightings);
+		setLightingIlluminationLevel.addInputWithChangeEffect(INPUT_LIGHTING_ILLUMINATION_LEVEL, TypeMapper.getDatatypeURI(Integer.class), 1, 1, ppLighting_Illumination_Level);
+		profiles[15] = setLightingIlluminationLevel.myProfile;
+		
+		SCallee_SmartEnvironmentProvidedService getCurtains = 
+				new SCallee_SmartEnvironmentProvidedService(SERVICE_GET_CURTAIN_CONTROLLERS);
+		getCurtains.addOutput(OUTPUT_CURTAINS, Curtain.MY_URI, 0, 0, ppCurtains);
+		profiles[16] = getCurtains.myProfile;
+		
+		SCallee_SmartEnvironmentProvidedService openCurtain = 
+				new SCallee_SmartEnvironmentProvidedService(SERVICE_OPEN_CURTAIN);
+		openCurtain.addFilteringInput(INPUT_CURTAIN_URI, Curtain.MY_URI, 1, 1, ppCurtains);
+		openCurtain.myProfile.addChangeEffect(ppCurtains_Status, new Boolean(true));
+		profiles[17] = openCurtain.myProfile;
+		
+		SCallee_SmartEnvironmentProvidedService closeCurtain = 
+				new SCallee_SmartEnvironmentProvidedService(SERVICE_CLOSE_CURTAIN);
+		closeCurtain.addFilteringInput(INPUT_CURTAIN_URI, Curtain.MY_URI, 1, 1, ppCurtains);
+		closeCurtain.myProfile.addChangeEffect(ppCurtains_Status, new Boolean(false));
+		profiles[18] = closeCurtain.myProfile;
+		
+		SCallee_SmartEnvironmentProvidedService getConsents = 
+				new SCallee_SmartEnvironmentProvidedService(SERVICE_GET_CONSENTS);
+		getConsents.addOutput(OUTPUT_CURTAINS, ElectricConsent.MY_URI, 0, 0, ppConsents);
+		profiles[19] = getConsents.myProfile;
+		
+		SCallee_SmartEnvironmentProvidedService turnOnConsent = 
+				new SCallee_SmartEnvironmentProvidedService(SERVICE_TURN_ON_CONSENTS);
+		turnOnConsent.addFilteringInput(INPUT_CONSENT_URI, ElectricConsent.MY_URI, 1, 1, ppConsents);
+		turnOnConsent.myProfile.addChangeEffect(ppConsents_Status, new Boolean(true));
+		profiles[20] = turnOnConsent.myProfile;
+		
+		SCallee_SmartEnvironmentProvidedService turnOffConsent = 
+				new SCallee_SmartEnvironmentProvidedService(SERVICE_TURN_ON_CONSENTS);
+		turnOffConsent.addFilteringInput(INPUT_CONSENT_URI, ElectricConsent.MY_URI, 1, 1, ppConsents);
+		turnOffConsent.myProfile.addChangeEffect(ppConsents_Status, new Boolean(false));
+		profiles[21] = turnOffConsent.myProfile;
 	}
 	
 }

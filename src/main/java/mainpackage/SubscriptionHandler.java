@@ -27,7 +27,7 @@ public class SubscriptionHandler {
 
 		// YOU CAN DELETE THE FOLLOWING LINE
 
-		System.out.println(String.format(Component.component_ID + " SUBSCRIPTION HANDLER: INFO: Received the following message from subscription:\n %s \n", subscription_response_message));
+		System.out.println(String.format(" SUBSCRIPTION HANDLER: INFO: Received the following message from subscription:\n %s \n", subscription_response_message));
 
 		// DO SOMETHING WITH msg_content...
 

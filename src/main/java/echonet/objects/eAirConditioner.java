@@ -1,15 +1,24 @@
 package echonet.objects;
 
-import java.util.Date;
 
+import java.util.Date;
+import java.util.LinkedList;
+import java.util.Timer;
+import java.util.TimerTask;
+
+import echowand.common.EOJ;
 import echowand.common.EPC;
-import echowand.common.PropertyMap;
-import echowand.object.EchonetObjectException;
-import echowand.object.ObjectData;
-import echowand.object.RemoteObject;
+import echowand.net.Node;
+import echowand.net.SubnetException;
+import echowand.service.Service;
+import echowand.service.result.GetListener;
+import echowand.service.result.GetResult;
+import echowand.service.result.ResultData;
+import echowand.service.result.ResultFrame;
 import utils.EchonetDataConverter;
 
 public class eAirConditioner extends eDataObject{
+	private boolean operationStatus;
 	private boolean operationPowerSaving;
 	private String operationModeSetting;
 	private boolean automaticTemperatureControlSetting;
@@ -55,6 +64,8 @@ public class eAirConditioner extends eDataObject{
 	private Date offTimerSetting;
 	private Date offTimerRelativeSetting;
 	
+	private Timer timer;
+	
 	//private NodeProfileObject profile;
 	public eAirConditioner() {
 		this.classCode = (byte)0x01;
@@ -66,34 +77,19 @@ public class eAirConditioner extends eDataObject{
 		this.groupCode = (byte)0x30;
 		this.instanceCode = instanceCode;
 	}
-	@Override
-	public void ParseDataFromRemoteObject(RemoteObject rObj) throws EchonetObjectException {
-		this.instanceCode = rObj.getEOJ().getInstanceCode();
-	//	ObjectData data = rObj.getData(EPC.x9F);
-	//	PropertyMap propertyMap = new PropertyMap(data.toBytes());
-		if(rObj.isGettable(EPC.x8F)) {
-			ObjectData data = rObj.getData(EPC.x8F);
-			if (EchonetDataConverter.dataToInteger(data) == 65) {
-				setOperationPowerSaving(true);
-			} else {
-				setOperationPowerSaving(false);
-			}
-		}
-		if(rObj.isGettable(EPC.xB0)) {
-			this.setOperationModeSetting(EchonetDataConverter.dataToAirConditionerOperationMode(rObj.getData(EPC.xB0)));
-		}
-		if(rObj.isGettable(EPC.xB3)) {
-			this.setCurrentSettingTemperature(EchonetDataConverter.dataToInteger(rObj.getData(EPC.xB3)));
-		}
-		if(rObj.isGettable(EPC.xBB)) {
-			this.setCurrentSettingTemperature(EchonetDataConverter.dataToInteger(rObj.getData(EPC.xBB)));
-		}
-		if(rObj.isGettable(EPC.xA0)) {
-			this.setAirFlowRate(EchonetDataConverter.dataToAirConditionerFlowRate(rObj.getData(EPC.xA0)));
-		}
-		
+	public eAirConditioner( EOJ eoj,Node node) {
+		super(node,eoj);
+		this.classCode = (byte)0x01;
+		this.groupCode = (byte)0x30;
+		this.instanceCode = eoj.getInstanceCode();
 	}
-
+	
+	public boolean isOperationStatus() {
+		return operationStatus;
+	}
+	public void setOperationStatus(boolean operationStatus) {
+		this.operationStatus = operationStatus;
+	}
 	public boolean isOperationPowerSaving() {
 		return operationPowerSaving;
 	}
@@ -366,14 +362,92 @@ public class eAirConditioner extends eDataObject{
 		this.profile = profile;
 	}
 	*/
+	private void getData(Service service){
+		LinkedList<EPC> epcs = new LinkedList<EPC>();
+		epcs.add(EPC.x80);
+		epcs.add(EPC.x8F);
+		epcs.add(EPC.xB0);
+		epcs.add(EPC.xB3);
+		epcs.add(EPC.xBB);
+		epcs.add(EPC.xA0);
+		try {
+			service.doGet(node,eoj,epcs,5000, new GetListener() {
+				@Override
+			    public void receive(GetResult result, ResultFrame resultFrame, ResultData resultData) {
+					if (resultData.isEmpty()) {
+						return;
+					}
+					
+					switch (resultData.getEPC()) {
+					case x80:
+						if(EchonetDataConverter.dataToInteger(resultData) == 48) {
+							setOperationStatus(true);
+						} else {
+							setOperationStatus(false);
+						}
+						System.out.println(String.format("AirConditioner:%s {EPC:0x80, EDT: 0x%02X}=={OperationStatus:%s}",
+								 getNode().getNodeInfo().toString(),resultData.toBytes()[0],isOperationStatus()));
+						break;
+					case x8F:
+						if (EchonetDataConverter.dataToInteger(resultData) == 65) {
+							
+							System.out.println(String.format("AirConditioner:"+node.getNodeInfo().toString()+ 
+									" {EPC:0x8F, EDT: 0x%02X%02X}=={OperationPowerSaving:True}",resultData.toBytes()[0],resultData.toBytes()[1]));
+							setOperationPowerSaving(true);
+						} else {
+							setOperationPowerSaving(false);
+							System.out.println(String.format("AirConditioner:"+node.getNodeInfo().toString()+ 
+									" {EPC:0x8F, EDT: 0x%02X%02X}=={OperationPowerSaving:False}",resultData.toBytes()[0],resultData.toBytes()[1]));
+						}
+						break;
+					case xB0:
+						setOperationModeSetting(EchonetDataConverter.dataToAirConditionerOperationMode(resultData));
+						System.out.println(String.format("AirConditioner:"+node.getNodeInfo().toString()+ 
+								" {EPC:0xB0, EDT: 0x%02X}=={OperationMode:%s}",resultData.toBytes()[0],getOperationModeSetting()));
+						break;
+					case xB3:
+						setCurrentSettingTemperature(EchonetDataConverter.dataToInteger(resultData));
+						System.out.println(String.format("AirConditioner:"+node.getNodeInfo().toString()+ 
+								" {EPC:0xB3, EDT: 0x%02X}=={CurrentSettingTemperature:%d}",resultData.toBytes()[0],getCurrentSettingTemperature()));
+						break;
+					case xBB:
+						setRoomTemperature(EchonetDataConverter.dataToInteger(resultData));
+						System.out.println(String.format("AirConditioner:"+node.getNodeInfo().toString()+ 
+								" {EPC:0xBB, EDT: 0x%02X}=={RoomTemperature:%d}",resultData.toBytes()[0],getRoomTemperature()));
+						break;
+					case xA0:
+						setAirFlowRate(EchonetDataConverter.dataToAirConditionerFlowRate(resultData));
+						System.out.println(String.format("AirConditioner:"+node.getNodeInfo().toString()+ 
+								" {EPC:0xA0, EDT: 0x%02X}=={OperationMode:%s}",resultData.toBytes()[0],getAirFlowRate()));
+						break;		
+					default:
+						break;
+					}	
+				}
+			});
+		} catch (SubnetException e) {
+			e.printStackTrace();
+		}
+	}
 	@Override
 	public String ToString() {
 		StringBuilder rs = new StringBuilder();
-		rs.append("IP:" + getDeviceIP() +"/n");
+		rs.append("IP:" + getNode().toString() +"/n");
 		rs.append("Mode:" + getOperationModeSetting() +"/n");
 		rs.append("Current Temperature: " + getCurrentSettingTemperature());
 		return rs.toString();
 	}
-	
+	@Override
+	public void ParseDataFromEOJ(Service service) {
+		timer = new Timer(true);
+		timer.schedule(new TimerTask() {
+			
+			@Override
+			public void run() {
+				getData(service);
+			}
+		}, 3000, 20000);	
+	}
+		
 	
 }

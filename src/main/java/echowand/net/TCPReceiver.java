@@ -1,12 +1,15 @@
 package echowand.net;
 
+import echowand.util.Pair;
 import java.util.HashMap;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import echowand.util.Pair;
-
+/**
+ *
+ * @author ymakino
+ */
 public class TCPReceiver implements TCPConnectionObserver {
     private static final Logger LOGGER = Logger.getLogger(TCPReceiver.class.getName());
     private static final String CLASS_NAME = TCPReceiver.class.getName();
@@ -20,10 +23,18 @@ public class TCPReceiver implements TCPConnectionObserver {
         receiverThreadMap = new HashMap<TCPConnection, TCPConnectionReceiverThread>();
     }
     
+    /**
+     * このTCPReceiverが有効であるかどうか返す。
+     * @return 有効であればtrue、そうでなければfalse
+     */
     public synchronized boolean isInService() {
         return inService;
     }
-
+    
+    /**
+     * このTCPReceiverを有効にする。
+     * @return 無効から有効に変更した場合はtrue、そうでなければfalse
+     */
     public synchronized boolean startService() {
         LOGGER.entering(CLASS_NAME, "startService");
         
@@ -37,7 +48,11 @@ public class TCPReceiver implements TCPConnectionObserver {
         LOGGER.exiting(CLASS_NAME, "startService", true);
         return true;
     }
-
+    
+    /**
+     * このTCPReceiverを無効にする。
+     * @return 有効から無効に変更した場合はtrue、そうでなければfalse
+     */
     public synchronized boolean stopService() {
         LOGGER.entering(CLASS_NAME, "stopService");
         
@@ -54,6 +69,12 @@ public class TCPReceiver implements TCPConnectionObserver {
         return true;
     }
 
+    /**
+     * 指定されたTCPConnectionを追加する。
+     * 指定されたTCPConnectionからのフレームの受信を行うように設定される。
+     * @param connection 追加するTCPConnectionの指定
+     * @return 追加に成功した場合にはtrue、そうでなければfalse
+     */
     public synchronized boolean addConnection(TCPConnection connection) {
         LOGGER.entering(CLASS_NAME, "addConnection", connection);
         
@@ -76,6 +97,12 @@ public class TCPReceiver implements TCPConnectionObserver {
         return true;
     }
 
+    /**
+     * 指定されたTCPConnectionを削除する。
+     * 指定されたTCPConnectionからのフレームの受信を停止するように設定される。
+     * @param connection 削除するTCPConnectionの指定
+     * @return 削除に成功した場合にはtrue、そうでなければfalse
+     */
     public synchronized boolean removeConnection(TCPConnection connection) {
         LOGGER.entering(CLASS_NAME, "removeConnection", connection);
         
@@ -90,14 +117,17 @@ public class TCPReceiver implements TCPConnectionObserver {
         }
         
         TCPConnectionReceiverThread receiverThread = receiverThreadMap.get(connection);
-        receiverThread.terminate();
+        receiverThread.interrupt();
         receiverThreadMap.remove(connection);
         connection.removeObserver(this);
         
         LOGGER.exiting(CLASS_NAME, "removeConnection", true);
         return true;
     }
-
+    
+    /**
+     * 受信を行うために管理しているTCPConnectionを全て削除する
+     */
     public synchronized void removeAllConnections() {
         LOGGER.entering(CLASS_NAME, "removeAllConnections");
         
@@ -107,19 +137,20 @@ public class TCPReceiver implements TCPConnectionObserver {
         
         LOGGER.exiting(CLASS_NAME, "removeAllConnections");
     }
-
-    public Pair<TCPConnection, CommonFrame> receive() throws NetworkException {
+    
+    /**
+     * フレームを受信する。
+     * 受信したフレームが利用したTCPConnectionと、受信したフレームの内容を返す。
+     * @return 受信したフレームのTCPConnectionとフレームの内容
+     * @throws InterruptedException 割り込みがあった場合
+     */
+    public Pair<TCPConnection, CommonFrame> receive() throws InterruptedException {
         LOGGER.entering(CLASS_NAME, "receive");
         
-        try {
-            Pair<TCPConnection, CommonFrame> pair = receiveQueue.take();
-            LOGGER.exiting(CLASS_NAME, "receive", pair);
-            return pair;
-        } catch (InterruptedException ex) {
-            NetworkException exception = new NetworkException("catched exception", ex);
-            LOGGER.throwing(CLASS_NAME, "receive", exception);
-            throw exception;
-        }
+        Pair<TCPConnection, CommonFrame> pair = receiveQueue.take();
+
+        LOGGER.exiting(CLASS_NAME, "receive", pair);
+        return pair;
     }
     
     @Override

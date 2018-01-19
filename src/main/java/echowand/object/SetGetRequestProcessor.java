@@ -1,21 +1,30 @@
 package echowand.object;
 
+import echowand.common.EOJ;
+import echowand.common.ESV;
+import echowand.logic.DefaultRequestProcessor;
+import echowand.net.*;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Logger;
 
-import echowand.common.EOJ;
-import echowand.common.ESV;
-import echowand.logic.DefaultRequestProcessor;
-import echowand.net.*;
+/**
+ * Set、Get、SetGet、INF_REQリクエストの処理を実行
+ * @author Yoshiki Makino
+ */
 
 public class SetGetRequestProcessor extends DefaultRequestProcessor {
     private static final Logger logger = Logger.getLogger(SetGetRequestProcessor.class.getName());
     private static final String className = SetGetRequestProcessor.class.getName();
     
     private LocalObjectManager manager;
-
+    
+    /**
+     * SetGetRequestProcessorを生成する。
+     * ローカルオブジェクトのSetやGetを行うためにLocalObjectManagerを持っている必要がある。
+     * @param manager Set、Getの対象となるローカルオブジェクト群
+     */
     public SetGetRequestProcessor(LocalObjectManager manager) {
         logger.entering(className, "SetGetRequestProcessor", manager);
         
@@ -327,7 +336,14 @@ public class SetGetRequestProcessor extends DefaultRequestProcessor {
         logger.exiting(className, "processRequest", true);
         return true;
     }
-
+    
+    /**
+     * ESVがSetIであるフレームの処理を行う。
+     * @param subnet 受信したフレームの送受信が行なわれたサブネット
+     * @param frame 受信したフレーム
+     * @param processed 指定されたフレームがすでに処理済みである場合にはtrue、そうでなければfalse
+     * @return 処理に成功した場合にはtrue、そうでなければfalse
+     */
     @Override
     public boolean processSetI(Subnet subnet, Frame frame, boolean processed) {
         logger.entering(className, "processRequest", new Object[]{subnet, frame, processed});
@@ -337,7 +353,14 @@ public class SetGetRequestProcessor extends DefaultRequestProcessor {
         logger.entering(className, "processRequest", ret);
         return ret;
     }
-
+    
+    /**
+     * ESVがSetCであるフレームの処理を行う。
+     * @param subnet 受信したフレームの送受信が行なわれたサブネット
+     * @param frame 受信したフレーム
+     * @param processed 指定されたフレームがすでに処理済みである場合にはtrue、そうでなければfalse
+     * @return 処理に成功した場合にはtrue、そうでなければfalse
+     */
     @Override
     public boolean processSetC(Subnet subnet, Frame frame, boolean processed) {
         logger.entering(className, "processSetC", new Object[]{subnet, frame, processed});
@@ -347,7 +370,14 @@ public class SetGetRequestProcessor extends DefaultRequestProcessor {
         logger.entering(className, "processSetC", ret);
         return ret;
     }
-
+    
+    /**
+     * ESVがGetであるフレームの処理を行う。
+     * @param subnet 受信したフレームの送受信が行なわれたサブネット
+     * @param frame 受信したフレーム
+     * @param processed 指定されたフレームがすでに処理済みである場合にはtrue、そうでなければfalse
+     * @return 処理に成功した場合にはtrue、そうでなければfalse
+     */
     @Override
     public boolean processGet(Subnet subnet, Frame frame, boolean processed) {
         logger.entering(className, "processGet", new Object[]{subnet, frame, processed});
@@ -358,6 +388,13 @@ public class SetGetRequestProcessor extends DefaultRequestProcessor {
         return ret;
     }
 
+    /**
+     * ESVがSetGetであるフレームの処理を行う。
+     * @param subnet 受信したフレームの送受信が行なわれたサブネット
+     * @param frame 受信したフレーム
+     * @param processed 指定されたフレームがすでに処理済みである場合にはtrue、そうでなければfalse
+     * @return 処理に成功した場合にはtrue、そうでなければfalse
+     */
     @Override
     public boolean processSetGet(Subnet subnet, Frame frame, boolean processed) {
         logger.entering(className, "processSetGet", new Object[]{subnet, frame, processed});
@@ -367,7 +404,14 @@ public class SetGetRequestProcessor extends DefaultRequestProcessor {
         logger.exiting(className, "processSetGet", ret);
         return ret;
     }
-
+    
+    /**
+     * ESVがINF_REQであるフレームの処理を行う。
+     * @param subnet 受信したフレームの送受信が行なわれたサブネット
+     * @param frame 受信したフレーム
+     * @param processed 指定されたフレームがすでに処理済みである場合にはtrue、そうでなければfalse
+     * @return 処理に成功した場合にはtrue、そうでなければfalse
+     */
     @Override
     public boolean processINF_REQ(Subnet subnet, Frame frame, boolean processed) {
         logger.entering(className, "processSetGet", new Object[]{subnet, frame, processed});

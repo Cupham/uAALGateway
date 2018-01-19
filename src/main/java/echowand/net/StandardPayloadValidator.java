@@ -2,23 +2,46 @@ package echowand.net;
 
 import echowand.common.ESV;
 
+/**
+ * StandardPayloadの検証
+ * @author Yoshiki Makino
+ */
 public class StandardPayloadValidator {
-
+    /**
+     * ペイロードに問題がないかを確認する
+     * @param payload 確認を行うペイロード
+     * @return 問題がなければtrue、そうでなければfalse
+     */
     public boolean validate(StandardPayload payload) {
         return validateSEOJ(payload) &&
                 validateDEOJ(payload) &&
                 validateESV(payload) &&
                 validateProperties(payload);
     }
-
+    
+    /**
+     * 送信EOJに問題がないか確認する。
+     * @param payload 確認を行うペイロード
+     * @return 問題がなければtrue、そうでなければfalse
+     */
     public boolean validateSEOJ(StandardPayload payload) {
         return payload.getSEOJ() != null;
     }
-
+    
+    /**
+     * 宛先EOJに問題がないか確認する。
+     * @param payload 確認を行うペイロード
+     * @return 問題がなければtrue、そうでなければfalse
+     */
     public boolean validateDEOJ(StandardPayload payload) {
         return payload.getDEOJ() != null;
     }
-
+    
+    /**
+     * ペイロードのESVに問題がないか確認する。
+     * @param payload 確認を行うペイロード
+     * @return 問題がなければtrue、そうでなければfalse
+     */
     public boolean validateESV(StandardPayload payload) {
         ESV esv = payload.getESV();
         return esv != null && esv != ESV.Invalid; 
@@ -112,7 +135,13 @@ public class StandardPayloadValidator {
     private PropType getSecondPropType(StandardPayload payload) {
         return getPropType(false, payload);
     }
-
+    
+    
+    /**
+     * プロパティに問題がないか確認する。
+     * @param payload 確認を行うペイロード
+     * @return 問題がなければtrue、そうでなければfalse
+     */
     public boolean validateProperties(StandardPayload payload) {
         if (payload.getESV() == null) {
             return false;

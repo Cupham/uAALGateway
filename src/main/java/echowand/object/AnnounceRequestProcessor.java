@@ -1,9 +1,5 @@
 package echowand.object;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.logging.Logger;
-
 import echowand.common.EOJ;
 import echowand.common.ESV;
 import echowand.logic.DefaultRequestProcessor;
@@ -13,14 +9,28 @@ import echowand.net.Property;
 import echowand.net.StandardPayload;
 import echowand.net.Subnet;
 import echowand.net.SubnetException;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.logging.Logger;
 
+/**
+ * INF、INFCリクエストの処理を実行
+ * @author Yoshiki Makino
+ */
 public class AnnounceRequestProcessor extends DefaultRequestProcessor {
     private static final Logger logger = Logger.getLogger(AnnounceRequestProcessor.class.getName());
     private static final String className = AnnounceRequestProcessor.class.getName();
     
     private LocalObjectManager localManager;
     private RemoteObjectManager remoteManager;
-
+    
+    /**
+     * AnnounceRequestProcessorを生成する。
+     * ローカルオブジェクトへの通知を可能にするためLocalObjectManagerを持っている必要がある。
+     * リモートオブジェクトの通知を伝えるためにRemoteObjectManagerを持っている必要がある。
+     * @param localManager 通知の宛先となるローカルオブジェクト群
+     * @param remoteManager データの通知を伝えるためのリモートオブジェクト群
+     */
     public AnnounceRequestProcessor(LocalObjectManager localManager, RemoteObjectManager remoteManager) {
         logger.entering(className, "AnnounceRequestProcessor", new Object[]{localManager, remoteManager});
         
@@ -112,7 +122,14 @@ public class AnnounceRequestProcessor extends DefaultRequestProcessor {
         logger.exiting(className, "processINForINFC", true);
         return true;
     }
-
+    
+    /**
+     * ESVがINFであるフレームの処理を行う。
+     * @param subnet 受信したフレームの送受信が行なわれたサブネット
+     * @param frame 受信したフレーム
+     * @param processed 指定されたフレームがすでに処理済みである場合にはtrue、そうでなければfalse
+     * @return 処理に成功した場合にはtrue、そうでなければfalse
+     */
     @Override
     public boolean processINF(Subnet subnet, Frame frame, boolean processed) {
         logger.entering(className, "processINF", new Object[]{subnet, frame, processed});
@@ -128,6 +145,13 @@ public class AnnounceRequestProcessor extends DefaultRequestProcessor {
         return ret;
     }
 
+    /**
+     * ESVがINFCであるフレームの処理を行う。
+     * @param subnet 受信したフレームの送受信が行なわれたサブネット
+     * @param frame 受信したフレーム
+     * @param processed 指定されたフレームがすでに処理済みである場合にはtrue、そうでなければfalse
+     * @return 処理に成功した場合にはtrue、そうでなければfalse
+     */
     @Override
     public boolean processINFC(Subnet subnet, Frame frame, boolean processed) {
         logger.entering(className, "processINFC", new Object[]{subnet, frame, processed});

@@ -1,22 +1,34 @@
 package echonet.objects;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import utils.EchonetDataConverter;
-import echowand.common.Data;
+import echowand.common.EOJ;
 import echowand.common.EPC;
-import echowand.common.PropertyMap;
+import echowand.net.Node;
+import echowand.net.SubnetException;
 import echowand.object.EchonetObjectException;
-import echowand.object.ObjectData;
-import echowand.object.RemoteObject;
+import echowand.service.Service;
+import echowand.service.result.GetListener;
+import echowand.service.result.GetResult;
+import echowand.service.result.ResultData;
+import echowand.service.result.ResultFrame;
+import ontologies.EchonetDevice;
 
 public class eSuperClass {
+	private Timer timer;
 	private String deviceID;
+	private List<DataChangeObserver> observers = new ArrayList<DataChangeObserver>();
 	/**
 	 * Device IP
 	 */
-	private String deviceIP;
+	public Node node;
 	/**
 	 * Class group code
 	 */
@@ -29,6 +41,8 @@ public class eSuperClass {
 	 * Instance code
 	 */
 	protected byte instanceCode;
+	
+	public EOJ eoj;
 
 	/**
 	 * EPC: 0x80 ON: 0x30, OFF: 0x31
@@ -135,162 +149,200 @@ public class eSuperClass {
 	 * @param ip
 	 * @param name
 	 */
-	public eSuperClass(String ip, String name) {
-		this.deviceIP = ip;
+	public eSuperClass(Node node, String name) {		
+		this.node = node;
 		this.deviceID = name;
 	}
-	
-	/**
-	 * Parse profile object from remote object
-	 * 
-	 * @param rObj
-	 * @throws EchonetObjectException
-	 */
-	public void ParseProfileObjectFromEPC(RemoteObject rObj) throws EchonetObjectException {
+	public eSuperClass(Node node, EOJ eoj) {
+		this.node = node;
+		this.eoj = eoj;
+		this.deviceID = node.getNodeInfo().toString()+"_"+eoj.getInstanceCode();
+	}
+	private void getData(Service service){
+		LinkedList<EPC> epcs = new LinkedList<EPC>();
+		epcs.add(EPC.x80);
+		epcs.add(EPC.x81);
+		epcs.add(EPC.x82);	
+		epcs.add(EPC.x83);
+		epcs.add(EPC.x84);
+		epcs.add(EPC.x85);
+		epcs.add(EPC.x86);
+		epcs.add(EPC.x87);
+		epcs.add(EPC.x88);
+		epcs.add(EPC.x89);
+		epcs.add(EPC.x8A);
+		epcs.add(EPC.x8B);
+		epcs.add(EPC.x8C);
+		epcs.add(EPC.x8D);
+		epcs.add(EPC.x8E);
+		epcs.add(EPC.x8F);
+		epcs.add(EPC.x93);
+		epcs.add(EPC.x97);
+		epcs.add(EPC.x98);
+		epcs.add(EPC.x99);
+		epcs.add(EPC.x9A);
 		
+		try {
+			service.doGet(node,eoj,epcs,5000, new GetListener() {
+				@Override
+			    public void receive(GetResult result, ResultFrame resultFrame, ResultData resultData) {	
+					if (resultData.isEmpty()) {
+						return;
+					}
+					switch (resultData.getEPC()) {
+					case x80:
+						if(EchonetDataConverter.dataToInteger(resultData) == 48) {
+							setOperationStatus(true);
+						} else {
+							setOperationStatus(false);
+						}
+						System.out.println(String.format("Node:%s@EOJ:%s {EPC:0x80, EDT: 0x%02X}=={OperationStatus:%s}",
+								 getNode().getNodeInfo().toString(),eoj.toString(),resultData.toBytes()[0],isOperationStatus()));
 
-
-
-		this.groupCode = rObj.getEOJ().getClassGroupCode();
-		this.classCode = rObj.getEOJ().getClassCode();
-		this.instanceCode = rObj.getEOJ().getInstanceCode();
-		if (rObj.isGettable(EPC.x80)) { // operation status
-			ObjectData data = rObj.getData(EPC.x80);			
-			if (EchonetDataConverter.dataToInteger(data) == 48) {
-				System.out.println(String.format("   			{EPC:0x80, EDT: 0x%02X}=={OperationStatus:True}",data.toBytes()[0]));
-				this.operationStatus = true; // device status is ON
-			} else {
-				System.out.println(String.format("   			{EPC:0x80, EDT: 0x%02X}=={OperationStatus:False}",data.toBytes()[0]));
-				this.operationStatus = false; // device status is OFF
-			}
+						break;
+					case x81:
+						String rsLocation = EchonetDataConverter.dataToInstallLocation(resultData);	
+						if (rsLocation == null) {
+							rsLocation = " The installation location has not been set";
+						}
+						setInstallLocation(rsLocation);		
+						System.out.println(String.format("Node:%s@EOJ:%s {EPC:0x81, EDT: 0x%02X}=={InstallationLocation:%s}",
+								 getNode().getNodeInfo().toString(),eoj.toString(),resultData.toBytes()[0],getInstallLocation()));
+						break;
+					case x82:
+						setStandardVersionInfo(EchonetDataConverter.dataToVersion(resultData));
+						System.out.println(String.format("Node:%s@EOJ:%s {EPC:0x82, EDT: 0x%02X}=={Version Information:%s}",
+								 getNode().getNodeInfo().toString(),eoj.toString(),resultData.toBytes()[0],getStandardVersionInfo()));
+						break;
+					case x83:
+						setIdentificationNumber(EchonetDataConverter.dataToIdentifiCationNumber(resultData));
+						System.out.println(String.format("Node:%s@EOJ:%s {EPC:0x83, EDT: 0x%02X}=={Identification Number:%s}",
+								 getNode().getNodeInfo().toString(),eoj.toString(),resultData.toBytes()[0],getIdentificationNumber()));
+						break;
+					case x84:
+						setInstantaneousPower(EchonetDataConverter.dataToShort(resultData));
+						System.out.println(String.format("Node:%s@EOJ:%s {EPC:0x84, EDT: 0x%02X}=={Instantaneous Power Consumption:%d}",
+								 getNode().getNodeInfo().toString(),eoj.toString(),resultData.toBytes()[0],getInstantaneousPower()));
+						break;		
+					case x85:
+						setCumulativePower(EchonetDataConverter.dataToLong(resultData));
+						System.out.println(String.format("Node:%s@EOJ:%s {EPC:0x85, EDT: 0x%02X}=={Cumulative Power Consumption:%d}",
+								 getNode().getNodeInfo().toString(),eoj.toString(),resultData.toBytes()[0],getCumulativePower()));
+						break;
+					case x86:
+						setManufactureerFaultCode(EchonetDataConverter.dataToFaultCode(resultData));
+						System.out.println(String.format("Node:%s@EOJ:%s {EPC:0x86, EDT: 0x%02X}=={Manufacturer Fault Code:%s}",
+								 getNode().getNodeInfo().toString(),eoj.toString(),resultData.toBytes()[0],getManufacturerFaultCode()));
+						break;
+					case x87:
+						setCurrentLimitSetting(EchonetDataConverter.dataToInteger(resultData));
+						System.out.println(String.format("Node:%s@EOJ:%s {EPC:0x87, EDT: 0x%02X}=={Current Limit Setting:%d}",
+								 getNode().getNodeInfo().toString(),eoj.toString(),resultData.toBytes()[0],getCurrentLimitSetting()));
+						break;		
+					case x88:
+						if(EchonetDataConverter.dataToInteger(resultData) == 65) {
+							setFaultStatus(true);
+						} else {
+							setFaultStatus(false);
+						}
+						System.out.println(String.format("Node:%s@EOJ:%s {EPC:0x88, EDT: 0x%02X}=={Fault Status:%s}",
+								 getNode().getNodeInfo().toString(),eoj.toString(),resultData.toBytes()[0],isFaultStatus()));
+						break;		
+					case x89:
+						if (isFaultStatus()) {
+							try {
+								setFaultDescription(EchonetDataConverter.getFaultDetail(resultData));
+							} catch (EchonetObjectException e) {
+								e.printStackTrace();
+							}
+						} else {
+							setFaultDescription("NO FAULT");
+						}
+						System.out.println(String.format("Node:%s@EOJ:%s {EPC:0x89, EDT: 0x%02X}=={Fault Description:%s}",
+								 getNode().getNodeInfo().toString(),eoj.toString(),resultData.toBytes()[0],getFaultDescription()));
+						break;
+					case x8A:
+						setManufacturerCode(EchonetDataConverter.dataToString(resultData));
+						System.out.println(String.format("Node:%s@EOJ:%s {EPC:0x8A, EDT: 0x%02X}=={Manufacturer Code:%s}",
+								 getNode().getNodeInfo().toString(),eoj.toString(),resultData.toBytes()[0],getManufacturerCode()));
+						break;	
+					case x8B:						
+						setBusinessFacilityCode(EchonetDataConverter.dataToString(resultData));
+						System.out.println(String.format("Node:%s@EOJ:%s {EPC:0x8B, EDT: 0x%02X}=={Business Facility Code:%s}",
+								 getNode().getNodeInfo().toString(),eoj.toString(),resultData.toBytes()[0],getBusinessFacilityCode()));
+						break;
+					case x8C:
+						setProductCode(EchonetDataConverter.dataToString(resultData));
+						System.out.println(String.format("Node:%s@EOJ:%s {EPC:0x8C, EDT: 0x%02X}=={Product Code:%s}",
+								 getNode().getNodeInfo().toString(),eoj.toString(),resultData.toBytes()[0],getProductCode()));
+						break;
+					case x8D:
+						setProductNumber(EchonetDataConverter.dataToString(resultData));
+						System.out.println(String.format("Node:%s@EOJ:%s {EPC:0x8D, EDT: 0x%02X}=={Product Number:%s}",
+								 getNode().getNodeInfo().toString(),eoj.toString(),resultData.toBytes()[0],getProductNumber()));
+						break;		
+					case x8E:
+						setProductDate(EchonetDataConverter.dataToDate(resultData));
+						System.out.println(String.format("Node:%s@EOJ:%s {EPC:0x8E, EDT: 0x%02X}=={Production Date:%tA}",
+								 getNode().getNodeInfo().toString(),eoj.toString(),resultData.toBytes()[0],getProductDate()));
+						break;
+					case x8F:				
+						if(EchonetDataConverter.dataToInteger(resultData) == 65) {
+							setPowerSaving(true);
+						} else {
+							setPowerSaving(false);
+						}
+						System.out.println(String.format("Node:%s@EOJ:%s {EPC:0x8F, EDT: 0x%02X}=={PowerSaving Mode:%s}",
+								 getNode().getNodeInfo().toString(),eoj.toString(),resultData.toBytes()[0],isPowerSaving()));
+						break;
+					case x93:
+						if(EchonetDataConverter.dataToInteger(resultData) == 65) {
+							setThroughPublicNetwork(true);
+						} else {
+							setThroughPublicNetwork(false);
+						}
+						System.out.println(String.format("Node:%s@EOJ:%s {EPC:0x93, EDT: 0x%02X}=={isThrough Public Network:%s}",
+								 getNode().getNodeInfo().toString(),eoj.toString(),resultData.toBytes()[0],isThroughPublicNetwork()));
+						break;
+					case x97:
+						setCurrentTimeSetting(EchonetDataConverter.dataToTime(resultData));		
+						System.out.println(String.format("Node:%s@EOJ:%s {EPC:0x97, EDT: 0x%02X}=={Current Time Setting:%s}",
+								 getNode().getNodeInfo().toString(),eoj.toString(),resultData.toBytes()[0],getCurrentTimeSetting()));
+						break;
+					case x98:
+						setCurrentDateSetting(EchonetDataConverter.dataToDate(resultData));
+						System.out.println(String.format("Node:%s@EOJ:%s {EPC:0x98, EDT: 0x%02X}=={Current Date Setting:%s}",
+								 getNode().getNodeInfo().toString(),eoj.toString(),resultData.toBytes()[0],getCurrentDateSetting()));
+						break;
+					case x99:
+						setPowerLimit(EchonetDataConverter.dataToShort(resultData));
+						System.out.println(String.format("Node:%s@EOJ:%s {EPC:0x99, EDT: 0x%02X}=={Power Limit:%d}",
+								 getNode().getNodeInfo().toString(),eoj.toString(),resultData.toBytes()[0],getPowerLimit()));
+						break;
+					case x9A:
+						setCumulativeTime(EchonetDataConverter.dataToCummalativeTime(resultData));
+						System.out.println(String.format("Node:%s@EOJ:%s {EPC:0x9A, EDT: 0x%02X}=={Up Time:%s}",
+								 getNode().getNodeInfo().toString(),eoj.toString(),resultData.toBytes()[0],getCumulativeTime()));
+						break;
+					default:
+						break;
+					}	
+				}
+			});
+		} catch (SubnetException e) {
+			e.printStackTrace();
 		}
-		if (rObj.isGettable(EPC.x81)) { // install location
-			ObjectData data = rObj.getData(EPC.x81);
-			String rsLocation = EchonetDataConverter.dataToInstallLocation(data);
-			System.out.println(String.format("   			{EPC:0x81, EDT: 0x%02X}=={InstallationLocation: ",data.toBytes()[0])+rsLocation+"}");
+	}
+
+	public void ParseProfileObjectFromEPC(Service service) {
+		timer = new Timer(true);
+		timer.schedule(new TimerTask() {
 			
-			if (rsLocation == null) {
-				rsLocation = "			Can not find install location!";
+			@Override
+			public void run() {
+				getData(service);
 			}
-			this.installLocation = rsLocation;
-		}
-		System.out.println("   			...");
-		if (rObj.isGettable(EPC.x82)) { // standard version
-			this.standardVersionInfo = EchonetDataConverter.dataToVersion(rObj.getData(EPC.x82));
-		}
-
-		if (rObj.isGettable(EPC.x83)) { // identification number
-			this.identificationNumber = EchonetDataConverter.dataToIdentifiCationNumber(rObj.getData(EPC.x83)) + "";
-		}
-
-		if (rObj.isGettable(EPC.x84)) { // measured instantaneous power
-										// consumption
-			this.instantaneousPower = EchonetDataConverter.dataToShort(rObj.getData(EPC.x84));
-		}
-
-		if (rObj.isGettable(EPC.x85)) { // Measured cumulative power consumption
-			this.cumulativePower = EchonetDataConverter.dataToLong(rObj.getData(EPC.x85));
-		}
-
-		if (rObj.isGettable(EPC.x86)) { // Manufacturer's fault code
-			this.manufacturerFaultCode = EchonetDataConverter.dataToFaultCode(rObj.getData(EPC.x86)) + "";
-		}
-
-		if (rObj.isGettable(EPC.x87)) { // Current limit setting
-			this.currentLimitSetting = EchonetDataConverter.dataToInteger(rObj.getData(EPC.x87));
-		}
-
-		if (rObj.isGettable(EPC.x88)) { // Fault status
-			this.faultStatus = (EchonetDataConverter.dataToInteger(rObj.getData(EPC.x88)) == 65) ? true : false;
-		}
-
-		if (rObj.isGettable(EPC.x89)) { // Fault description
-			if (this.faultStatus) {
-				this.faultDescription = EchonetDataConverter.getFaultDetail(rObj.getData(EPC.x89));
-			} else {
-				this.faultDescription = "No Fault";
-			}
-		}
-		if (rObj.isGettable(EPC.x8A)) { // Manufacture code
-			this.manufacturerCode = EchonetDataConverter.dataToString(rObj.getData(EPC.x8A)) + "";
-		}
-
-		if (rObj.isGettable(EPC.x8B)) { // Business facility code
-			this.manufacturerCode = EchonetDataConverter.dataToString(rObj.getData(EPC.x8B)) + "";
-		}
-
-		if (rObj.isGettable(EPC.x8C)) { // product code
-			this.productCode = EchonetDataConverter.dataToString(rObj.getData(EPC.x8C)) + "";
-		}
-
-		if (rObj.isGettable(EPC.x8D)) { // producttion number
-			this.productNumber = EchonetDataConverter.dataToString(rObj.getData(EPC.x8D)) + "";
-		}
-
-		if (rObj.isGettable(EPC.x8E)) { // production date default 4bytes with
-										// format YYMD
-			this.productDate = EchonetDataConverter.dataDateTime(rObj.getData(EPC.x8E));
-		}
-
-		if (rObj.isGettable(EPC.x8F)) { // Power saving mode
-			this.powerSaving = (EchonetDataConverter.dataToInteger(rObj.getData(EPC.x8F)) == 65) ? true : false;
-		}
-
-		if (rObj.isGettable(EPC.x93)) { // Remote control
-			this.throughPublicNetwork = (EchonetDataConverter.dataToInteger(rObj.getData(EPC.x93)) == 65) ? true : false;
-		}
-
-		if (rObj.isGettable(EPC.x97)) { // current time 2bytes with format HH:MM
-			byte timeArray[];
-			timeArray = rObj.getData(EPC.x97).toBytes();
-			int h = timeArray[0];
-			int m = timeArray[1];
-			this.currentTimeSetting = "" + ((h < 10) ? ("0" + h) : (h + "")) + ":" + ((m < 10) ? ("0" + m) : ("" + m));
-		}
-
-		if (rObj.isGettable(EPC.x98)) { // current time 4bytes with format
-										// YYYY:MM:DD
-			this.currentDateSetting = EchonetDataConverter.dataDateTime(rObj.getData(EPC.x98));
-		}
-
-		if (rObj.isGettable(EPC.x99)) { // power limit
-			this.powerLimit = EchonetDataConverter.dataToShort(rObj.getData(EPC.x99));
-		}
-
-		if (rObj.isGettable(EPC.x9A)) { // Cumulative operating time 5bytes with
-										// first byte: Unit
-										// 4 bytes next: format
-										// Second:Minute:Hour:Day
-			byte timeArray[];
-			timeArray = rObj.getData(EPC.x9A).toBytes();
-			String unit = "";
-			switch (timeArray[0]) {
-			case (byte) 0x41:
-				unit = "seconds";
-				break;
-			case (byte) 0x42:
-				unit = "months";
-				break;
-			case (byte) 0x43:
-				unit = "hours";
-				break;
-			case (byte) 0x44:
-				unit = "days";
-				break;
-			default:
-				unit = "seconds";
-				break;
-			}
-			byte valueArray[] = new byte[4];
-			valueArray[0] = timeArray[1];
-			valueArray[1] = timeArray[2];
-			valueArray[2] = timeArray[3];
-			valueArray[3] = timeArray[4];
-			int timeSpan = EchonetDataConverter.dataToInteger(valueArray);
-			this.cumulativeTime = timeSpan + " " + unit;
-		}
-		
-		return;
+		}, 0, 30000);	
 	}
 	
 	
@@ -303,7 +355,7 @@ public class eSuperClass {
 		if (obj == this)
 			return true;
 		eSuperClass checkObj = (eSuperClass) obj;
-		if (!compareObject(this.deviceIP, checkObj.deviceIP))
+		if (!compareObject(this.node, checkObj.node))
 			return false;
 		if (!compareObject(this.deviceID, checkObj.deviceID))
 			return false;
@@ -359,7 +411,7 @@ public class eSuperClass {
 	@Override
 	public String toString() {
 		StringBuilder rs = new StringBuilder();
-		rs.append(" Device IP: " + this.deviceIP + ",");
+		rs.append(" Device IP: " + this.node.toString() + ",");
 		rs.append(" Device ID: " + this.deviceID + ",");
 		rs.append(" Operation status: " + ((this.operationStatus) ? "ON" : "OFF") + ",");
 		rs.append(" Installation location: " + this.installLocation + ",");
@@ -423,19 +475,30 @@ public class eSuperClass {
 			}
 		}
 	}
-
+	
+	public void attach(DataChangeObserver observer) {
+		observers.add(observer);
+	}
+	public void notifyDataChanged(Object obj, String property) {
+		for(DataChangeObserver ob : observers) {
+			ob.dataUpdated(obj, property);
+		}
+	}
 	public String getDeviceName() {
 		return deviceID;
 	}
 	public void setDeviceName(String deviceName) {
 		this.deviceID = deviceName;
 	}
-	public String getDeviceIP() {
-		return deviceIP;
+	
+	public Node getNode() {
+		return node;
 	}
-	public void setDeviceIP(String deviceIP) {
-		this.deviceIP = deviceIP;
+
+	public void setNode(Node node) {
+		this.node = node;
 	}
+
 	public byte getGroupCode() {
 		return groupCode;
 	}
@@ -458,127 +521,213 @@ public class eSuperClass {
 		return operationStatus;
 	}
 	public void setOperationStatus(boolean operationStatus) {
-		this.operationStatus = operationStatus;
+		if(this.isOperationStatus() != operationStatus) {
+			this.operationStatus = operationStatus;
+			notifyDataChanged(this, EchonetDevice.PROPERTY_HAS_OPERATION_STATUS);
+		}
+		
 	}
 	public String getInstallLocation() {
 		return installLocation;
 	}
 	public void setInstallLocation(String installLocation) {
-		this.installLocation = installLocation;
+		if(!installLocation.equals(this.getInstallLocation())) {
+			this.installLocation = installLocation;
+			notifyDataChanged(this, EchonetDevice.PROPERTY_HAS_INSTALLATION_LOCATION);
+		}
+		
 	}
 	public String getStandardVersionInfo() {
 		return standardVersionInfo;
 	}
 	public void setStandardVersionInfo(String standardVersionInfo) {
-		this.standardVersionInfo = standardVersionInfo;
+		if(!standardVersionInfo.equals(this.getStandardVersionInfo())) {
+			this.standardVersionInfo = standardVersionInfo;
+			notifyDataChanged(this, EchonetDevice.PROPERTY_STANDARD_VERSION_INFORMATION);
+		}		
 	}
 	public String getIdentificationNumber() {
 		return identificationNumber;
 	}
 	public void setIdentificationNumber(String identificationNumber) {
-		this.identificationNumber = identificationNumber;
+		if(!identificationNumber.equals(this.getIdentificationNumber())) {
+			this.identificationNumber = identificationNumber;
+			notifyDataChanged(this, EchonetDevice.PROPERTY_HAS_IDENTIFICATION_NUMBER);
+		}
+		
 	}
 	public short getInstantaneousPower() {
 		return instantaneousPower;
 	}
 	public void setInstantaneousPower(short instantaneousPower) {
-		this.instantaneousPower = instantaneousPower;
+		if(this.getInstantaneousPower() != instantaneousPower) {
+			this.instantaneousPower = instantaneousPower;
+			notifyDataChanged(this, EchonetDevice.PROPERTY_HAS_MEASURED_INSTANTANEOUS_POWER_CONSUMPTION);
+		}
+		
 	}
 	public long getCumulativePower() {
 		return cumulativePower;
 	}
 	public void setCumulativePower(long cumulativePower) {
-		this.cumulativePower = cumulativePower;
+		if(this.getCumulativePower() != cumulativePower) {
+			this.cumulativePower = cumulativePower;
+			notifyDataChanged(this, EchonetDevice.PROPERTY_HAS_MEASURED_CUMULATIVE_POWER_CONSUMPTION);
+		}
+		
 	}
 	public String getManufacturerFaultCode() {
 		return manufacturerFaultCode;
 	}
 	public void setManufactureerFaultCode(String manufactureerFaultCode) {
-		this.manufacturerFaultCode = manufactureerFaultCode;
+		if(!manufactureerFaultCode.equals(this.getManufacturerFaultCode())) {
+			this.manufacturerFaultCode = manufactureerFaultCode;
+			notifyDataChanged(this, EchonetDevice.PROPERTY_HAS_MANUFACTURER_FAULT_CODE);
+		}
+		
 	}
 	public int getCurrentLimitSetting() {
 		return currentLimitSetting;
 	}
 	public void setCurrentLimitSetting(int currentLimitSetting) {
-		this.currentLimitSetting = currentLimitSetting;
+		if(this.getCurrentLimitSetting()!=currentLimitSetting) {
+			this.currentLimitSetting = currentLimitSetting;
+			notifyDataChanged(this, EchonetDevice.PROPERTY_HAS_CURRENT_LIMIT_SETTING);
+		}
+		
 	}
 	public boolean isFaultStatus() {
 		return faultStatus;
 	}
 	public void setFaultStatus(boolean faultStatus) {
-		this.faultStatus = faultStatus;
+		if(this.isFaultStatus() != faultStatus) {
+			this.faultStatus = faultStatus;
+			notifyDataChanged(this, EchonetDevice.PROPERTY_HAS_FAULT_STATUS);
+		}
+		
 	}
 	public String getFaultDescription() {
 		return faultDescription;
 	}
 	public void setFaultDescription(String faultDescription) {
-		this.faultDescription = faultDescription;
+		if(!faultDescription.equals(this.getFaultDescription())) {
+			this.faultDescription = faultDescription;
+			notifyDataChanged(this, EchonetDevice.PROPERTY_HAS_FAULT_DESCRIPTION);
+		}
+		
 	}
 	public String getManufacturerCode() {
 		return manufacturerCode;
 	}
 	public void setManufacturerCode(String manufacturerCode) {
-		this.manufacturerCode = manufacturerCode;
+		if(!manufacturerCode.equals(this.getManufacturerCode())) {
+			this.manufacturerCode = manufacturerCode;
+			notifyDataChanged(this, EchonetDevice.PROPERTY_HAS_MANUFACTURER_CODE);
+		}		
 	}
 	public String getBusinessFacilityCode() {
 		return businessFacilityCode;
 	}
 	public void setBusinessFacilityCode(String businessFacilityCode) {
-		this.businessFacilityCode = businessFacilityCode;
+		if(!businessFacilityCode.equals(this.getBusinessFacilityCode())) {
+			this.businessFacilityCode = businessFacilityCode;
+			notifyDataChanged(this, EchonetDevice.PROPERTY_HAS_BUSINESS_FACILITY_CODE);
+		}	
 	}
 	public String getProductCode() {
 		return productCode;
 	}
 	public void setProductCode(String productCode) {
-		this.productCode = productCode;
+		if(!productCode.equals(this.getProductCode())) {
+			this.productCode = productCode;
+			notifyDataChanged(this, EchonetDevice.PROPERTY_HAS_PRODUCT_CODE);
+		}	
 	}
 	public String getProductNumber() {
 		return productNumber;
 	}
 	public void setProductNumber(String productNumber) {
-		this.productNumber = productNumber;
+		if(!productNumber.equals(this.getProductNumber())) {
+			this.productNumber = productNumber;
+			notifyDataChanged(this, EchonetDevice.PROPERTY_HAS_PRODUCTION_NUMBER);
+		}
+		
 	}
 	public Date getProductDate() {
 		return productDate;
 	}
 	public void setProductDate(Date productDate) {
-		this.productDate = productDate;
+		if(!productDate.equals(this.getProductDate())) {
+			this.productDate = productDate;
+			notifyDataChanged(this, EchonetDevice.PROPERTY_HAS_PRODUCTION_DATE);
+		}
+		
 	}
 	public boolean isPowerSaving() {
 		return powerSaving;
 	}
 	public void setPowerSaving(boolean powerSaving) {
-		this.powerSaving = powerSaving;
+		if(this.isPowerSaving()!=powerSaving) {
+			this.powerSaving = powerSaving;
+			notifyDataChanged(this, EchonetDevice.PROPERTY_HAS_POWER_SAVING_OPERATION_SETTING);
+		}
+		
 	}
 	public boolean isThroughPublicNetwork() {
 		return throughPublicNetwork;
 	}
 	public void setThroughPublicNetwork(boolean throughPublicNetwork) {
-		this.throughPublicNetwork = throughPublicNetwork;
+		if(this.isThroughPublicNetwork()!=throughPublicNetwork) {
+			this.throughPublicNetwork = throughPublicNetwork;
+			notifyDataChanged(this, EchonetDevice.PROPERTY_HAS_REMOTE_CONTROL_SETTING);
+		}
+		
 	}
 	public String getCurrentTimeSetting() {
 		return currentTimeSetting;
 	}
 	public void setCurrentTimeSetting(String currentTimeSetting) {
-		this.currentTimeSetting = currentTimeSetting;
+		if(!currentTimeSetting.equals(this.getCurrentTimeSetting())) {
+			this.currentTimeSetting = currentTimeSetting;
+			notifyDataChanged(this, EchonetDevice.PROPERTY_HAS_CURRENT_TIME_SETTING);
+		}
+		
 	}
 	public Date getCurrentDateSetting() {
 		return currentDateSetting;
 	}
 	public void setCurrentDateSetting(Date currentDateSetting) {
-		this.currentDateSetting = currentDateSetting;
+		if(!currentDateSetting.equals(this.getCurrentDateSetting())) {
+			this.currentDateSetting = currentDateSetting;
+			notifyDataChanged(this, EchonetDevice.PROPERTY_HAS_CURRENT_DATE_SETTING);
+		}	
 	}
 	public short getPowerLimit() {
 		return powerLimit;
 	}
 	public void setPowerLimit(short powerLimit) {
-		this.powerLimit = powerLimit;
+		if(this.getPowerLimit()!=powerLimit) {
+			this.powerLimit = powerLimit;
+			notifyDataChanged(this, EchonetDevice.PROPERTY_HAS_POWER_LIMIT_SETTING);
+		}
+		
 	}
 	public String getCumulativeTime() {
 		return cumulativeTime;
 	}
 	public void setCumulativeTime(String cumulativeTime) {
-		this.cumulativeTime = cumulativeTime;
+		if(!cumulativeTime.equals(this.getCumulativeTime())) {
+			this.cumulativeTime = cumulativeTime;
+			notifyDataChanged(this, EchonetDevice.PROPERTY_HAS_CUMULATIVE_OPERATING_TIME);
+		}
+	}
+
+	public EOJ getEoj() {
+		return eoj;
+	}
+
+	public void setEoj(EOJ eoj) {
+		this.eoj = eoj;
 	}
 	
 

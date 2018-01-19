@@ -28,7 +28,7 @@ public class EchonetDeviceScanner {
 	public EchonetDeviceScanner(Service service) {
 		this.service = service;
 	}
-	
+	/*
 	public static EchonetLiteDevice getDeviceResources(Service service, Node node) 
 			throws EchonetObjectException, SubnetException {
 
@@ -39,13 +39,9 @@ public class EchonetDeviceScanner {
 			RemoteObject remoteobject = service.getRemoteObject(node, eoj);
 			if (eoj.isNodeProfileObject()) {
 				// TODO: Replace remoteObject by doGet to reduce the time.
-				/*
-				Node node = remoteobject.getNode();
-				EOJ eoj = remoteobject.getEOJ();
-				service.doGet(node, eoj, Arrays.asList(EPC.x80, EPC.x81, EPC.xE0), timeout);
-				*/
+
 				
-				NodeProfileObject profileObj = new NodeProfileObject(node.toString(),node.getNodeInfo().toString());
+				NodeProfileObject profileObj = new NodeProfileObject(node,node.getNodeInfo().toString());
 				
 				try {
 					System.out.println("   		Translating ECHONET Profile object...");
@@ -68,7 +64,7 @@ public class EchonetDeviceScanner {
 		
 		return eDevice;
 	}
-	
+	*/
 	public ArrayList<EchonetLiteDevice> scanEDevices() throws SocketException, SubnetException,
 	TooManyObjectsException, InterruptedException, EchonetObjectException {
 		long startTime = System.currentTimeMillis();
@@ -87,7 +83,7 @@ public class EchonetDeviceScanner {
 		 * Parse device (node)
 		 ********************************************/
 		for (Node node : nodes) {
-			deviceList.add(getDeviceResources(this.service,node));
+			//deviceList.add(getDeviceResources(this.service,node));
 		}
 		System.out.println("   Finish translating ECHONET Lite frame to ECHONET objects within "+
 		(System.currentTimeMillis() - startTime1) + " ms.");

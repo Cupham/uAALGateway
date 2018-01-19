@@ -9,23 +9,54 @@ import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * 新たなTCP接続の受付
+ * @author ymakino
+ */
 public class TCPAcceptor {
     private static final Logger LOGGER = Logger.getLogger(TCPAcceptor.class.getName());
     private static final String CLASS_NAME = TCPAcceptor.class.getName();
     
     private InetAddress address;
-    private int port;
+    private int portNumber;
     private ServerSocket serverSocket;
     private LinkedList<TCPAcceptorObserver> observers;
-
-    public TCPAcceptor(int port) {
-        this(null, port);
+    
+    /**
+     * 接続待ちポート番号を指定して、TCPAcceptorを生成する。
+     * @param portNumber 接続待ちポート番号の指定
+     */
+    public TCPAcceptor(int portNumber) {
+        this(null, portNumber);
     }
-
-    public TCPAcceptor(InetAddress address, int port) {
+    
+    /**
+     * 接続待ちポート番号とIPアドレスを指定して、TCPAcceptorを生成する。
+     * @param address 接続待ちIPアドレスの指定
+     * @param portNumber 接続待ちポート番号の指定
+     */
+    public TCPAcceptor(InetAddress address, int portNumber) {
         this.address = address;
-        this.port = port;
+        this.portNumber = portNumber;
         observers = new LinkedList<TCPAcceptorObserver>();
+    }
+    
+    public int getPortNumber() {
+        return portNumber;
+    }
+    
+    public boolean setPortNumber(int portNumber) {
+        LOGGER.entering(CLASS_NAME, "setPortNumber", portNumber);
+        
+        if (isInService()) {
+            LOGGER.exiting(CLASS_NAME, "setPortNumber", false);
+            return false;
+        }
+        
+        this.portNumber = portNumber;
+        
+        LOGGER.exiting(CLASS_NAME, "setPortNumber", true);
+        return true;
     }
     
     private synchronized LinkedList<TCPAcceptorObserver> cloneObservers() {
@@ -41,15 +72,29 @@ public class TCPAcceptor {
         
         LOGGER.exiting(CLASS_NAME, "notifyAccepted");
     }
-
+    
+    /**
+     * オブザーバを追加
+     * @param observer オブザーバが追加された場合にはtrue、そうでなければfalse
+     * @return 追加に成功した場合にはtrue、そうでなければfalse
+     */
     public synchronized boolean addObserver(TCPAcceptorObserver observer) {
         return observers.add(observer);
     }
-
+    
+    /**
+     * オブザーバを削除
+     * @param observer オブザーバが削除された場合にはtrue、そうでなければfalse
+     * @return 削除に成功した場合にはtrue、そうでなければfalse
+     */
     public synchronized boolean removeObserver(TCPAcceptorObserver observer) {
         return observers.remove(observer);
     }
-
+    
+    /**
+     * このTCPAcceptorが有効であるかどうか返す。
+     * @return 有効であればtrue、そうでなければfalse
+     */
     public synchronized boolean isInService() {
         return serverSocket != null;
     }
@@ -58,7 +103,13 @@ public class TCPAcceptor {
         return serverSocket;
     }
 
-    public TCPConnection accept() throws NetworkException {
+    /**
+     * 新たに生成されたTCPAcceptorを返す。
+     * @return 新たに生成されたTCPConnection
+     * @throws NetworkException TCPConnectionの生成に失敗した場合
+     * @throws IOException I/Oエラーが発生した場合
+     */
+    public TCPConnection accept() throws NetworkException, IOException {
         LOGGER.entering(CLASS_NAME, "accept");
         
         ServerSocket ss = getServerSocket();
@@ -69,23 +120,22 @@ public class TCPAcceptor {
             throw exception;
         }
         
-        try {
-            Socket socket = ss.accept();
-            NodeInfo localNodeInfo = new InetNodeInfo(socket.getLocalAddress());
-            NodeInfo remoteNodeInfo = new InetNodeInfo(socket.getInetAddress());
-            TCPConnection connection = new TCPConnection(socket, localNodeInfo, remoteNodeInfo);
-            
-            notifyAccepted(connection);
-            
-            LOGGER.exiting(CLASS_NAME, "accept", connection);
-            return connection;
-        } catch (IOException ex) {
-            NetworkException exception = new NetworkException("catched exception", ex);
-            LOGGER.throwing(CLASS_NAME, "accept", exception);
-            throw exception;
-        }
-    }
+        Socket socket = ss.accept();
+        NodeInfo localNodeInfo = new InetNodeInfo(socket.getLocalAddress());
+        NodeInfo remoteNodeInfo = new InetNodeInfo(socket.getInetAddress());
+        TCPConnection connection = new TCPConnection(socket, localNodeInfo, remoteNodeInfo);
 
+        notifyAccepted(connection);
+
+        LOGGER.exiting(CLASS_NAME, "accept", connection);
+        return connection;
+    }
+    
+    /**
+     * このTCPAcceptorを有効にする。
+     * @return 無効から有効に変更した場合はtrue、そうでなければfalse
+     * @throws NetworkException 有効にするのに失敗した場合
+     */
     public synchronized boolean startService() throws NetworkException {
         LOGGER.entering(CLASS_NAME, "startService");
 
@@ -101,19 +151,12 @@ public class TCPAcceptor {
             InetSocketAddress saddr;
             
             if (address == null) {
-                saddr = new InetSocketAddress(port);
+                saddr = new InetSocketAddress(portNumber);
             } else {
-                saddr = new InetSocketAddress(address, port);
+                saddr = new InetSocketAddress(address, portNumber);
             }
             serverSocket.bind(saddr);
         } catch (IOException ex) {
-            if (serverSocket != null) {
-                try {
-                    serverSocket.close();
-                } catch (IOException ex1) {
-                }
-            }
-            
             NetworkException exception = new NetworkException("catched exception", ex);
             LOGGER.throwing(CLASS_NAME, "startService", exception);
             throw exception;
@@ -122,7 +165,11 @@ public class TCPAcceptor {
         LOGGER.exiting(CLASS_NAME, "startService", true);
         return true;
     }
-
+    
+    /**
+     * このTCPAcceptorを無効にする。
+     * @return 有効から無効に変更した場合はtrue、そうでなければfalse
+     */
     public synchronized boolean stopService() {
         LOGGER.entering(CLASS_NAME, "stopService");
         

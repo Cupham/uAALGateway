@@ -8,6 +8,9 @@ public class EchonetService extends Service{
 	
 	public static final String PROP_PROVIDES_TEMPERATURE_SENSOR_SERVICE = CaressesOntology.NAMESPACE + "provides_temperature_sensor_service";
 	public static final String PROP_PROVIDES_AIRCONDTIONER_SERVICE = CaressesOntology.NAMESPACE + "provides_airconditioner_service";
+	public static final String PROP_PROVIDES_LIGHTING_SERVICE = CaressesOntology.NAMESPACE + "provides_lighting_service";
+	public static final String PROP_PROVIDES_CURTAIN_SERVICE = CaressesOntology.NAMESPACE + "provides_curtain_service";
+	public static final String PROP_PROVIDES_CONSENT_SERVICE = CaressesOntology.NAMESPACE + "provides_consent_service";
 	public EchonetService() {
 		super();
 		// TODO Auto-generated constructor stub

@@ -1,14 +1,13 @@
 package echowand.object;
 
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.logging.Logger;
-
 import echowand.common.ClassEOJ;
 import echowand.common.Data;
 import echowand.common.EOJ;
 import echowand.common.EPC;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.logging.Logger;
 
 abstract class ListDataGenerator<DataType> {
 
@@ -113,13 +112,22 @@ class ClassListDataGenerator extends ListDataGenerator<ClassEOJ> {
     }
 }
 
+/**
+ * ノードプロファイルの代理となり、0xD3-0xD7のGet命令の処理を実行。
+ * @author Yoshiki Makino
+ */
 public class NodeProfileObjectDelegate extends LocalObjectDefaultDelegate {
     private static final Logger logger = Logger.getLogger(NodeProfileObjectDelegate.class.getName());
     private static final String className = NodeProfileObjectDelegate.class.getName();
     
     private boolean countOnlyDeviceClass = true;
     private LocalObjectManager manager;
-
+    
+    /**
+     * NodeProfileObjectDelegateを生成する。
+     * インスタンスリストデータを生成するためにLocalObjectManagerが必要となる。
+     * @param manager ローカルオブジェクト管理を行うオブジェクト
+     */
     public NodeProfileObjectDelegate(LocalObjectManager manager) {
         logger.entering(className, "NodeProfileObjectDelegate", manager);
         
@@ -225,14 +233,28 @@ public class NodeProfileObjectDelegate extends LocalObjectDefaultDelegate {
         return objectData;
     }
 
+    /**
+     * デバイスオブジェクトのみを自ノードクラス数(0xD4)に含めるかどうかを返す。
+     * @return デバイスオブジェクトのみを含む場合にはtrue、そうでなければfalse
+     */
     public boolean getCountOnlyDeviceClass() {
         return countOnlyDeviceClass;
     }
-
+    
+    /**
+     * デバイスオブジェクトのみを自ノードクラス数(0xD4)に含めるかどうかを設定する。
+     * @param onlyDeviceClass デバイスオブジェクトのみを含めるかどうか指定
+     */
     public void setCountOnlyDeviceClass(boolean onlyDeviceClass) {
         countOnlyDeviceClass = onlyDeviceClass;
     }
-
+    
+    /**
+     * 0xD3から0xD7までのプロパティデータを生成する。
+     * @param result 処理状態を表すオブジェクト
+     * @param object プロパティデータが要求されているオブジェクト
+     * @param epc 要求プロパティデータのEPC
+     */
     @Override
     public void getData(GetState result, LocalObject object, EPC epc) {
         logger.entering(className, "getData", new Object[]{result, object, epc});
@@ -253,8 +275,6 @@ public class NodeProfileObjectDelegate extends LocalObjectDefaultDelegate {
             case xD7:
                 result.setGetData(getClassListS());
                 break;
-			default :
-				break;
         }
         
         logger.exiting(className, "getData");

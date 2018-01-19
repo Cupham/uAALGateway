@@ -1,13 +1,12 @@
 package echowand.service;
 
+import echowand.net.Frame;
+import echowand.service.result.CaptureResult;
 import java.util.LinkedList;
 import java.util.logging.Logger;
 
-import echowand.net.Frame;
-import echowand.service.result.CaptureResult;
-
 /**
- * CaptureResultにフレームを登録するCaptureSubnetObserver
+ * CaptureSubnetを経由するフレームを用いてCaptureResultを更新
  * @author ymakino
  */
 public class CaptureResultObserver implements CaptureSubnetObserver {
@@ -20,13 +19,17 @@ public class CaptureResultObserver implements CaptureSubnetObserver {
      * CaptureResultObserverを生成する。
      */
     public CaptureResultObserver() {
+        LOGGER.entering(CLASS_NAME, "CaptureResultObserver");
+        
         captureResults = new LinkedList<CaptureResult>();
+        
+        LOGGER.exiting(CLASS_NAME, "CaptureResultObserver");
     }
     
     /**
-     * 指定されたCaptureResultを追加する。
-     * @param captureResult 追加するCaptureResult
-     * @return 追加に成功したらtrue、そうでなければfalse
+     * 指定されたCaptureResultを登録する。
+     * @param captureResult 登録するCaptureResult
+     * @return 登録に成功したらtrue、そうでなければfalse
      */
     public synchronized boolean addCaptureResult(CaptureResult captureResult) {
         LOGGER.entering(CLASS_NAME, "addCaptureResult", captureResult);
@@ -38,9 +41,9 @@ public class CaptureResultObserver implements CaptureSubnetObserver {
     }
     
     /**
-     * 指定されたCaptureResultを抹消する。
-     * @param captureResult 抹消するCaptureResult
-     * @return 抹消に成功したらtrue、そうでなければfalse
+     * 指定されたCaptureResultの登録を抹消する。
+     * @param captureResult 登録を抹消するCaptureResult
+     * @return 登録の抹消に成功したらtrue、そうでなければfalse
      */
     public synchronized boolean removeCaptureResult(CaptureResult captureResult) {
         LOGGER.entering(CLASS_NAME, "removeCaptureResult", captureResult);

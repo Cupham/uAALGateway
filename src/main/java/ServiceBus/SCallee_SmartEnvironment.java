@@ -3,6 +3,7 @@
 
 import java.net.SocketException;
 import java.nio.ByteBuffer;
+import java.util.ArrayList;
 
 /* More on how to use this class at: 
  * http://forge.universaal.org/wiki/support:Developer_Handbook_6#Providing_services_on_the_bus */
@@ -20,7 +21,10 @@ import echowand.object.EchonetObjectException;
 import echowand.object.ObjectData;
 import echowand.service.ObjectNotFoundException;
 import mainpackage.Activator;
+import ontologies.Curtain;
+import ontologies.ElectricConsent;
 import ontologies.HomeAirConditioner;
+import ontologies.Lighting;
 import ontologies.TemperatureSensor;
 import utils.EchonetDataConverter;
 
@@ -146,8 +150,82 @@ public class SCallee_SmartEnvironment extends ServiceCallee {
 					| ObjectNotFoundException | InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			}	
-		}else {
+			}
+		}else if(operation.startsWith(SCallee_SmartEnvironmentProvidedService.SERVICE_GET_LIGHTING_DEVICES)) {
+			sr = getLightings();
+		}else if(operation.startsWith(SCallee_SmartEnvironmentProvidedService.SERVICE_TURN_ON_LIGHTING_DEVICE)) {
+			Lighting inputData = (Lighting) call.getInputValue(SCallee_SmartEnvironmentProvidedService.INPUT_LIGHTING_URI);
+			try {
+				sr = switchLighting(inputData, true);
+			} catch (SocketException | SubnetException | TooManyObjectsException | EchonetObjectException
+					| ObjectNotFoundException | InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		}else if(operation.startsWith(SCallee_SmartEnvironmentProvidedService.SERVICE_TURN_OFF_LIGHTING_DEVICE)) {
+			Lighting inputData = (Lighting) call.getInputValue(SCallee_SmartEnvironmentProvidedService.INPUT_LIGHTING_URI);
+			try {
+				sr = switchLighting(inputData, false);
+			} catch (SocketException | SubnetException | TooManyObjectsException | EchonetObjectException
+					| ObjectNotFoundException | InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}else if(operation.startsWith(SCallee_SmartEnvironmentProvidedService.SERVICE_SET_LIGHTING_ILLUMINATION_LEVEL)) {
+			Lighting inputData = (Lighting) call.getInputValue(SCallee_SmartEnvironmentProvidedService.INPUT_LIGHTING_URI);
+			Object level = call.getInputValue(SCallee_SmartEnvironmentProvidedService.INPUT_LIGHTING_ILLUMINATION_LEVEL);
+			try {
+				sr = setLightingIlluminationLevel(inputData, Integer.parseInt(level.toString()));
+			} catch (SocketException | SubnetException | TooManyObjectsException | EchonetObjectException
+					| ObjectNotFoundException | InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}else if(operation.startsWith(SCallee_SmartEnvironmentProvidedService.SERVICE_GET_CURTAIN_CONTROLLERS)) {
+			sr = getCurtains();
+		}else if(operation.startsWith(SCallee_SmartEnvironmentProvidedService.SERVICE_OPEN_CURTAIN)) {
+			Curtain inputData = (Curtain) call.getInputValue(SCallee_SmartEnvironmentProvidedService.INPUT_CURTAIN_URI);
+			try {
+				sr = switchCurtain(inputData, true);
+			} catch (SocketException | SubnetException | TooManyObjectsException | EchonetObjectException
+					| ObjectNotFoundException | InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		}else if(operation.startsWith(SCallee_SmartEnvironmentProvidedService.SERVICE_CLOSE_CURTAIN)) {
+			Curtain inputData = (Curtain) call.getInputValue(SCallee_SmartEnvironmentProvidedService.INPUT_CURTAIN_URI);
+			try {
+				sr = switchCurtain(inputData, false);
+			} catch (SocketException | SubnetException | TooManyObjectsException | EchonetObjectException
+					| ObjectNotFoundException | InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}else if(operation.startsWith(SCallee_SmartEnvironmentProvidedService.SERVICE_GET_CONSENTS)) {
+			sr = getConsents();
+		}else if(operation.startsWith(SCallee_SmartEnvironmentProvidedService.SERVICE_TURN_ON_CONSENTS)) {
+			ElectricConsent inputData = (ElectricConsent) call.getInputValue(SCallee_SmartEnvironmentProvidedService.INPUT_CONSENT_URI);
+			try {
+				sr = switchConsent(inputData, true);
+			} catch (SocketException | SubnetException | TooManyObjectsException | EchonetObjectException
+					| ObjectNotFoundException | InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		}else if(operation.startsWith(SCallee_SmartEnvironmentProvidedService.SERVICE_TURN_OFF_CONSENTS)) {
+			ElectricConsent inputData = (ElectricConsent) call.getInputValue(SCallee_SmartEnvironmentProvidedService.INPUT_CONSENT_URI);
+			try {
+				sr = switchConsent(inputData, false);
+			} catch (SocketException | SubnetException | TooManyObjectsException | EchonetObjectException
+					| ObjectNotFoundException | InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		else {
 			System.out.println("The required service is not yet supported!!");
 		}
 		return sr;
@@ -156,11 +234,12 @@ public class SCallee_SmartEnvironment extends ServiceCallee {
 	private ServiceResponse getTemperatureSensors() {
 		ServiceResponse sr = null;
 		System.out.println("SCallee_SmartEnvironment:	Returning all temperature sensors in iHouse");
-		if(Activator.temperatureSensorOntologies != null) {
+		if(Activator.temperatureSensorOntologies.size() != 0) {
 			sr = new ServiceResponse(CallStatus.succeeded);
+			ArrayList<TemperatureSensor> tempSS =  new ArrayList<TemperatureSensor>(Activator.temperatureSensorOntologies.values());
 			sr.addOutput(new ProcessOutput(
 					SCallee_SmartEnvironmentProvidedService.OUTPUT_TEMPERATURE_SENSORS
-					,Activator.temperatureSensorOntologies));
+					,tempSS));
 			System.out.println("SCallee_SmartEnvironment:	Returned " +Activator.temperatureSensorOntologies.size() 
 					+" temperature sensors");
 		} else {
@@ -409,5 +488,195 @@ public class SCallee_SmartEnvironment extends ServiceCallee {
 		}	
 		return sr;
 	}
+	
+	private ServiceResponse getLightings() {
+		ServiceResponse sr = null;
+		System.out.println("SCallee_SmartEnvironment:	Returning all lighting devices in iHouse");
+		if(Activator.lightingOntologies.size() != 0) {
+			sr = new ServiceResponse(CallStatus.succeeded);
+			ArrayList<Lighting> lightings =  new ArrayList<Lighting>(Activator.lightingOntologies.values());
+			sr.addOutput(new ProcessOutput(
+					SCallee_SmartEnvironmentProvidedService.OUTPUT_LIGHTINGS
+					,lightings));
+			System.out.println("SCallee_SmartEnvironment:	Returned " +Activator.lightingOntologies.size() 
+					+" lighting devices");
+		} else {
+			sr = new ServiceResponse(CallStatus.denied);
+			System.out.println("SCallee_SmartEnvironment:	Can not get lighting devices from iHouse");
+		}	
+		return sr;
+	}
+	private ServiceResponse switchLighting(Lighting lighting, boolean status) throws SocketException, SubnetException, TooManyObjectsException, EchonetObjectException, ObjectNotFoundException, InterruptedException {
+		ServiceResponse sr = null;
+		if(lighting != null) {
+			if(status) {
+				System.out.println("SCallee_SmartEnvironment:	Turning ON the lighting device with IP: " + lighting.getIPAddress());	
+				EOJ eoj = new EOJ(lighting.getClassGroupCode(), lighting.getClassCode(), lighting.getInstanceCode());
+				ObjectData data = new ObjectData((byte) 0x30);
+				boolean rs = Activator.deviceUpdater.updateDeviceAttribute(lighting.getIPAddress(), eoj,EPC.x80 , data);
+				if(rs) {
+					sr = new ServiceResponse(CallStatus.succeeded);
+					System.out.println("SCallee_SmartEnvironment:	Turned ON the lighting device successfully");
+				} else {
+					sr = new ServiceResponse(CallStatus.denied);
+					System.out.println("SCallee_SmartEnvironment:	Can not turn ON the specific device");
+				}
+			} else if(!status){ 
+				System.out.println("SCallee_SmartEnvironment:	Turning OFF the lighting device with IP: " + lighting.getIPAddress());	
+				EOJ eoj = new EOJ(lighting.getClassGroupCode(), lighting.getClassCode(), lighting.getInstanceCode());
+				ObjectData data = new ObjectData((byte) 0x31);
+				boolean rs = Activator.deviceUpdater.updateDeviceAttribute(lighting.getIPAddress(), eoj,EPC.x80 , data);
+				if(rs) {
+					sr = new ServiceResponse(CallStatus.succeeded);
+					System.out.println("SCallee_SmartEnvironment:	Turned OFF the lighting device successfully");
+				} else {
+					sr = new ServiceResponse(CallStatus.denied);
+					System.out.println("SCallee_SmartEnvironment:	Can not turn OFF the specific device");
+				}
+			} else {
+				System.out.println("SCallee_SmartEnvironment:	What do you want to do with device: " + lighting.getIPAddress());
+			}
+			
+		} else {
+			System.out.println("SCallee_SmartEnvironment:	Error input required!");
+			
+		}	
+		return sr;
+	}
+	
+	private ServiceResponse setLightingIlluminationLevel(Lighting dev, int level) throws SocketException, SubnetException, TooManyObjectsException, EchonetObjectException, ObjectNotFoundException, InterruptedException {
+		ServiceResponse sr = null;
+		ObjectData data = null;
+		Integer illuminationLevel = new Integer(level);
+		if(dev != null && illuminationLevel !=null) {
+			System.out.println("SCallee_SmartEnvironment:	set illumination value of lighting device with IP: " + dev.getIPAddress() 
+			+ "to: " + illuminationLevel.intValue() + "%");
+			data = new ObjectData(illuminationLevel.byteValue());
+			EOJ eoj = new EOJ(dev.getClassGroupCode(), dev.getClassCode(), dev.getInstanceCode());
+			boolean rs = Activator.deviceUpdater.updateDeviceAttribute(dev.getIPAddress(), eoj,EPC.xB0 , data);
+			if(rs) {
+				sr = new ServiceResponse(CallStatus.succeeded);
+				System.out.println("SCallee_SmartEnvironment:	set illumination value successfully");
+			} else {
+				sr = new ServiceResponse(CallStatus.denied);
+				System.out.println("SCallee_SmartEnvironment:	Can not set illumination level for this device");
+			}
+		} else {
+			System.out.println("SCallee_SmartEnvironment:	Error input required!");
+			
+		}	
+		return sr;
+	}
+	
+	private ServiceResponse getCurtains() {
+		ServiceResponse sr = null;
+		System.out.println("SCallee_SmartEnvironment:	Returning all curtain controllers in iHouse");
+		if(Activator.curtainOntologies.size() != 0) {
+			sr = new ServiceResponse(CallStatus.succeeded);
+			ArrayList<Curtain> curtains =  new ArrayList<Curtain>(Activator.curtainOntologies.values());
+			sr.addOutput(new ProcessOutput(
+					SCallee_SmartEnvironmentProvidedService.OUTPUT_CURTAINS
+					,curtains));
+			System.out.println("SCallee_SmartEnvironment:	Returned " +Activator.lightingOntologies.size() 
+					+" curtain controllers");
+		} else {
+			sr = new ServiceResponse(CallStatus.denied);
+			System.out.println("SCallee_SmartEnvironment:	Can not get curtain controllers from iHouse");
+		}	
+		return sr;
+	}
+	private ServiceResponse switchCurtain(Curtain dev, boolean status) throws SocketException, SubnetException, TooManyObjectsException, EchonetObjectException, ObjectNotFoundException, InterruptedException {
+		ServiceResponse sr = null;
+		if(dev != null) {
+			if(status) {
+				System.out.println("SCallee_SmartEnvironment:	Open curtain with IP: " + dev.getIPAddress());	
+				EOJ eoj = new EOJ(dev.getClassGroupCode(), dev.getClassCode(), dev.getInstanceCode());
+				ObjectData data = new ObjectData((byte) 0x30);
+				boolean rs = Activator.deviceUpdater.updateDeviceAttribute(dev.getIPAddress(), eoj,EPC.x80 , data);
+				if(rs) {
+					sr = new ServiceResponse(CallStatus.succeeded);
+					System.out.println("SCallee_SmartEnvironment:	Open the curtain successfully");
+				} else {
+					sr = new ServiceResponse(CallStatus.denied);
+					System.out.println("SCallee_SmartEnvironment:	Can not open this specific curtain");
+				}
+			} else if(!status){ 
+				System.out.println("SCallee_SmartEnvironment:	Close curtain with IP: " + dev.getIPAddress());	
+				EOJ eoj = new EOJ(dev.getClassGroupCode(), dev.getClassCode(), (byte) 0x02);
+				ObjectData data = new ObjectData((byte) 0x30);
+				boolean rs = Activator.deviceUpdater.updateDeviceAttribute(dev.getIPAddress(), eoj,EPC.x80 , data);
+				if(rs) {
+					sr = new ServiceResponse(CallStatus.succeeded);
+					System.out.println("SCallee_SmartEnvironment:	Close the curtain successfully");
+				} else {
+					sr = new ServiceResponse(CallStatus.denied);
+					System.out.println("SCallee_SmartEnvironment:	Can not close this specific curtain");
+				}
+			} else {
+				System.out.println("SCallee_SmartEnvironment:	What do you want to do with device: " + dev.getIPAddress());
+			}
+			
+		} else {
+			System.out.println("SCallee_SmartEnvironment:	Error input required!");
+			
+		}	
+		return sr;
+	}
+	
+	private ServiceResponse getConsents() {
+		ServiceResponse sr = null;
+		System.out.println("SCallee_SmartEnvironment:	Returning all consents in iHouse");
+		if(Activator.consentOntologies.size() != 0) {
+			sr = new ServiceResponse(CallStatus.succeeded);
+			ArrayList<ElectricConsent> consents =  new ArrayList<ElectricConsent>(Activator.consentOntologies.values());
+			sr.addOutput(new ProcessOutput(
+					SCallee_SmartEnvironmentProvidedService.OUTPUT_CONSENTS
+					,consents));
+			System.out.println("SCallee_SmartEnvironment:	Returned " +Activator.consentOntologies.size() 
+					+" consents");
+		} else {
+			sr = new ServiceResponse(CallStatus.denied);
+			System.out.println("SCallee_SmartEnvironment:	Can not get consent from iHouse");
+		}	
+		return sr;
+	}
+	private ServiceResponse switchConsent(ElectricConsent dev, boolean status) throws SocketException, SubnetException, TooManyObjectsException, EchonetObjectException, ObjectNotFoundException, InterruptedException {
+		ServiceResponse sr = null;
+		if(dev != null) {
+			if(status) {
+				System.out.println("SCallee_SmartEnvironment:	Turn ON the electric consent with IP: " + dev.getIPAddress());	
+				EOJ eoj = new EOJ(dev.getClassGroupCode(), dev.getClassCode(), dev.getInstanceCode());
+				ObjectData data = new ObjectData((byte) 0x30);
+				boolean rs = Activator.deviceUpdater.updateDeviceAttribute(dev.getIPAddress(), eoj,EPC.x80 , data);
+				if(rs) {
+					sr = new ServiceResponse(CallStatus.succeeded);
+					System.out.println("SCallee_SmartEnvironment:	Turn ON the electric consent successfully");
+				} else {
+					sr = new ServiceResponse(CallStatus.denied);
+					System.out.println("SCallee_SmartEnvironment:	Can not turn ON this electric consent");
+				}
+			} else if(!status){ 
+				System.out.println("SCallee_SmartEnvironment:	Turn OFF the electric consent with IP: " + dev.getIPAddress());	
+				EOJ eoj = new EOJ(dev.getClassGroupCode(), dev.getClassCode(), dev.getInstanceCode());
+				ObjectData data = new ObjectData((byte) 0x31);
+				boolean rs = Activator.deviceUpdater.updateDeviceAttribute(dev.getIPAddress(), eoj,EPC.x80 , data);
+				if(rs) {
+					sr = new ServiceResponse(CallStatus.succeeded);
+					System.out.println("SCallee_SmartEnvironment:	Turn OFF the electric consent successfully");
+				} else {
+					sr = new ServiceResponse(CallStatus.denied);
+					System.out.println("SCallee_SmartEnvironment:	Can not turn OFF this electric consent");
+				}
+			} else {
+				System.out.println("SCallee_SmartEnvironment:	What do you want to do with device: " + dev.getIPAddress());
+			}
+			
+		} else {
+			System.out.println("SCallee_SmartEnvironment:	Error input required!");
+			
+		}	
+		return sr;
+	}
+	
 	
 }

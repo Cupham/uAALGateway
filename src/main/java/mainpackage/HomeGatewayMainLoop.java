@@ -52,7 +52,7 @@ public class HomeGatewayMainLoop {
 		
 		// Init a thread to scan and get all Home Network Device Resources
 		
-		initHNScanner();
+	//	initHNScanner();
 		
 		return rs;
 	}
@@ -66,7 +66,7 @@ public class HomeGatewayMainLoop {
 	   // Get all echonet devices
 	   // Translate EOJ, EPC into readable data
 	   // Create corresponding ontologies
-	
+	/*
 	private void initHNScanner() {
 		this.resourceScannerThread = new Thread() {
 			public void run() {
@@ -91,12 +91,12 @@ public class HomeGatewayMainLoop {
 									   //Temperature Sensor
 									if(dataObj.getClass().equals(eTemperatureSensor.class)) {
 										eTemperatureSensor temperatureSensor = (eTemperatureSensor) dataObj;
-										temperatureSensor.setDeviceIP(dev.getProfileObj().getDeviceIP());
+									//	temperatureSensor.setDeviceIP(dev.getProfileObj().getDeviceIP());
 										eTemperatureSensors.add(temperatureSensor);
 										// Home Aircondtioner
 									} else if(dataObj.getClass().equals(eAirConditioner.class)) {
 										eAirConditioner aircondtioner = (eAirConditioner) dataObj;
-										aircondtioner.setDeviceIP(dev.getProfileObj().getDeviceIP());
+									//	aircondtioner.setDeviceIP(dev.getProfileObj().getDeviceIP());
 										eHomeAirConditioners.add(aircondtioner);
 										// other devices
 									} else {
@@ -114,8 +114,8 @@ public class HomeGatewayMainLoop {
 							System.out.println("ERR: There is no Echonet Temperature Sensor in the home network");
 						} else {
 							for(eTemperatureSensor temperatureSensor : eTemperatureSensors) {
-								String uriSuffix =  temperatureSensor.getDeviceIP() + "_"+temperatureSensor.getInstanceCode(); 
-								System.out.println("Translating uAAL objects(TemperatureSensor "+temperatureSensor.getInstanceCode()+") with IP "+temperatureSensor.getDeviceIP() +" to uAAL objects...");
+							//	String uriSuffix =  temperatureSensor.getDeviceIP() + "_"+temperatureSensor.getInstanceCode(); 
+							//	System.out.println("Translating uAAL objects(TemperatureSensor "+temperatureSensor.getInstanceCode()+") with IP "+temperatureSensor.getDeviceIP() +" to uAAL objects...");
 								Activator.i_TemperatureSensor = new TemperatureSensor(CaressesOntology.NAMESPACE +"I_TemperatureSensor"+uriSuffix);
 								OntologyHelper.initTemperatureSensorOntology(temperatureSensor, Activator.i_TemperatureSensor);
 								Activator.temperatureSensorOntologies.add(Activator.i_TemperatureSensor);
@@ -127,7 +127,7 @@ public class HomeGatewayMainLoop {
 							System.out.println("ERR: There is no Airconditioner in the home network");
 						} else {
 							for( eAirConditioner airconditioner : eHomeAirConditioners) {
-								String uriSuffix =  airconditioner.getDeviceIP() + "_"+airconditioner.getInstanceCode(); 
+							//	String uriSuffix =  airconditioner.getDeviceIP() + "_"+airconditioner.getInstanceCode(); 
 								System.out.println("Translating uAAL objects(Airconditioner "+airconditioner.getInstanceCode()+") with IP "+airconditioner.getDeviceIP() +" to uAAL objects...");
 								Activator.i_HomeAirConditoner = new HomeAirConditioner(CaressesOntology.NAMESPACE +"I_Airconditioner"+uriSuffix);
 								OntologyHelper.initHomeAirconditionerOntology(airconditioner, Activator.i_HomeAirConditoner);
@@ -145,6 +145,7 @@ public class HomeGatewayMainLoop {
 			
 		};
 	}
+	*/
 	private boolean initEchonetInterface () {
 		boolean rs = true;
 		try {

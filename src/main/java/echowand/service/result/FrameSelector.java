@@ -1,10 +1,5 @@
 package echowand.service.result;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.logging.Logger;
-
 import echowand.common.ClassEOJ;
 import echowand.common.EOJ;
 import echowand.common.EPC;
@@ -12,6 +7,10 @@ import echowand.net.Frame;
 import echowand.net.Node;
 import echowand.net.StandardPayload;
 import echowand.util.Selector;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.logging.Logger;
 
 /**
  *
@@ -43,14 +42,6 @@ public class FrameSelector implements Selector<Frame> {
         this.nodes = new ArrayList<Node>();
         this.eojs = new ArrayList<EOJ>();
         this.epcs = new ArrayList<EPC>();
-        
-        LOGGER.exiting(CLASS_NAME, "FrameSelector");
-    }
-    
-    public FrameSelector(Node node) {
-        LOGGER.entering(CLASS_NAME, "FrameSelector", new Object[]{node});
-        
-        init(toList(node), null, null);
         
         LOGGER.exiting(CLASS_NAME, "FrameSelector");
     }

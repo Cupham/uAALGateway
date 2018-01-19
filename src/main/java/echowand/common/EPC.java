@@ -1,6 +1,5 @@
 package echowand.common;
 
-
 /**
  * EPCを表す列挙型
  * @author Yoshiki Makino

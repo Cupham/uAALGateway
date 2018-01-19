@@ -1,10 +1,5 @@
 package echowand.service.result;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.logging.Logger;
-
 import echowand.common.Data;
 import echowand.common.EOJ;
 import echowand.common.EPC;
@@ -15,8 +10,13 @@ import echowand.net.Node;
 import echowand.net.Property;
 import echowand.net.StandardPayload;
 import echowand.service.ObserveResultProcessor;
+import echowand.service.TimestampManager;
 import echowand.util.Collector;
 import echowand.util.Selector;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.logging.Logger;
 
 /**
  *
@@ -34,6 +34,38 @@ public class ObserveResult {
     private boolean dataListEnabled = true;
     private boolean frameListEnabled = true;
     private boolean done;
+    
+    private ObserveListener observeListener;
+    private TimestampManager timestampManager;
+
+    public ObserveResult(Selector<? super Frame> selector, ObserveResultProcessor processor, TimestampManager timestampManager) {
+        LOGGER.entering(CLASS_NAME, "ObserveResult", new Object[]{selector, processor});
+
+        frameSelector = selector;
+        this.processor = processor;
+        this.timestampManager = timestampManager;
+        
+        dataList = new LinkedList<ResultData>();
+        frameList = new LinkedList<ResultFrame>();
+        dataFrameMap = new HashMap<ResultData, ResultFrame>();
+        done = false;
+        
+        observeListener = null;
+        
+        LOGGER.exiting(CLASS_NAME, "ObserveResult");
+    }
+    
+    public synchronized void setObserveListener(ObserveListener observeListener) {
+        LOGGER.entering(CLASS_NAME, "setObserveListener", observeListener);
+        
+        this.observeListener = observeListener;
+        
+        if (observeListener != null && !done) {
+            observeListener.begin(this);
+        }
+        
+        LOGGER.exiting(CLASS_NAME, "setObserveListener");
+    }
 
     public synchronized void enableDataList() {
         LOGGER.entering(CLASS_NAME, "enableDataList");
@@ -84,19 +116,6 @@ public class ObserveResult {
         LOGGER.exiting(CLASS_NAME, "isFrameListEnabled", frameListEnabled);
         return frameListEnabled;
     }
-
-    public ObserveResult(Selector<? super Frame> selector, ObserveResultProcessor processor) {
-        LOGGER.entering(CLASS_NAME, "ObserveResult", new Object[]{selector, processor});
-
-        frameSelector = selector;
-        this.processor = processor;
-        dataList = new LinkedList<ResultData>();
-        frameList = new LinkedList<ResultFrame>();
-        dataFrameMap = new HashMap<ResultData, ResultFrame>();
-        done = false;
-        
-        LOGGER.exiting(CLASS_NAME, "ObserveResult");
-    }
     
     public synchronized void stopObserve() {
         LOGGER.entering(CLASS_NAME, "stopObserve");
@@ -104,6 +123,10 @@ public class ObserveResult {
         if (!done) {
             processor.removeObserveResult(this);
             done = true;
+            
+            if (observeListener != null) {
+                observeListener.finish(this);
+            }
         }
         
         LOGGER.exiting(CLASS_NAME, "stopObserve");
@@ -157,14 +180,12 @@ public class ObserveResult {
             return false;
         }
         
-        Frame frame = resultFrame.frame;
-        
-        if (!hasStandardPayload(frame)) {
+        if (!hasStandardPayload(resultFrame.getActualFrame())) {
             LOGGER.exiting(CLASS_NAME, "addFrame", false);
             return false;
         }
         
-        StandardPayload payload = frame.getCommonFrame().getEDATA(StandardPayload.class);
+        StandardPayload payload = resultFrame.getCommonFrame().getEDATA(StandardPayload.class);
         
         if (payload.getESV() != ESV.INF && payload.getESV() != ESV.INFC) {
             LOGGER.exiting(CLASS_NAME, "addFrame", false);
@@ -172,22 +193,25 @@ public class ObserveResult {
         }
         
         boolean result = true;
+        int count = payload.getFirstOPC();
+        LinkedList<ResultData> frameDataList = new LinkedList<ResultData>();
         
         if (frameListEnabled) {
             result &= frameList.add(resultFrame);
         }
         
-        int count = payload.getFirstOPC();
         for (int i=0; i<count; i++) {
             Property property = payload.getFirstPropertyAt(i);
             
-            Node node = frame.getSender();
+            Node node = resultFrame.getSender();
             ESV esv = payload.getESV();
             EOJ eoj = payload.getSEOJ();
             EPC epc = property.getEPC();
             Data data = property.getEDT();
             
-            ResultData resultData = new ResultData(node, esv, eoj, epc, data, resultFrame.time);
+            ResultData resultData = new ResultData(node, esv, eoj, epc, data, resultFrame.getTimestamp());
+            
+            frameDataList.add(resultData);
             
             if (dataListEnabled) {
                 result &= dataList.add(resultData);
@@ -198,6 +222,14 @@ public class ObserveResult {
             }
         }
         
+        if (observeListener != null) {
+            observeListener.receive(this, resultFrame);
+            
+            for (ResultData resultData : frameDataList) {
+                observeListener.receive(this, resultFrame, resultData);
+            }
+        }
+        
         LOGGER.exiting(CLASS_NAME, "addFrame", result);
         return result;
     }
@@ -205,8 +237,8 @@ public class ObserveResult {
     private synchronized ResultFrame createResultFrame(Frame frame) {
         LOGGER.entering(CLASS_NAME, "createResultFrame", frame);
         
-        long time = System.currentTimeMillis();
-        ResultFrame resultFrame = new ResultFrame(frame, time);
+        long timestamp = timestampManager.get(frame, System.currentTimeMillis());
+        ResultFrame resultFrame = new ResultFrame(frame, timestamp);
         
         LOGGER.exiting(CLASS_NAME, "createResultFrame", resultFrame);
         return resultFrame;

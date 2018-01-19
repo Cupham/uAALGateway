@@ -1,12 +1,16 @@
 package echowand.logic;
 
-import java.util.*;
-import java.util.logging.Logger;
-
 import echowand.common.EOJ;
 import echowand.common.ESV;
 import echowand.net.*;
+import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
+/**
+ * トランザクション実行クラス
+ * @author Yoshiki Makino
+ */
 public class Transaction {
     private static final Logger logger = Logger.getLogger(Transaction.class.getName());
     private static final String className = Transaction.class.getName();
@@ -33,13 +37,20 @@ public class Transaction {
     
     private static EnumMap<ESV, LinkedList<ESV>> responseESVMap = new EnumMap<ESV, LinkedList<ESV>>(ESV.class);
     
-    private static short getNextTID() {
+    private synchronized static short getNextTID() {
         if (nextTID == 0) {
             nextTID = 1;
         }
         return nextTID++;
     }
 
+    /**
+     * Transactionを生成する。
+     * 原則としてTransactionManagerを用いて生成することを推奨する。
+     * @param subnet リクエスト処理が送受信されるサブネット
+     * @param transactionManager Transactionオブジェクトの管理オブジェクト
+     * @param transactionConfig  リクエスト処理の詳細設定
+     */
     public Transaction(Subnet subnet, TransactionManager transactionManager, TransactionConfig transactionConfig) {
         logger.entering(className, "Transaction", new Object[]{subnet, transactionManager, transactionConfig});
         
@@ -73,6 +84,12 @@ public class Transaction {
         }
     }
     
+    /**
+     * 指定されたリクエストESVに対応するレスポンスESVの登録を行う。
+     * エラーレスポンス等の登録も行う必要があるため、一つのリクエストに対して複数のレスポンスを対応させることができる。
+     * @param req リクエストESVの指定
+     * @param res レスポンスESVの指定
+     */
     protected void addResponseESVMap(ESV req, ESV res) {
         LinkedList<ESV> esvs;
         if (responseESVMap.containsKey(req)) {
@@ -84,10 +101,18 @@ public class Transaction {
         responseESVMap.put(req, esvs);
     }
     
+    /**
+     * トランザクション処理の詳細設定を返す。
+     * @return リクエスト処理の詳細設定
+     */
     public TransactionConfig getTransactionConfig() {
         return transactionConfig;
     }
     
+    /**
+     * トランザクションのレスポンス処理を行なうTransactionListenerを登録する。
+     * @param listener 登録するTransactionListener
+     */
     public synchronized void addTransactionListener(TransactionListener listener) {
         logger.entering(className, "addTransactionListener", listener);
         
@@ -96,6 +121,11 @@ public class Transaction {
         logger.exiting(className, "addTransactionListener");
     }
     
+    
+    /**
+     * トランザクションのレスポンス処理を行なうTransactionListenerの登録を抹消する。
+     * @param listener 登録を抹消するTransactionListener
+     */
     public synchronized void removeTransactionListener(TransactionListener listener) {
         logger.entering(className, "removeTransactionListener", listener);
         
@@ -148,6 +178,10 @@ public class Transaction {
         logger.exiting(className, "doCallFinishTransactionListeners");
     }
     
+    /**
+     * 登録済みのTransactionListenerの個数を返す。
+     * @return 登録済みのTransactionListener数
+     */
     public synchronized int countTransactionListeners() {
         logger.entering(className, "countTransactionListeners", timeout);
         
@@ -157,6 +191,10 @@ public class Transaction {
         return count;
     }
     
+    /**
+     * トランザクションのタイムアウトをミリ秒単位で設定する
+     * @param timeout タイムアウトの時間(ミリ秒)
+     */
     public synchronized void setTimeout(int timeout) {
         logger.entering(className, "setTimeout", timeout);
         
@@ -165,10 +203,18 @@ public class Transaction {
         logger.exiting(className, "setTimeout");
     }
     
+    /**
+     * トランザクションのタイムアウト時間を返す。
+     * @return timeout タイムアウトの時間(ミリ秒)
+     */
     public synchronized int getTimeout() {
         return timeout;
     }
     
+    /**
+     * トランザクションのTIDを返す。
+     * @return リクエスト処理のTID
+     */
     public short getTID() {
         return tid;
     }
@@ -188,7 +234,7 @@ public class Transaction {
         return payload;
     }
     
-    private boolean sendRequest() throws SubnetException {
+    private boolean sendRequest() {
         logger.entering(className, "sendRequest");
         
         int count = transactionConfig.getCountPayloads();
@@ -207,7 +253,15 @@ public class Transaction {
             cf.setEDATA(payload);
             cf.setTID(tid);
             Frame frame = new Frame(transactionConfig.getSenderNode(), transactionConfig.getReceiverNode(), cf);
-            boolean success = subnet.send(frame);
+            
+            boolean success = true;
+            
+            try {
+                subnet.send(frame);
+            } catch (SubnetException ex) {
+                success = false;
+                logger.logp(Level.INFO, className, "sendRequest", "catched exception", ex);
+            }
             
             doCallSentTransactionListeners(frame, success);
             
@@ -231,8 +285,12 @@ public class Transaction {
         return valid;
     }
 
+    /**
+     * 受信したレスポンスフレームの処理を行なう。
+     * @param frame 受信したフレーム
+     * @return フレームの処理に成功した場合にはtrue、そうでなければfalse
+     */
     public synchronized boolean receiveResponse(Frame frame) {
-    	
         logger.entering(className, "receiveResponse");
         
         if (!this.waiting) {
@@ -296,6 +354,9 @@ public class Transaction {
         return true;
     }
     
+    /**
+     * トランザクションを終了する。
+     */
     public synchronized void finish() {
         logger.entering(className, "finish");
         
@@ -331,7 +392,10 @@ public class Transaction {
             logger.exiting(className, "TimeoutTimerTask.run");
         }
     }
-
+    /**
+     * トランザクションを開始する。
+     * @throws SubnetException フレームの生成や送信に失敗した場合 
+     */
     public synchronized void execute() throws SubnetException {
         logger.entering(className, "execute");
         
@@ -346,7 +410,7 @@ public class Transaction {
         
         transactionManager.addTransaction(this);
         
-        sendRequest();
+        boolean success = sendRequest();
         
         int timeout = getTimeout();
         
@@ -356,10 +420,18 @@ public class Transaction {
             timer = new Timer(true);
             timer.schedule(new TimeoutTimerTask(this), timeout);
         }
+        
+        if (!success) {
+            throw new SubnetException("sendRequest failed");
+        }
 
         logger.exiting(className, "execute");
     }
 
+    /**
+     * トランザクションが終了するまで待つ。
+     * @throws InterruptedException 割り込みが発生した場合
+     */
     public synchronized void join() throws InterruptedException {
         logger.entering(className, "join");
         
@@ -370,6 +442,10 @@ public class Transaction {
         logger.exiting(className, "join");
     }
     
+    /**
+     * 受信したレスポンスフレームの数を返す。
+     * @return 受信したレスポンスフレーム数
+     */
     public synchronized int countResponses() {
         logger.entering(className, "countResponses");
         
@@ -379,10 +455,18 @@ public class Transaction {
         return count;
     }
     
+    /**
+     * トランザクションが処理中であるか示す。
+     * @return トランザクションが処理中であればtrue、そうでなければfalse
+     */
     public synchronized boolean isWaitingResponse() {
         return waiting;
     }
 
+    /**
+     * トランザクションが終了しているか示す。
+     * @return トランザクションが終了していればtrue、そうでなければfalse
+     */
     public synchronized boolean isDone() {
         return done;
     }

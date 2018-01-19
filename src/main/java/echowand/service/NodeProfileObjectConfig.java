@@ -1,16 +1,15 @@
 package echowand.service;
 
-import java.util.logging.Logger;
-
 import echowand.common.EPC;
 import echowand.info.NodeProfileInfo;
 import echowand.info.PropertyInfo;
 import echowand.object.LocalObjectDateTimeDelegate;
-import echowand.object.LocalObjectNotifyDelegate;
 import echowand.object.NodeProfileObjectDelegate;
 import echowand.util.Constraint;
+import java.util.logging.Logger;
 
 /**
+ * CoreがNodeProfileObjectを生成するための設定
  * @author ymakino
  */
 public class NodeProfileObjectConfig extends LocalObjectConfig {
@@ -21,10 +20,9 @@ public class NodeProfileObjectConfig extends LocalObjectConfig {
     
     private LazyConfiguration dateTimeConfiguration;
     private LazyConfiguration nodeProfileConfiguration;
-    private LazyConfiguration notifyConfiguration;
     
     /**
-     * NodeProfileObjectConfig
+     * NodeProfileObjectConfigを生成する。
      */
     public NodeProfileObjectConfig() {
         super(new NodeProfileInfo());
@@ -46,20 +44,12 @@ public class NodeProfileObjectConfig extends LocalObjectConfig {
             }
         };
         
-        notifyConfiguration = new LazyConfiguration() {
-            @Override
-            public void configure(LocalObjectConfig config, Core core) {
-                addDelegate(new LocalObjectNotifyDelegate(core.getSubnet(), core.getTransactionManager()));
-            }
-        };
-        
         addLazyConfiguration(dateTimeConfiguration);
         addLazyConfiguration(nodeProfileConfiguration);
-        addLazyConfiguration(notifyConfiguration);
     }
     
     /**
-     * LocalObjectDateTimeDelegate
+     * LocalObjectDateTimeDelegateの利用を有効にする。
      */
     public void enableDateTimeDelegate() {
         if (!isDateTimeDelegateEnabled()) {
@@ -69,21 +59,22 @@ public class NodeProfileObjectConfig extends LocalObjectConfig {
     
     
     /**
-     * LocalObjectDateTimeDelegate
+     * LocalObjectDateTimeDelegateの利用を無効にする。
      */
     public void disableDateTimeDelegate() {
         removeLazyConfiguration(dateTimeConfiguration);
     }
     
     /**
-     * LocalObjectDateTimeDelegate
+     * LocalObjectDateTimeDelegateを利用するかどうかを返す。
+     * @return LocalObjectDateTimeDelegateを利用する場合にはtrue、そうでなければfalse
      */
     public boolean isDateTimeDelegateEnabled() {
         return containsLazyConfiguration(dateTimeConfiguration);
     }
     
     /**
-     * NodeProfileObjectDelegate
+     * NodeProfileObjectDelegateの利用を有効にする。
      */
     public void enableNodeProfileDelegate() {
         if (!isNodeProfileDelegateEnabled()) {
@@ -92,80 +83,87 @@ public class NodeProfileObjectConfig extends LocalObjectConfig {
     }
     
     /**
-     * NodeProfileObjectDelegate
+     * NodeProfileObjectDelegateの利用を無効にする。
      */
     public void disableNodeProfileDelegate() {
         removeLazyConfiguration(nodeProfileConfiguration);
     }
     
     /**
-     * NodeProfileObjectDelegate
+     * NodeProfileObjectDelegateを利用するかどうかを返す。
+     * @return NodeProfileDelegateを利用する場合にはtrue、そうでなければfalse
      */
     public boolean isNodeProfileDelegateEnabled() {
         return containsLazyConfiguration(nodeProfileConfiguration);
     }
     
     /**
-     * LocalObjectNotifyDelegate
-     */
-    public void enableNotifyDelegate() {
-        if (!isNotifyDelegateEnabled()) {
-            addLazyConfiguration(notifyConfiguration);
-        }
-    }
-    
-    /**
-     * LocalObjectNotifyDelegate
-     */
-    public void disableNotifyDelegate() {
-        removeLazyConfiguration(notifyConfiguration);
-    }
-    
-    /**
-     * LocalObjectNotifyDelegate
-     * @return LocalObjectNotifyDelegate
-     */
-    public boolean isNotifyDelegateEnabled() {
-        return containsLazyConfiguration(notifyConfiguration);
-    }
-    
-    /**
-     * 
+     * このNodeProfileObjectConfigにプロパティを追加する。
+     * @param epc 追加するプロパティのEPC
+     * @param gettable Setの可否
+     * @param settable Getの可否
+     * @param observable 通知の有無
+     * @param size プロパティのデータサイズ
+     * @return 追加が成功した場合にはtrue、失敗した場合にはfalse
      */
     public boolean addProperty(EPC epc, boolean gettable, boolean settable, boolean observable, int size) {
         return nodeProfileInfo.add(epc, gettable, settable, observable, size);
     }
     
     /**
-     * 
+     * このNodeProfileObjectConfigにプロパティを追加する。
+     * @param epc 追加するプロパティのEPC
+     * @param gettable Setの可否
+     * @param settable Getの可否
+     * @param observable 通知の有無
+     * @param size プロパティのデータサイズ
+     * @param constraint プロパティの制約
+     * @return 追加が成功した場合にはtrue、失敗した場合にはfalse
      */
     public boolean addProperty(EPC epc, boolean gettable, boolean settable, boolean observable, int size, Constraint constraint) {
         return nodeProfileInfo.add(epc, gettable, settable, observable, size, constraint);
     }
     
     /**
-     * 
+     * このNodeProfileObjectConfigにプロパティを追加する。
+     * @param epc 追加するプロパティのEPC
+     * @param gettable Setの可否
+     * @param settable Getの可否
+     * @param observable 通知の有無
+     * @param data プロパティのデータ
+     * @return 追加が成功した場合にはtrue、失敗した場合にはfalse
      */
     public boolean addProperty(EPC epc, boolean gettable, boolean settable, boolean observable, byte[] data) {
         return nodeProfileInfo.add(epc, gettable, settable, observable, data);
     }
     
     /**
-     * 
+     * このNodeProfileObjectConfigにプロパティを追加する。
+     * @param epc 追加するプロパティのEPC
+     * @param gettable Setの可否
+     * @param settable Getの可否
+     * @param observable 通知の有無
+     * @param constraint プロパティの制約
+     * @param data プロパティのデータ
+     * @return 追加が成功した場合にはtrue、失敗した場合にはfalse
      */
     public boolean addProperty(EPC epc, boolean gettable, boolean settable, boolean observable, byte[] data, Constraint constraint) {
         return nodeProfileInfo.add(epc, gettable, settable, observable, data, constraint);
     }
     
     /**
-     * 
+     * このNodeProfileObjectConfigにプロパティを追加する。
+     * @param prop 追加するプロパティ
+     * @return 追加が成功した場合にはtrue、失敗した場合にはfalse
      */
     public boolean addProperty(PropertyInfo prop) {
         return nodeProfileInfo.add(prop);
     }
     
     /**
-     * 
+     * このNodeProfileObjectConfigからプロパティを削除する。
+     * @param epc 削除するプロパティのEPC
+     * @return 削除が成功した場合にはtrue、失敗した場合にはfalse
      */
     public boolean removeProperty(EPC epc) {
         return nodeProfileInfo.remove(epc);

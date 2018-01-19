@@ -1,23 +1,41 @@
 package echowand.util;
 
+import echowand.util.Constraint;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
-import echowand.util.Constraint;
+/**
+ * データ長によるプロパティの制約を表現する。
+ * @author Yoshiki Makino
+ */
 public class ConstraintSize implements Constraint {
-	private int minSize;
+    private int minSize;
     private int maxSize;
     private Set<Integer> sizeSet;
     
+    /**
+     * ConstraintSizeを生成する。
+     * @param size プロパティデータサイズの制約
+     */
     public ConstraintSize(int size) {
         this(size, size);
     }
     
+    /**
+     * ConstraintSizeを生成する。
+     * @param minSize プロパティデータの最小サイズ
+     * @param maxSize プロパティデータの最大サイズ
+     */
     public ConstraintSize(int minSize, int maxSize) {
         this.minSize = minSize;
         this.maxSize = maxSize;
     }
     
+    /**
+     * ConstraintSizeを生成する。
+     * @param sizeSet プロパティデータサイズの集合
+     */
     public ConstraintSize(Set<Integer> sizeSet) {
         if (sizeSet.isEmpty()) {
             this.minSize = 0;
@@ -41,10 +59,18 @@ public class ConstraintSize implements Constraint {
         }
     }
     
+    /**
+     * プロパティデータの最小サイズを返す。
+     * @return プロパティデータの最小サイズ
+     */
     public int getMinSize() {
         return this.minSize;
     }
     
+    /**
+     * プロパティデータの最大サイズを返す。
+     * @return プロパティデータの最大サイズ
+     */
     public int getMaxSize() {
         return this.maxSize;
     }

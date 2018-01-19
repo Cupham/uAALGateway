@@ -50,7 +50,11 @@ public class TemperatureServiceCallee extends ServiceCallee {
 		
 	    public ArrayList<TemperatureSensor> getAllTemperatureSensor() {
 	    	if(Activator.temperatureSensorOntologies != null) {
-	    		return Activator.temperatureSensorOntologies;
+	    		ArrayList<TemperatureSensor> rs = new ArrayList<TemperatureSensor>();
+	    		for(String key : Activator.temperatureSensorOntologies.keySet()) {
+	    			rs.add(Activator.temperatureSensorOntologies.get(key));
+	    		}
+	    		return rs;
 	    	} else {
 	    		return null;
 	    	}

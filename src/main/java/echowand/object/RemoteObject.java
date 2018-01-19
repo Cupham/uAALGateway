@@ -1,8 +1,5 @@
 package echowand.object;
 
-import java.util.LinkedList;
-import java.util.logging.Logger;
-
 import echowand.common.Data;
 import echowand.common.EOJ;
 import echowand.common.EPC;
@@ -12,19 +9,37 @@ import echowand.logic.Transaction;
 import echowand.logic.TransactionListener;
 import echowand.logic.TransactionManager;
 import echowand.net.*;
+import java.util.LinkedList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
+/**
+ * リモートに存在するECHONETオブジェクト
+ * @author Yoshiki Makino
+ */
 public class RemoteObject implements EchonetObject {
     private static final Logger logger = Logger.getLogger(RemoteObject.class.getName());
     private static final String className = RemoteObject.class.getName();
-
+    
+    /**
+     * トランザクションのタイムアウト(ミリ秒)
+     */
     public static final int TRANSACTION_TIMEOUT = 5000;
-
+    /**
+     * トランザクションの送信EOJ
+     */
     public static final EOJ SOURCE_EOJ = new EOJ("0ef001");
-
+    /**
+     * GetプロパティマップのEPC
+     */
     public static final EPC GET_PROPERTYMAP_EPC = EPC.x9F;
-
+    /**
+     * SetプロパティマップのEPC
+     */
     public static final EPC SET_PROPERTYMAP_EPC = EPC.x9E;
-
+    /**
+     * AnnoプロパティマップのEPC
+     */
     public static final EPC ANNOUNCE_PROPERTYMAP_EPC = EPC.x9D;
     
     private TransactionManager transactionManager;
@@ -34,7 +49,14 @@ public class RemoteObject implements EchonetObject {
     private int timeout;
     
     private LinkedList<RemoteObjectObserver> observers;
-
+    
+    /**
+     * RemoteObjectを生成する。
+     * @param subnet このRemoteObjectが含まれるサブネット
+     * @param node このRemoteObjectを管理しているノード
+     * @param eoj このRemoteObjectのEOJ
+     * @param transactionManager トランザクション生成に用いられるTransactionManager
+     */
     public RemoteObject(Subnet subnet, Node node, EOJ eoj, TransactionManager transactionManager) {
         logger.entering(className, "RemoteObject", new Object[]{subnet, node, eoj, transactionManager});
         
@@ -51,24 +73,46 @@ public class RemoteObject implements EchonetObject {
     private synchronized LinkedList<RemoteObjectObserver> cloneObservers() {
         return new LinkedList<RemoteObjectObserver>(observers);
     }
-
+    
+    /**
+     * 設定されたTransactionManagerを返す。
+     * @return 設定されているTransactionManager
+     */
     public TransactionManager getListener() {
         return transactionManager;
     }
-
+    
+    /**
+     * 設定されたTransactionManagerを返す。
+     * @return 設定されているTransactionManager
+     */
     public Subnet getSubnet() {
         return subnet;
     }
-
+    
+    /**
+     * 設定された管理ノードを返す。
+     * @return 設定されているTransactionManager
+     */
     public Node getNode() {
         return node;
     }
-
+    
+    /**
+     * このオブジェクトのEOJを返す。
+     * @return このオブジェクトのEOJ
+     */
     @Override
     public EOJ getEOJ() {
         return eoj;
     }
-
+    
+    /**
+     * トランザクションのタイムアウト時間を設定する。
+     * タイムアウト時間は正の整数で指定する。
+     * @param timeout タイムアウト(ミリ秒)
+     * @return タイムアウトの設定に成功したらtrue、そうでなければfalse
+     */
     public boolean setTimeout(int timeout) {
         logger.entering(className, "setTimeout", timeout);
         
@@ -81,7 +125,11 @@ public class RemoteObject implements EchonetObject {
             return false;
         }
     }
-
+    
+    /**
+     * トランザクションのタイムアウト時間を取得する。
+     * @return 設定されているタイムアウトの時間(ミリ秒)
+     */
     public int getTimeout() {
         logger.entering(className, "getTimeout");
         
@@ -262,7 +310,14 @@ public class RemoteObject implements EchonetObject {
         logger.exiting(className, "createSetGetTransaction", transaction);
         return transaction;
     }
-
+    
+    /**
+     * 指定されたEPCのデータを返す。
+     * EPCのデータを取得するためにTransactionを実行する。
+     * @param epc EPCの指定
+     * @return 指定したEPCのデータ
+     * @throws EchonetObjectException データのGet中にエラーが発生した場合
+     */
     @Override
     public ObjectData getData(EPC epc) throws EchonetObjectException {
         logger.entering(className, "getData", epc);
@@ -286,6 +341,7 @@ public class RemoteObject implements EchonetObject {
         try {
             transaction.join();
         } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
             EchonetObjectException exception = new EchonetObjectException("interrupted", e);
             logger.throwing(className, "getData", exception);
             throw exception;
@@ -307,7 +363,12 @@ public class RemoteObject implements EchonetObject {
         logger.exiting(className, "getData", data);
         return data;
     }
-
+    
+    /**
+     * 指定されたEPCのデータをアナウンスするように要求する。
+     * @param epc EPCの指定
+     * @throws EchonetObjectException ネットワークに問題が発生した場合
+     */
     public void observeData(EPC epc) throws EchonetObjectException {
         logger.entering(className, "observeData", epc);
         
@@ -331,6 +392,14 @@ public class RemoteObject implements EchonetObject {
         logger.exiting(className, "observeData");
     }
 
+    /**
+     * 指定されたEPCに指定されたデータをセットする。
+     * EPCのデータをSetするためにTransactionを実行する。
+     * @param epc EPCの指定
+     * @param data セットするデータの指定
+     * @return セットを受け付けた場合にはtrue、そうでなければfalse
+     * @throws EchonetObjectException データのSet中にエラーが発生した場合
+     */
     @Override
     public boolean setData(EPC epc, ObjectData data) throws EchonetObjectException {
         logger.entering(className, "setData", new Object[]{epc, data});
@@ -345,12 +414,16 @@ public class RemoteObject implements EchonetObject {
 
         try {
             transaction.execute();
-            transaction.join();
         } catch (SubnetException e) {
             EchonetObjectException exception = new EchonetObjectException("setData failed", e);
             logger.throwing(className, "setData", exception);
             throw exception;
+        }
+        
+        try {
+            transaction.join();
         } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
             EchonetObjectException exception = new EchonetObjectException("interrupted", e);
             logger.throwing(className, "setData", exception);
             throw exception;
@@ -364,27 +437,55 @@ public class RemoteObject implements EchonetObject {
     private PropertyMap getPropertyMap(EPC epc) throws EchonetObjectException {
         return new PropertyMap(getData(epc).toBytes());
     }
-
+    
+    /**
+     * 指定されたEPCのプロパティが存在するかを返す。
+     * @param epc EPCの指定
+     * @return 存在していればtrue、そうでなければfalse
+     * @throws EchonetObjectException データの取得に失敗した場合
+     */
     @Override
     public boolean contains(EPC epc) throws EchonetObjectException {
         return isGettable(epc) || isSettable(epc) || isObservable(epc);
     }
-
+    
+    /**
+     * 指定されたEPCがGet可能であるかを返す。
+     * @param epc EPCの指定
+     * @return Get可能であればtrue、そうでなければfalse
+     * @throws EchonetObjectException データの取得に失敗した場合
+     */
     @Override
     public boolean isGettable(EPC epc) throws EchonetObjectException {
         return getPropertyMap(GET_PROPERTYMAP_EPC).isSet(epc);
     }
-
+    
+    /**
+     * 指定されたEPCがSet可能であるかを返す。
+     * @param epc EPCの指定
+     * @return Set可能であればtrue、そうでなければfalse
+     * @throws EchonetObjectException データの取得に失敗した場合
+     */
     @Override
     public boolean isSettable(EPC epc) throws EchonetObjectException {
         return getPropertyMap(SET_PROPERTYMAP_EPC).isSet(epc);
     }
-
+    
+    /**
+     * 指定されたEPCが通知を行うかを返す。
+     * @param epc EPCの指定
+     * @return 通知を行うのであればtrue、そうでなければfalse
+     * @throws EchonetObjectException データの取得に失敗した場合
+     */
     @Override
     public boolean isObservable(EPC epc) throws EchonetObjectException {
         return getPropertyMap(ANNOUNCE_PROPERTYMAP_EPC).isSet(epc);
     }
-
+    
+    /**
+     * プロパティデータ変更通知オブザーバを登録する。
+     * @param observer 登録するオブザーバ
+     */
     public synchronized void addObserver(RemoteObjectObserver observer) {
         logger.entering(className, "addObserver", observer);
         
@@ -392,7 +493,11 @@ public class RemoteObject implements EchonetObject {
         
         logger.exiting(className, "addObserver");
     }
-
+    
+    /**
+     * プロパティデータ変更通知オブザーバの登録を抹消する。
+     * @param observer 登録を抹消するオブザーバ
+     */
     public synchronized void removeObserver(RemoteObjectObserver observer) {
         logger.entering(className, "removeObserver", observer);
         
@@ -400,11 +505,20 @@ public class RemoteObject implements EchonetObject {
         
         logger.exiting(className, "removeObserver");
     }
-
+    
+    /**
+     * プロパティデータ変更通知オブザーバの数を返す。
+     * @return オブザーバの数
+     */
     public synchronized int countObservers() {
         return observers.size();
     }
-
+    
+    /**
+     * プロパティデータの変更をオブザーバに通知する。
+     * @param epc 通知EPC
+     * @param data 通知データ
+     */
     public void notifyData(EPC epc, ObjectData data) {
         logger.entering(className, "notifyData", new Object[]{epc, data});
         
