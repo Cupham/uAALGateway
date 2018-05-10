@@ -15,6 +15,8 @@ import echowand.service.result.GetListener;
 import echowand.service.result.GetResult;
 import echowand.service.result.ResultData;
 import echowand.service.result.ResultFrame;
+import ontologies.HomeAirConditioner;
+import ontologies.Lighting;
 import utils.EchonetDataConverter;
 
 public class eAirConditioner extends eDataObject{
@@ -88,7 +90,12 @@ public class eAirConditioner extends eDataObject{
 		return operationStatus;
 	}
 	public void setOperationStatus(boolean operationStatus) {
-		this.operationStatus = operationStatus;
+		if(operationStatus != isOperationStatus()) {
+			System.out.println("Status changed\n\n\n\n");
+			this.operationStatus = operationStatus;
+			notifyDataChanged(this, HomeAirConditioner.PROPERTY_HAS_OPERATION_STATUS);
+		}
+		
 	}
 	public boolean isOperationPowerSaving() {
 		return operationPowerSaving;
@@ -100,7 +107,11 @@ public class eAirConditioner extends eDataObject{
 		return operationModeSetting;
 	}
 	public void setOperationModeSetting(String operationModeSetting) {
-		this.operationModeSetting = operationModeSetting;
+		if(!operationModeSetting.equalsIgnoreCase(getOperationModeSetting())) {
+			System.out.println("Mode changed\n\n\n\n");
+			this.operationModeSetting = operationModeSetting;
+			notifyDataChanged(this, HomeAirConditioner.PROPERTY_HAS_OPERATION_MODE_SETTING);
+		}
 	}
 	public boolean isAutomaticTemperatureControlSetting() {
 		return automaticTemperatureControlSetting;
@@ -392,12 +403,12 @@ public class eAirConditioner extends eDataObject{
 						if (EchonetDataConverter.dataToInteger(resultData) == 65) {
 							
 							System.out.println(String.format("AirConditioner:"+node.getNodeInfo().toString()+ 
-									" {EPC:0x8F, EDT: 0x%02X%02X}=={OperationPowerSaving:True}",resultData.toBytes()[0],resultData.toBytes()[1]));
+									" {EPC:0x8F, EDT: 0x%02X}=={OperationPowerSaving:True}",resultData.toBytes()[0]));
 							setOperationPowerSaving(true);
 						} else {
 							setOperationPowerSaving(false);
 							System.out.println(String.format("AirConditioner:"+node.getNodeInfo().toString()+ 
-									" {EPC:0x8F, EDT: 0x%02X%02X}=={OperationPowerSaving:False}",resultData.toBytes()[0],resultData.toBytes()[1]));
+									" {EPC:0x8F, EDT: 0x%02X}=={OperationPowerSaving:False}",resultData.toBytes()[0]));
 						}
 						break;
 					case xB0:

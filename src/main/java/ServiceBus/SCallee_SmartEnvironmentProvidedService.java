@@ -24,7 +24,7 @@ import java.util.Hashtable;
 
 public class SCallee_SmartEnvironmentProvidedService extends EchonetService{
 
-	public static ServiceProfile[] profiles = new ServiceProfile[21];
+	public static ServiceProfile[] profiles = new ServiceProfile[22];
 	private static Hashtable serverLevelRestrictions = new Hashtable();
 	
 	public static final String NAMESPACE = "http://CARESSESuniversAALskeleton.org/Callee_SmartEnvironment.owl#";
@@ -56,7 +56,7 @@ public class SCallee_SmartEnvironmentProvidedService extends EchonetService{
 	static final String SERVICE_OPEN_CURTAIN= NAMESPACE + "open_curtain";
 	static final String SERVICE_CLOSE_CURTAIN= NAMESPACE + "close_curtain";
 		//Consent
-	static final String SERVICE_GET_CONSENTS= NAMESPACE + "get_curtains";
+	static final String SERVICE_GET_CONSENTS= NAMESPACE + "get_consents";
 	static final String SERVICE_TURN_ON_CONSENTS= NAMESPACE + "turnon_consent";
 	static final String SERVICE_TURN_OFF_CONSENTS= NAMESPACE + "turnoff_consent";
 
@@ -263,7 +263,7 @@ public class SCallee_SmartEnvironmentProvidedService extends EchonetService{
 		profiles[20] = turnOnConsent.myProfile;
 		
 		SCallee_SmartEnvironmentProvidedService turnOffConsent = 
-				new SCallee_SmartEnvironmentProvidedService(SERVICE_TURN_ON_CONSENTS);
+				new SCallee_SmartEnvironmentProvidedService(SERVICE_TURN_OFF_CONSENTS);
 		turnOffConsent.addFilteringInput(INPUT_CONSENT_URI, ElectricConsent.MY_URI, 1, 1, ppConsents);
 		turnOffConsent.myProfile.addChangeEffect(ppConsents_Status, new Boolean(false));
 		profiles[21] = turnOffConsent.myProfile;

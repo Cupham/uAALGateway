@@ -11,9 +11,11 @@ import org.universAAL.middleware.context.DefaultContextPublisher;
 import org.universAAL.middleware.context.owl.ContextProvider;
 import org.universAAL.middleware.context.owl.ContextProviderType;
 import org.universAAL.middleware.interfaces.configuration.scope.Scope;
+import org.universAAL.middleware.owl.MergedRestriction;
 import org.universAAL.middleware.rdf.ScopedResource;
 
 import mainpackage.CaressesOntology;
+import ontologies.EchonetDevice;
 
 public class CPublisher {
 	private ContextPublisher contextPublisher;
@@ -22,7 +24,9 @@ public class CPublisher {
 	public CPublisher(ModuleContext context) {
 		ContextProvider cProvider = new ContextProvider(CaressesOntology.NAMESPACE+"EchonetResourcePublisher");
 		cProvider.setType(ContextProviderType.gauge);
-		cProvider.setProvidedEvents(new ContextEventPattern[] {new ContextEventPattern()});
+		ContextEventPattern echonet = new ContextEventPattern();
+		echonet.addRestriction(MergedRestriction.getAllValuesRestriction(ContextEvent.PROP_RDF_SUBJECT, EchonetDevice.MY_URI));
+		cProvider.setProvidedEvents(new ContextEventPattern[] {echonet});
 		contextPublisher = new DefaultContextPublisher(context, cProvider);
 		if(contextPublisher != null) {
 			System.out.println("Initialize context publisher successfully");

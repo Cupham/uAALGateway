@@ -38,7 +38,7 @@ public class eLighting extends eDataObject{
 		return operationStatus;
 	}
 	public void setOperationStatus(boolean operationStatus) {
-		if(this.isOperationStatus() != operationStatus) {
+		if(operationStatus != isOperationStatus()) {
 			System.out.println("Operation Status changed\n\n\n\n");
 			this.operationStatus = operationStatus;
 			notifyDataChanged(this, Lighting.PROPERTY_HAS_OPERATION_STATUS);
@@ -88,8 +88,8 @@ public class eLighting extends eDataObject{
 					case xB0:
 						int level = EchonetDataConverter.dataToInteger(resultData);
 						setIlluminateLevel(level);
-						System.out.println(String.format("Lighting:%s {EPC:0xB0, EDT: 0x%02X%02X}=={Illumination Level = :%d}",
-								 getNode().getNodeInfo().toString(),resultData.toBytes()[0],resultData.toBytes()[1],getIlluminateLevel()));	
+						System.out.println(String.format("Lighting:%s {EPC:0xB0, EDT: 0x%02X}=={Illumination Level = :%d}",
+								 getNode().getNodeInfo().toString(),resultData.toBytes()[0],getIlluminateLevel()));	
 						break;
 						
 					default:
@@ -111,7 +111,7 @@ public class eLighting extends eDataObject{
 			public void run() {
 				getData(service);
 			}
-		}, 0, 1000);	
+		}, 0, 10000);	
 	}
 
 }

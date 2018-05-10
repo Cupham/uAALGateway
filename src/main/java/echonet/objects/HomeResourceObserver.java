@@ -4,6 +4,7 @@ package echonet.objects;
 import mainpackage.Activator;
 import mainpackage.CaressesOntology;
 import ontologies.Curtain;
+import ontologies.ElectricConsent;
 import ontologies.HomeAirConditioner;
 import ontologies.Lighting;
 import ontologies.TemperatureSensor;
@@ -41,7 +42,6 @@ public class HomeResourceObserver extends DataChangeObserver{
 			if(Activator.homeAirconditionerOntologies.containsKey(URI)) {
 				Activator.i_HomeAirConditoner = Activator.homeAirconditionerOntologies.get(URI);
 				OntologyHelper.updateAirconditionerOntologyProperty(aircon, Activator.i_HomeAirConditoner, property);
-
 			} else {
 				Activator.i_HomeAirConditoner = new HomeAirConditioner(URI);
 				OntologyHelper.initHomeAirconditionerOntology(aircon, Activator.i_HomeAirConditoner);
@@ -84,7 +84,7 @@ public class HomeResourceObserver extends DataChangeObserver{
 				Activator.i_Consent = Activator.consentOntologies.get(URI);
 				OntologyHelper.updateConsentOntologyProperty(consent, Activator.i_Consent, property);
 			} else {
-				Activator.i_Curtain = new Curtain(URI);
+				Activator.i_Consent = new ElectricConsent(URI);
 				OntologyHelper.initConsentntology(consent, Activator.i_Consent);
 			}
 			Activator.consentOntologies.put(URI, Activator.i_Consent);

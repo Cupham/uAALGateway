@@ -23,7 +23,7 @@ public class eCurtain extends eDataObject{
 		return status;
 	}
 	public void setStatus(boolean operationStatus) {
-		if(this.isOperationStatus() != operationStatus) {
+		if(operationStatus != isStatus()) {
 			System.out.println("Status changed\n\n\n\n");
 			this.status = operationStatus;
 			notifyDataChanged(this, Curtain.PROPERTY_HAS_STATUS);
@@ -62,7 +62,7 @@ public class eCurtain extends eDataObject{
 							setStatus(true);
 						} else if(eoj.getInstanceCode() == (byte)0x02 && EchonetDataConverter.dataToInteger(resultData) == 48) {
 							setStatus(false);
-						} else if(EchonetDataConverter.dataToInteger(resultData) == 48) {
+						} else if(EchonetDataConverter.dataToInteger(resultData) != 48) {
 							setStatus(false);
 						}
 						System.out.println(String.format("Curtain:%s {EPC:0x80, EDT: 0x%02X}=={Status:%s}",
@@ -87,7 +87,7 @@ public class eCurtain extends eDataObject{
 			public void run() {
 				getData(service);
 			}
-		}, 0, 1000);	
+		}, 0, 10000);	
 	}
 
 

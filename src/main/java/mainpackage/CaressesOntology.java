@@ -190,12 +190,15 @@ public class CaressesOntology extends Ontology{
 		oci.addSuperClass(Service.MY_URI);
 		oci.addObjectProperty(EchonetService.PROP_PROVIDES_AIRCONDTIONER_SERVICE).setFunctional();
 		oci.addObjectProperty(EchonetService.PROP_PROVIDES_TEMPERATURE_SENSOR_SERVICE).setFunctional();
-				
+		oci.addObjectProperty(EchonetService.PROP_PROVIDES_CURTAIN_SERVICE).setFunctional();
+		oci.addObjectProperty(EchonetService.PROP_PROVIDES_LIGHTING_SERVICE).setFunctional();
+		oci.addObjectProperty(EchonetService.PROP_PROVIDES_CONSENT_SERVICE).setFunctional();
+		
 		oci.addRestriction(MergedRestriction.getAllValuesRestriction(EchonetService.PROP_PROVIDES_TEMPERATURE_SENSOR_SERVICE, TemperatureSensor.MY_URI));
 		oci.addRestriction(MergedRestriction.getAllValuesRestriction(EchonetService.PROP_PROVIDES_AIRCONDTIONER_SERVICE, HomeAirConditioner.MY_URI));
 		oci.addRestriction(MergedRestriction.getAllValuesRestriction(EchonetService.PROP_PROVIDES_LIGHTING_SERVICE, Lighting.MY_URI));	
 		oci.addRestriction(MergedRestriction.getAllValuesRestriction(EchonetService.PROP_PROVIDES_CURTAIN_SERVICE, Curtain.MY_URI));
-		oci.addRestriction(MergedRestriction.getAllValuesRestriction(EchonetService.PROP_PROVIDES_CURTAIN_SERVICE, ElectricConsent.MY_URI));
+		oci.addRestriction(MergedRestriction.getAllValuesRestriction(EchonetService.PROP_PROVIDES_CONSENT_SERVICE, ElectricConsent.MY_URI));
 		// end echonet service
 				
 	}

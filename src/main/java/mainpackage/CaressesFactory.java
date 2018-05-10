@@ -8,6 +8,8 @@ import ontologies.AudioVisualRelatedOntology;
 import ontologies.CookingHouseholdRelatedOntology;
 import ontologies.EchonetDevice;
 import ontologies.HealthRelatedOntology;
+import ontologies.HousingFacilitiesRelatedOntology;
+import ontologies.ManagementOperationRelatedOntology;
 import ontologies.SensorRelatedOntology;
 
 public class CaressesFactory implements ResourceFactory {
@@ -54,9 +56,9 @@ public class CaressesFactory implements ResourceFactory {
 			case HEALTH_RELATED_ONT:
 				return new HealthRelatedOntology(instanceURI);
 			case HOUSING_FACILITY_RELARED_ONT:
-				return new CookingHouseholdRelatedOntology(instanceURI);			
+				return new HousingFacilitiesRelatedOntology(instanceURI);			
 			case MANAGEMENT_OPERATION_RELATED_ONT:
-				return new HealthRelatedOntology(instanceURI);		
+				return new ManagementOperationRelatedOntology(instanceURI);		
 			case TEMPERATURE_SENSOR:
 				return new ontologies.TemperatureSensor(instanceURI);
 			case HOME_AIRCONDITIONER:

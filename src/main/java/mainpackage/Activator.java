@@ -107,6 +107,7 @@ public class Activator implements BundleActivator {
 		homeAirconditionerOntologies = new HashMap<String,HomeAirConditioner>();
 		lightingOntologies = new HashMap<String,Lighting>();
 		curtainOntologies = new HashMap<String,Curtain>();
+		consentOntologies =  new HashMap<String, ElectricConsent>();
 		echonetDevices = new ArrayList<EchonetLiteDevice>();
 		
 		i_SmartFacility =  new SmartFacility(CaressesOntology.NAMESPACE + "I_SmartFacility");
@@ -186,7 +187,7 @@ public class Activator implements BundleActivator {
 			echonetCore.startService();
 			echonetService = new Service(echonetCore);
 			// deviceScanner = new EchonetDeviceScanner(Activator.echonetService);
-			//deviceUpdater = new EchonetDeviceUpdater(echonetService);
+			deviceUpdater = new EchonetDeviceUpdater(echonetService);
 			
 			Monitor monitor = new Monitor(echonetCore);
 			monitor.addMonitorListener(new MonitorListener() {

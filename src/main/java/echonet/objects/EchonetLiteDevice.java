@@ -50,6 +50,7 @@ public class EchonetLiteDevice {
 			case (byte) (0x22):
 				System.out.println("   			Creating Electric Consent object from ECHONET frame...");
 				dataObj = new eElectricConsent(eoj,node);
+				break;
 			default:
 				return false;
 			}

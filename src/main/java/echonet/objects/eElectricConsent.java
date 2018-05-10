@@ -56,17 +56,15 @@ public class eElectricConsent extends eDataObject{
 		return operationStatus;
 	}
 	public void setOperationStatus(boolean operationStatus) {
-		if(this.isOperationStatus() != operationStatus) {
+		if(operationStatus != isOperationStatus()) {
 			this.operationStatus = operationStatus;
 			notifyDataChanged(this, ElectricConsent.PROPERTY_HAS_OPERATION_STATUS);
 		}
 		
 	}
 	private void getData(Service service){
-		LinkedList<EPC> epcs = new LinkedList<EPC>();
-		epcs.add(EPC.x80);
 		try {
-			service.doGet(node, eoj, epcs, 5000, new GetListener() {
+			service.doGet(node, eoj, EPC.x80, 5000, new GetListener() {
 				@Override
 			    public void receive(GetResult result, ResultFrame resultFrame, ResultData resultData) {
 					if (resultData.isEmpty()) {
@@ -103,6 +101,6 @@ public class eElectricConsent extends eDataObject{
 			public void run() {
 				getData(service);
 			}
-		}, 3000, 5000);	
+		}, 3000, 10000);	
 	}
 }

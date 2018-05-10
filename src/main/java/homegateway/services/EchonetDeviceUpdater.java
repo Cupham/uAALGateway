@@ -9,6 +9,7 @@ import echowand.net.Node;
 import echowand.net.SubnetException;
 import echowand.object.EchonetObjectException;
 import echowand.object.ObjectData;
+import echowand.object.RemoteObject;
 import echowand.service.ObjectNotFoundException;
 import echowand.service.Service;
 
@@ -27,7 +28,10 @@ public class EchonetDeviceUpdater {
 		long startTime = System.currentTimeMillis();
 		// update execute
 		Node node = service.getRemoteNode(nodeIP);
-		if (service.setRemoteData(node, eoj, epc, value)) {
+		service.registerRemoteEOJ(node, eoj);
+        
+        RemoteObject remoteObject = service.getRemoteObject(node, eoj);
+		if (remoteObject.setData(epc, value)) {
 			long updateTime = System.currentTimeMillis() - startTime;
 			System.out.println("[UPDATE] Time update device: " + updateTime + " ms");
 			return true;

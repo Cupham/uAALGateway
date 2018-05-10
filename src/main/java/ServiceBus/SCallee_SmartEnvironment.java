@@ -46,7 +46,7 @@ public class SCallee_SmartEnvironment extends ServiceCallee {
 		
 		if(operation == null)
 			return null;
-		
+		System.out.println("Called received");
 		if(operation.startsWith(SCallee_SmartEnvironmentProvidedService.SERVICE_GET_TEMPERATURE_SENSORS)) {
 			sr = getTemperatureSensors();
 		} else if(operation.startsWith(SCallee_SmartEnvironmentProvidedService.SERVICE_TURN_ON_TEMPERATURE_SENSOR)){
@@ -155,6 +155,7 @@ public class SCallee_SmartEnvironment extends ServiceCallee {
 			sr = getLightings();
 		}else if(operation.startsWith(SCallee_SmartEnvironmentProvidedService.SERVICE_TURN_ON_LIGHTING_DEVICE)) {
 			Lighting inputData = (Lighting) call.getInputValue(SCallee_SmartEnvironmentProvidedService.INPUT_LIGHTING_URI);
+			System.out.println(inputData.toString());
 			try {
 				sr = switchLighting(inputData, true);
 			} catch (SocketException | SubnetException | TooManyObjectsException | EchonetObjectException
@@ -316,10 +317,11 @@ public class SCallee_SmartEnvironment extends ServiceCallee {
 		ServiceResponse sr = null;
 		System.out.println("SCallee_SmartEnvironment:	Returning all airconditioners in iHouse");
 		if(Activator.homeAirconditionerOntologies != null) {
+			ArrayList<HomeAirConditioner> tempSS =  new ArrayList<HomeAirConditioner>(Activator.homeAirconditionerOntologies.values());
 			sr = new ServiceResponse(CallStatus.succeeded);
 			sr.addOutput(new ProcessOutput(
 					SCallee_SmartEnvironmentProvidedService.OUTPUT_AIRCONDTIONERS
-					,Activator.homeAirconditionerOntologies));
+					,tempSS));
 			System.out.println("SCallee_SmartEnvironment:	Returned " +Activator.homeAirconditionerOntologies.size() 
 					+" temperature sensors");
 		} else {
