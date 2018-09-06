@@ -1,13 +1,14 @@
 package echowand.object;
 
-import echowand.common.EOJ;
-import echowand.net.Node;
-import echowand.util.Collector;
-import echowand.util.Selector;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Logger;
+
+import echowand.common.EOJ;
+import echowand.net.Node;
+import echowand.util.Collector;
+import echowand.util.Selector;
 
 /**
  * リモートオブジェクトを管理。

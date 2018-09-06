@@ -1,10 +1,11 @@
 package echowand.object;
 
-import echowand.common.EPC;
-import echowand.net.Property;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Logger;
+
+import echowand.common.EPC;
+import echowand.net.Property;
 
 /**
  * LocalObjectに対し複数Set、Getを実行

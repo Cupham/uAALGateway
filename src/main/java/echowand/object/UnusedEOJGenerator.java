@@ -1,10 +1,11 @@
 package echowand.object;
 
+import java.util.HashMap;
+import java.util.HashSet;
+
 import echowand.common.ClassEOJ;
 import echowand.common.EOJ;
 import echowand.logic.TooManyObjectsException;
-import java.util.HashMap;
-import java.util.HashSet;
 
 /**
  * ユニークなEOJの生成管理

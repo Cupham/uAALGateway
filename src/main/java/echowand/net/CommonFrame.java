@@ -1,8 +1,9 @@
 package echowand.net;
 
+import java.nio.ByteBuffer;
+
 import echowand.common.EOJ;
 import echowand.common.ESV;
-import java.nio.ByteBuffer;
 
 /**
  * 下位ネットワーク層に依存しない共通フレーム

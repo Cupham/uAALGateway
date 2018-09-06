@@ -1,5 +1,7 @@
 package echowand.object;
 
+import java.util.logging.Logger;
+
 import echowand.common.EOJ;
 import echowand.common.EPC;
 import echowand.logic.AnnounceTransactionConfig;
@@ -7,7 +9,6 @@ import echowand.logic.Transaction;
 import echowand.logic.TransactionManager;
 import echowand.net.Subnet;
 import echowand.net.SubnetException;
-import java.util.logging.Logger;
 
 /**
  * プロパティ値変更時に通知を行うDelegate

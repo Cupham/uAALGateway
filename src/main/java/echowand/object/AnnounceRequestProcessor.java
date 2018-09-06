@@ -1,5 +1,9 @@
 package echowand.object;
 
+import java.util.LinkedList;
+import java.util.List;
+import java.util.logging.Logger;
+
 import echowand.common.EOJ;
 import echowand.common.ESV;
 import echowand.logic.DefaultRequestProcessor;
@@ -9,9 +13,6 @@ import echowand.net.Property;
 import echowand.net.StandardPayload;
 import echowand.net.Subnet;
 import echowand.net.SubnetException;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.logging.Logger;
 
 /**
  * INF、INFCリクエストの処理を実行

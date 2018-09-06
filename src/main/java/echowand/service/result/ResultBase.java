@@ -1,5 +1,11 @@
 package echowand.service.result;
 
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import echowand.common.Data;
 import echowand.common.EOJ;
 import echowand.common.EPC;
@@ -12,11 +18,6 @@ import echowand.net.StandardPayload;
 import echowand.service.TimestampManager;
 import echowand.util.Collector;
 import echowand.util.Selector;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *

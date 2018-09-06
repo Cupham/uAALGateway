@@ -1,13 +1,14 @@
 package echowand.service;
 
-import echowand.service.result.ObserveResult;
-import echowand.logic.DefaultRequestProcessor;
-import echowand.net.Frame;
-import echowand.net.Subnet;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Logger;
+
+import echowand.logic.DefaultRequestProcessor;
+import echowand.net.Frame;
+import echowand.net.Subnet;
+import echowand.service.result.ObserveResult;
 
 /**
  * ObserveResultのための状変時アナウンスメッセージ処理

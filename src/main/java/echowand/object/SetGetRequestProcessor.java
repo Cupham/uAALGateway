@@ -1,13 +1,14 @@
 package echowand.object;
 
-import echowand.common.EOJ;
-import echowand.common.ESV;
-import echowand.logic.DefaultRequestProcessor;
-import echowand.net.*;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Logger;
+
+import echowand.common.EOJ;
+import echowand.common.ESV;
+import echowand.logic.DefaultRequestProcessor;
+import echowand.net.*;
 
 /**
  * Set、Get、SetGet、INF_REQリクエストの処理を実行

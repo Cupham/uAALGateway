@@ -1,10 +1,11 @@
 package echowand.net;
 
-import echowand.common.EOJ;
-import echowand.common.ESV;
 import java.nio.ByteBuffer;
 import java.util.Collection;
 import java.util.LinkedList;
+
+import echowand.common.EOJ;
+import echowand.common.ESV;
 
 /**
  * 標準ペイロード

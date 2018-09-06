@@ -1,8 +1,9 @@
 package echowand.monitor;
 
+import java.util.List;
+
 import echowand.common.EOJ;
 import echowand.net.Node;
-import java.util.List;
 
 /**
  *

@@ -1,12 +1,13 @@
 package echowand.logic;
 
-import echowand.net.Frame;
-import echowand.net.Subnet;
-import echowand.net.SubnetException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import echowand.net.Frame;
+import echowand.net.Subnet;
+import echowand.net.SubnetException;
 
 /**
  * 送受信のメインループを実行する。

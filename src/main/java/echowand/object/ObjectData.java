@@ -1,9 +1,10 @@
 package echowand.object;
 
-import echowand.common.Data;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+
+import echowand.common.Data;
 
 class ExtraData {
     ArrayList<Data> extraDataList;

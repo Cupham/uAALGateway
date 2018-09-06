@@ -1,9 +1,10 @@
 package echowand.service;
 
-import echowand.net.Frame;
-import echowand.service.result.CaptureResult;
 import java.util.LinkedList;
 import java.util.logging.Logger;
+
+import echowand.net.Frame;
+import echowand.service.result.CaptureResult;
 
 /**
  * CaptureSubnetを経由するフレームを用いてCaptureResultを更新

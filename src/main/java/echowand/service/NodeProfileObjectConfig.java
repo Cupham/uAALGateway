@@ -1,12 +1,13 @@
 package echowand.service;
 
+import java.util.logging.Logger;
+
 import echowand.common.EPC;
 import echowand.info.NodeProfileInfo;
 import echowand.info.PropertyInfo;
 import echowand.object.LocalObjectDateTimeDelegate;
 import echowand.object.NodeProfileObjectDelegate;
 import echowand.util.Constraint;
-import java.util.logging.Logger;
 
 /**
  * CoreがNodeProfileObjectを生成するための設定

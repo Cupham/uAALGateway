@@ -1,7 +1,8 @@
 package echowand.service;
 
-import echowand.object.LocalObject;
 import java.util.logging.Logger;
+
+import echowand.object.LocalObject;
 
 /**
  * 定期的に実行を行い、必要に応じてプロパティのアップデートを行う

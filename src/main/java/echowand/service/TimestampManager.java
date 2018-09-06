@@ -1,8 +1,9 @@
 package echowand.service;
 
-import echowand.net.Frame;
 import java.util.WeakHashMap;
 import java.util.logging.Logger;
+
+import echowand.net.Frame;
 
 /**
  *

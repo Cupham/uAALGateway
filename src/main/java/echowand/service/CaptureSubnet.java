@@ -1,13 +1,14 @@
 package echowand.service;
 
+import java.util.LinkedList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import echowand.net.Frame;
 import echowand.net.Node;
 import echowand.net.NodeInfo;
 import echowand.net.Subnet;
 import echowand.net.SubnetException;
-import java.util.LinkedList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * 送受信したフレームをキャプチャする機能を持つSubnet

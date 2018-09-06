@@ -1,11 +1,12 @@
 package echowand.logic;
 
+import java.util.LinkedList;
+import java.util.logging.Logger;
+
 import echowand.net.CommonFrame;
 import echowand.net.Frame;
 import echowand.net.StandardPayload;
 import echowand.net.Subnet;
-import java.util.LinkedList;
-import java.util.logging.Logger;
 
 /**
  * リクエストフレームを受け取り、登録された全てのRequestProcessorの適切なメソッドを呼び出す。

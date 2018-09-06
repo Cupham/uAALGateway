@@ -1,7 +1,8 @@
 package echowand.service;
 
-import echowand.object.LocalObject;
 import java.util.logging.Logger;
+
+import echowand.object.LocalObject;
 
 /**
  * LocalObjectCreatorの生成結果を保持

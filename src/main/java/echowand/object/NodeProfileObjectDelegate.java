@@ -1,13 +1,14 @@
 package echowand.object;
 
-import echowand.common.ClassEOJ;
-import echowand.common.Data;
-import echowand.common.EOJ;
-import echowand.common.EPC;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Logger;
+
+import echowand.common.ClassEOJ;
+import echowand.common.Data;
+import echowand.common.EOJ;
+import echowand.common.EPC;
 
 abstract class ListDataGenerator<DataType> {
 

@@ -1,9 +1,10 @@
 package echowand.service;
 
-import echowand.object.LocalObject;
 import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import echowand.object.LocalObject;
 
 /**
  * 登録されたPropertyUpdaterを定期的に実行

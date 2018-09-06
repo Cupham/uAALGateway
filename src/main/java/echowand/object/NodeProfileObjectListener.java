@@ -1,5 +1,9 @@
 package echowand.object;
 
+import java.util.LinkedList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import echowand.common.Data;
 import echowand.common.EOJ;
 import echowand.common.EPC;
@@ -7,9 +11,6 @@ import echowand.logic.Transaction;
 import echowand.logic.TransactionListener;
 import echowand.logic.TransactionManager;
 import echowand.net.*;
-import java.util.LinkedList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * 他ノードから送信されたインスタンスリストのレスポンスを受信し、RemoteObjectを生成する。

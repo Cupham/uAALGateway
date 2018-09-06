@@ -1,10 +1,11 @@
 package echowand.service;
 
+import java.util.logging.Logger;
+
 import echowand.common.EOJ;
 import echowand.common.EPC;
 import echowand.object.LocalObject;
 import echowand.object.ObjectData;
-import java.util.logging.Logger;
 
 /**
  * LocalObjectとCoreを保持し利用

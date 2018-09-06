@@ -1,13 +1,14 @@
 package echowand.object;
 
+import java.util.EnumMap;
+import java.util.LinkedList;
+import java.util.logging.Logger;
+
 import echowand.common.EOJ;
 import echowand.common.EPC;
 import echowand.info.ObjectInfo;
 import echowand.info.PropertyInfo;
 import echowand.util.Constraint;
-import java.util.EnumMap;
-import java.util.LinkedList;
-import java.util.logging.Logger;
 
 /**
  * ローカルに存在するECHONETオブジェクト

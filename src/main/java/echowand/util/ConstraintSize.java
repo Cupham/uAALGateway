@@ -1,9 +1,10 @@
 package echowand.util;
 
-import echowand.util.Constraint;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
+
+import echowand.util.Constraint;
 
 /**
  * データ長によるプロパティの制約を表現する。

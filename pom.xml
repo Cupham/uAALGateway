@@ -74,10 +74,12 @@
 			<version>3.4.0</version>
 		</dependency>
 			<dependency>
-				<groupId>net.java.dev.glazedlists</groupId>
-				<artifactId>glazedlists_java16</artifactId>
-				<version>1.10.0</version>
+				<groupId>org.universAAL.ontology</groupId>
+				<artifactId>echonetontology</artifactId>
+				<version>3.4.0</version>
 			</dependency>
+			
+			
 	</dependencies>
 	<build>
 		<plugins>
@@ -89,7 +91,7 @@
 				<configuration>
 					<instructions>
 						<Bundle-Name>${project.name}</Bundle-Name>
-						<Bundle-Activator>mainpackage.Activator</Bundle-Activator>
+						<Bundle-Activator>jaist.mainpackage.Activator</Bundle-Activator>
 						<Bundle-Description>${project.description}</Bundle-Description>
 						<Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
 						<Import-Package>org.osgi.framework;version="[1,2)",*</Import-Package>

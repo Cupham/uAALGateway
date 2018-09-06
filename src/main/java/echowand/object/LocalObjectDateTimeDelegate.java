@@ -1,8 +1,9 @@
 package echowand.object;
 
-import echowand.common.EPC;
 import java.util.Calendar;
 import java.util.logging.Logger;
+
+import echowand.common.EPC;
 
 /**
  * 年月日と時刻をローカル時刻に設定するDelegate

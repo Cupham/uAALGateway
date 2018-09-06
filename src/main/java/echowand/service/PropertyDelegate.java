@@ -1,9 +1,10 @@
 package echowand.service;
 
+import java.util.logging.Logger;
+
 import echowand.common.EPC;
 import echowand.object.LocalObject;
 import echowand.object.ObjectData;
-import java.util.logging.Logger;
 
 /**
  * プロパティを対象としたデリゲート

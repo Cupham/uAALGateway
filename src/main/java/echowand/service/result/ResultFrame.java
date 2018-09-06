@@ -1,9 +1,10 @@
 package echowand.service.result;
 
+import java.util.logging.Logger;
+
 import echowand.net.CommonFrame;
 import echowand.net.Frame;
 import echowand.net.Node;
-import java.util.logging.Logger;
 
 /**
  *

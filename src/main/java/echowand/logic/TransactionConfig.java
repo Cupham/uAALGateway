@@ -1,10 +1,11 @@
 package echowand.logic;
 
+import java.util.logging.Logger;
+
 import echowand.common.EOJ;
 import echowand.common.ESV;
 import echowand.net.Node;
 import echowand.net.StandardPayload;
-import java.util.logging.Logger;
 
 /**
  * トランザクションの詳細設定を行なう抽象クラス

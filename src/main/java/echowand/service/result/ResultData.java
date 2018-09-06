@@ -1,11 +1,12 @@
 package echowand.service.result;
 
+import java.util.logging.Logger;
+
 import echowand.common.Data;
 import echowand.common.EOJ;
 import echowand.common.EPC;
 import echowand.common.ESV;
 import echowand.net.Node;
-import java.util.logging.Logger;
 
 /**
  *

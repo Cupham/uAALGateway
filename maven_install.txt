@@ -1,0 +1,15 @@
+
+#1 : Install echonetontology to local maven directory
+
+mvn install:install-file -Dfile=ont.echonetontology-3.4.0.jar -DgroupId=org.universAAL.ontology -DartifactId=echonetontology -Dversion=3.4.0 -Dpackaging=jar
+
+#2 import echonetOntology using dependency
+			<dependency>
+				<groupId>org.universAAL.ontology</groupId>
+				<artifactId>echonetontology</artifactId>
+				<version>3.4.0</version>
+			</dependency>
+#3 install ontology bundle to karaf
+
+root@karaf> bundle:install wrap:mvn:org.universAAL.ontology/echonetontology/3.4.0
+

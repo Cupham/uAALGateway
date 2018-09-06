@@ -1,8 +1,9 @@
 package echowand.object;
 
-import echowand.common.EPC;
 import java.util.Random;
 import java.util.logging.Logger;
+
+import echowand.common.EPC;
 
 /**
  * プロパティ値をランダムに変化させるDelegate

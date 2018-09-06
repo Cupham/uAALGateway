@@ -1,9 +1,10 @@
 package echowand.monitor;
 
-import echowand.common.EOJ;
-import echowand.net.Node;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import echowand.common.EOJ;
+import echowand.net.Node;
 
 /**
  *

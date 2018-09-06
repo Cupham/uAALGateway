@@ -1,5 +1,8 @@
 package echowand.object;
 
+import java.util.LinkedList;
+import java.util.logging.Logger;
+
 import echowand.common.EOJ;
 import echowand.common.EPC;
 import echowand.logic.SetGetTransactionConfig;
@@ -9,8 +12,6 @@ import echowand.logic.TransactionManager;
 import echowand.net.Node;
 import echowand.net.Subnet;
 import echowand.net.SubnetException;
-import java.util.LinkedList;
-import java.util.logging.Logger;
 
 /**
  * 他のノード内にあるインスタンスを問い合わせるトランザクションを実行

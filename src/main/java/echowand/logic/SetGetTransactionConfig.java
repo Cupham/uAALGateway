@@ -1,13 +1,14 @@
 package echowand.logic;
 
+import java.util.LinkedList;
+import java.util.logging.Logger;
+
 import echowand.common.Data;
 import echowand.common.EPC;
 import echowand.common.ESV;
 import echowand.net.Property;
 import echowand.net.StandardPayload;
 import echowand.util.Pair;
-import java.util.LinkedList;
-import java.util.logging.Logger;
 
 /**
  * Set、Get、SetGet、INF_REQトランザクションの詳細設定。

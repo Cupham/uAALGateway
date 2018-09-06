@@ -1,5 +1,13 @@
 package echowand.service;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import echowand.common.ClassEOJ;
 import echowand.common.Data;
 import echowand.common.EOJ;
@@ -24,29 +32,22 @@ import echowand.object.RemoteObject;
 import echowand.object.RemoteObjectManager;
 import echowand.service.result.CaptureListener;
 import echowand.service.result.CaptureResult;
-import echowand.service.result.ResultBase;
-import echowand.service.result.GetResult;
 import echowand.service.result.FrameSelector;
 import echowand.service.result.GetListener;
+import echowand.service.result.GetResult;
 import echowand.service.result.NotifyListener;
 import echowand.service.result.NotifyResult;
 import echowand.service.result.ObserveListener;
 import echowand.service.result.ObserveResult;
+import echowand.service.result.ResultBase;
 import echowand.service.result.SetGetListener;
 import echowand.service.result.SetGetResult;
 import echowand.service.result.SetListener;
 import echowand.service.result.SetResult;
-import echowand.service.result.UpdateRemoteInfoResult;
 import echowand.service.result.UpdateRemoteInfoListener;
+import echowand.service.result.UpdateRemoteInfoResult;
 import echowand.util.Pair;
 import echowand.util.Selector;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * ライブラリの様々な機能を提供するServiceインタフェース

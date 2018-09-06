@@ -1,10 +1,11 @@
 package echowand.net;
 
-import echowand.util.Pair;
 import java.util.HashMap;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import echowand.util.Pair;
 
 /**
  *

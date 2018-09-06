@@ -1,5 +1,10 @@
 package echowand.service.result;
 
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.logging.Logger;
+
 import echowand.common.Data;
 import echowand.common.EOJ;
 import echowand.common.EPC;
@@ -10,10 +15,6 @@ import echowand.net.Node;
 import echowand.net.StandardPayload;
 import echowand.object.InstanceListRequestExecutor;
 import echowand.service.TimestampManager;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.logging.Logger;
 
 /**
  *

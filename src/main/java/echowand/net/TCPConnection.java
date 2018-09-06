@@ -1,7 +1,5 @@
 package echowand.net;
 
-import echowand.common.EPC;
-import echowand.common.ESV;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -12,6 +10,9 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import echowand.common.EPC;
+import echowand.common.ESV;
 
 /**
  * TCPコネクションの管理

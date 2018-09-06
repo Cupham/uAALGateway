@@ -1,7 +1,8 @@
 package echowand.object;
 
-import echowand.common.EPC;
 import java.util.LinkedList;
+
+import echowand.common.EPC;
 
 /**
  * LocalObjectの代理処理を実行するクラスを作成するためのインタフェースを表す。

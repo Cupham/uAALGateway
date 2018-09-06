@@ -1,10 +1,11 @@
 package echowand.service.result;
 
+import java.util.logging.Logger;
+
 import echowand.common.ESV;
 import echowand.net.Property;
 import echowand.net.StandardPayload;
 import echowand.service.TimestampManager;
-import java.util.logging.Logger;
 
 /**
  *

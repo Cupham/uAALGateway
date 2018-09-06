@@ -1,5 +1,9 @@
 package echowand.service;
 
+import java.util.LinkedList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import echowand.logic.Listener;
 import echowand.logic.MainLoop;
 import echowand.logic.RequestDispatcher;
@@ -13,9 +17,6 @@ import echowand.object.LocalObject;
 import echowand.object.LocalObjectManager;
 import echowand.object.RemoteObjectManager;
 import echowand.object.SetGetRequestProcessor;
-import java.util.LinkedList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Serviceを利用するために必要なechowandクラス群を管理

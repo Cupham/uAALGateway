@@ -1,10 +1,11 @@
 package echowand.logic;
 
-import echowand.net.Frame;
-import echowand.net.Subnet;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.logging.Logger;
+
+import echowand.net.Frame;
+import echowand.net.Subnet;
 
 /**
  * Transactionを管理するし、受信したフレームを適切なTransactionに処理させる。

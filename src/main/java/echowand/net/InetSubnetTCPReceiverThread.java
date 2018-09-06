@@ -1,8 +1,9 @@
 package echowand.net;
 
-import echowand.util.Pair;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import echowand.util.Pair;
 
 /**
  * TCPを利用したフレームの自動受信スレッド

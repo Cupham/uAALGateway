@@ -1,7 +1,8 @@
 package echowand.service;
 
-import echowand.net.Frame;
 import java.util.logging.Logger;
+
+import echowand.net.Frame;
 
 /**
  * CaptureSubnetを経由する全フレームにタイムスタンプを付与

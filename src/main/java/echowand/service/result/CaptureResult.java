@@ -1,14 +1,15 @@
 package echowand.service.result;
 
-import echowand.util.SelectorMember;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.logging.Logger;
+
 import echowand.net.Frame;
 import echowand.service.CaptureResultObserver;
 import echowand.service.TimestampManager;
 import echowand.util.Collector;
 import echowand.util.Selector;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.logging.Logger;
+import echowand.util.SelectorMember;
 
 /**
  *

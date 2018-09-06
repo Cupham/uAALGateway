@@ -1,9 +1,10 @@
 package echowand.net;
 
-import echowand.util.Pair;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import echowand.util.Pair;
 
 /**
  * UDPを利用したフレームの自動受信スレッド
