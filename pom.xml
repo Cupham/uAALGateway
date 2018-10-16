@@ -16,27 +16,27 @@
 		<dependency>
 			<groupId>org.universAAL.middleware</groupId>
 			<artifactId>mw.data.representation.osgi</artifactId>
-			<version>3.4.0</version>
+			<version>3.3.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.universAAL.middleware</groupId>
 			<artifactId>mw.bus.model.osgi</artifactId>
-			<version>3.4.0</version>
+			<version>3.3.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.universAAL.middleware</groupId>
 			<artifactId>mw.container.xfaces.osgi</artifactId>
-			<version>3.4.0</version>
+			<version>3.3.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.universAAL.middleware</groupId>
 			<artifactId>mw.container.osgi</artifactId>
-			<version>3.4.0</version>
+			<version>3.3.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.universAAL.ontology</groupId>
 			<artifactId>ont.phWorld</artifactId>
-			<version>3.4.0</version>
+			<version>3.3.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.universAAL.ontology</groupId>
@@ -78,7 +78,11 @@
 				<artifactId>echonetontology</artifactId>
 				<version>3.4.0</version>
 			</dependency>
-			
+		<dependency>
+				<groupId>jaist.tanlab</groupId>
+				<artifactId>echowand</artifactId>
+				<version>1.1</version>
+     			</dependency>	
 			
 	</dependencies>
 	<build>
@@ -91,7 +95,7 @@
 				<configuration>
 					<instructions>
 						<Bundle-Name>${project.name}</Bundle-Name>
-						<Bundle-Activator>jaist.mainpackage.Activator</Bundle-Activator>
+						<Bundle-Activator>main.Activator</Bundle-Activator>
 						<Bundle-Description>${project.description}</Bundle-Description>
 						<Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
 						<Import-Package>org.osgi.framework;version="[1,2)",*</Import-Package>
