@@ -1,6 +1,7 @@
 package uAAL.ContextBus;
 
 
+import org.apache.log4j.Logger;
 /* More on how to use this class at: 
  * http://forge.universaal.org/wiki/support:Developer_Handbook_6#Publishing_context_events */
 import org.universAAL.middleware.container.ModuleContext;
@@ -12,25 +13,30 @@ import org.universAAL.middleware.context.owl.ContextProvider;
 import org.universAAL.middleware.context.owl.ContextProviderType;
 import org.universAAL.middleware.owl.MergedRestriction;
 import org.universAAL.ontology.echonetontology.EchonetSuperDevice;
+import org.universAAL.ontology.echonetontology.sensorRelatedDevices.TemperatureSensor;
 
 import main.Activator;
 import main.CaressesOntology;
 
 public class CPublisher {
+	private static final Logger LOGGER = Logger.getLogger(CPublisher.class.getName());
 	private ContextPublisher contextPublisher;
 	int counter ;
 
 	public CPublisher(ModuleContext context) {
 		ContextProvider cProvider = new ContextProvider(Activator.echonet_ontology.NAMESPACE+"EchonetResourcePublisher");
+		
 		cProvider.setType(ContextProviderType.gauge);
-		ContextEventPattern echonet = new ContextEventPattern();
-		echonet.addRestriction(MergedRestriction.getAllValuesRestriction(ContextEvent.PROP_RDF_SUBJECT, EchonetSuperDevice.MY_URI));
-		cProvider.setProvidedEvents(new ContextEventPattern[] {echonet});
+		ContextEventPattern temperatureSensorEvent = new ContextEventPattern();
+		temperatureSensorEvent.addRestriction(MergedRestriction.getFixedValueRestriction(ContextEvent.PROP_RDF_SUBJECT, TemperatureSensor.MY_URI));
+	
+		cProvider.setProvidedEvents(new ContextEventPattern[] {temperatureSensorEvent});
+		
 		contextPublisher = new DefaultContextPublisher(context, cProvider);
 		if(contextPublisher != null) {
-			System.out.println("Initialize context publisher successfully");
+			LOGGER.info("Initialize context publisher successfully");
 		} else {
-			System.out.println("Something went wrong with context publisher");
+			LOGGER.error("Something went wrong with context publisher");
 		}
 		counter = 0;
 	}
@@ -47,7 +53,7 @@ public class CPublisher {
 	}
 
 	public void communicationChannelBroken() {
-		System.out.println(" PUBLISHER: Lost connection with the bus\n");
+		LOGGER.error(" PUBLISHER: Lost connection with the bus\n");
 
 	}
 	public static void printCEDetail(ContextEvent ce) {

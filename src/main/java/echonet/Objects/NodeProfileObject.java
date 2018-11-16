@@ -8,9 +8,6 @@ public class NodeProfileObject extends eSuperClass{
 		super();
 	}
 
-	public NodeProfileObject(Node node, String name) {
-		super(node, name);
-	}
 	public NodeProfileObject(Node node, EOJ eoj) {
 		super(node, eoj);
 	}

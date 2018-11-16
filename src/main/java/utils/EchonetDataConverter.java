@@ -13,6 +13,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.universAAL.ontology.echonetontology.values.EchonetDeviceGroupCodeValue;
+import org.universAAL.ontology.echonetontology.values.InstallationLocationValue;
 
 import echowand.common.EPC;
 import echowand.object.EchonetObjectException;
@@ -514,9 +515,9 @@ public class EchonetDataConverter {
 		byte data[] = odata.toBytes();
 		byte firstByte = data[0];
 		if (firstByte == (byte) 0xFF) {
-			return "Installation location not specified";
+			return SampleConstants.LOCATION_NOT_SPECIFIC;
 		} else if (firstByte == (byte) 0x00) {
-			return "Installation location undefined";
+			return SampleConstants.LOCATION_UNDEFINED;
 		} else if (firstByte == (byte) 0x01) { // 17 bytes
 			String rs = "";
 			for (int i = 1; i < data.length; i++) {
@@ -525,51 +526,108 @@ public class EchonetDataConverter {
 			return rs;
 		} else if (!isBitSet(firstByte, 3) && !isBitSet(firstByte, 4) && !isBitSet(firstByte, 5)
 				&& !isBitSet(firstByte, 6) && !isBitSet(firstByte, 7)) {
-			return "Reserved for future use.";
+			return SampleConstants.RESERVED;
 		} else {
 			HashMap<Integer, Integer> firstMap = getHashmapDefaultFromByte(firstByte);
 			if (equalsHashmap(firstMap, getHashmap(0, 1, 1, 1, 1, 0, 0, 0))) {
-				return "Others";
+				return SampleConstants.OTHER;
 			} else if (equalsHashmap(firstMap, getHashmap(0, 1, 1, 1, 0, 0, 0, 0))) {
-				return "Veranda/balcony";
+				return SampleConstants.VERANDA_BALCONY;
 			} else if (equalsHashmap(firstMap, getHashmap(0, 1, 1, 0, 1, 0, 0, 0))) {
-				return "Garage";
+				return SampleConstants.GARAGE;
 			} else if (equalsHashmap(firstMap, getHashmap(0, 1, 1, 0, 0, 0, 0, 0))) {
-				return "Garden/perimeter";
+				return SampleConstants.GARDEN_PERIMETER;
 			} else if (equalsHashmap(firstMap, getHashmap(0, 1, 0, 1, 1, 0, 0, 0))) {
-				return "Storeroom";
+				return SampleConstants.STORE_ROOM;
 			} else if (equalsHashmap(firstMap, getHashmap(0, 1, 0, 1, 0, 0, 0, 0))) {
-				return "Front door";
+				return SampleConstants.FRONT_DOOR;
 			} else if (equalsHashmap(firstMap, getHashmap(0, 1, 0, 0, 1, 0, 0, 0))) {
-				return "Stairway";
+				return SampleConstants.STAIR_WAY;
 			} else if (equalsHashmap(firstMap, getHashmap(0, 1, 0, 0, 0, 0, 0, 0))) {
-				return "Room";
+				return SampleConstants.ROOM;
 			} else if (equalsHashmap(firstMap, getHashmap(0, 0, 1, 1, 1, 0, 0, 0))) {
-				return "Passageway";
+				return SampleConstants.PASSAGEWAY;
 			} else if (equalsHashmap(firstMap, getHashmap(0, 0, 1, 1, 0, 0, 0, 0))) {
-				return "Washroom/changing room";
+				return SampleConstants.WASH_CHANGING_ROOM;
 			} else if (equalsHashmap(firstMap, getHashmap(0, 0, 1, 0, 1, 0, 0, 0))) {
-				return "Lavatory";
+				return SampleConstants.LAVATORY;
 			} else if (equalsHashmap(firstMap, getHashmap(0, 0, 1, 0, 0, 0, 0, 0))) {
-				return "Bathroom";
+				return SampleConstants.BATHROOM;
 			} else if (equalsHashmap(firstMap, getHashmap(0, 0, 0, 1, 1, 0, 0, 0))) {
-				return "Kitchen";
+				return SampleConstants.KITCHEN;
 			} else if (equalsHashmap(firstMap, getHashmap(0, 0, 0, 1, 0, 0, 0, 0))) {
-				return "Dining room";
+				return SampleConstants.DINING_ROOM;
 			} else if (equalsHashmap(firstMap, getHashmap(0, 0, 0, 0, 1, 0, 0, 0))) {
-				return "Living room";
+				return SampleConstants.LIVING_ROOM;
 			} else {
-				return "Free definition";
+				return SampleConstants.FREE_DEFINITION;
 			}
 		}
+	}
+	public static String eNumtoInstallationLocation(InstallationLocationValue location) {
+		String rs = "";
+		if(location.equals(InstallationLocationValue.LivingRoom)) {
+			rs = SampleConstants.LIVING_ROOM;
+		}
+		if(location.equals(InstallationLocationValue.Bathroom)) {
+			rs = SampleConstants.BATHROOM;
+		}
+		if(location.equals(InstallationLocationValue.DinningRoom)) {
+			rs = SampleConstants.DINING_ROOM;
+		}
+		if(location.equals(InstallationLocationValue.FrontDoor)) {
+			rs = SampleConstants.FRONT_DOOR;
+		}		
+		if(location.equals(InstallationLocationValue.Garare)) {
+			rs = SampleConstants.GARAGE;
+		}
+		if(location.equals(InstallationLocationValue.Garden_Perimeter)) {
+			rs = SampleConstants.GARDEN_PERIMETER;
+		}
+		if(location.equals(InstallationLocationValue.InstallationLocationIndefinited)) {
+			rs = SampleConstants.LOCATION_UNDEFINED;
+		}
+		if(location.equals(InstallationLocationValue.InstallationLocationNotSpecified)) {
+			rs = SampleConstants.LOCATION_NOT_SPECIFIC;
+		}	
+		if(location.equals(InstallationLocationValue.Kitchen)) {
+			rs = SampleConstants.KITCHEN;
+		}
+		if(location.equals(InstallationLocationValue.Lavatory)) {
+			rs = SampleConstants.LAVATORY;
+		}
+		if(location.equals(InstallationLocationValue.Others)) {
+			rs = SampleConstants.OTHER;
+		}
+		if(location.equals(InstallationLocationValue.Passageway)) {
+			rs = SampleConstants.PASSAGEWAY;
+		}
+		if(location.equals(InstallationLocationValue.Room)) {
+			rs = SampleConstants.ROOM;
+		}
+		if(location.equals(InstallationLocationValue.Stairway)) {
+			rs = SampleConstants.STAIR_WAY;
+		}
+		if(location.equals(InstallationLocationValue.Storeroom)) {
+			rs = SampleConstants.STORE_ROOM;
+		}
+		if(location.equals(InstallationLocationValue.Veranda_Balcony)) {
+			rs = SampleConstants.VERANDA_BALCONY;
+		}
+		if(location.equals(InstallationLocationValue.Washroom_ChangingRoom)) {
+			rs = SampleConstants.WASH_CHANGING_ROOM;
+		}if(location.equals(InstallationLocationValue.FreeDefinition)) {
+			rs = SampleConstants.FREE_DEFINITION;
+		}
+		return rs;
 	}
 	public static String dataToInstallLocation(ResultData rdata) {
 		byte data[] = rdata.toBytes();
 		byte firstByte = data[0];
 		if (firstByte == (byte) 0xFF) {
-			return "Installation location not specified";
+			return SampleConstants.LOCATION_NOT_SPECIFIC;
 		} else if (firstByte == (byte) 0x00) {
-			return "Installation location undefined";
+			return SampleConstants.LOCATION_UNDEFINED;
 		} else if (firstByte == (byte) 0x01) { // 17 bytes
 			String rs = "";
 			for (int i = 1; i < data.length; i++) {
@@ -578,41 +636,41 @@ public class EchonetDataConverter {
 			return rs;
 		} else if (!isBitSet(firstByte, 3) && !isBitSet(firstByte, 4) && !isBitSet(firstByte, 5)
 				&& !isBitSet(firstByte, 6) && !isBitSet(firstByte, 7)) {
-			return "Reserved for future use.";
+			return SampleConstants.RESERVED;
 		} else {
 			HashMap<Integer, Integer> firstMap = getHashmapDefaultFromByte(firstByte);
 			if (equalsHashmap(firstMap, getHashmap(0, 1, 1, 1, 1, 0, 0, 0))) {
-				return "Others";
+				return SampleConstants.OTHER;
 			} else if (equalsHashmap(firstMap, getHashmap(0, 1, 1, 1, 0, 0, 0, 0))) {
-				return "Veranda/balcony";
+				return SampleConstants.VERANDA_BALCONY;
 			} else if (equalsHashmap(firstMap, getHashmap(0, 1, 1, 0, 1, 0, 0, 0))) {
-				return "Garage";
+				return SampleConstants.GARAGE;
 			} else if (equalsHashmap(firstMap, getHashmap(0, 1, 1, 0, 0, 0, 0, 0))) {
-				return "Garden/perimeter";
+				return SampleConstants.GARDEN_PERIMETER;
 			} else if (equalsHashmap(firstMap, getHashmap(0, 1, 0, 1, 1, 0, 0, 0))) {
-				return "Storeroom";
+				return SampleConstants.STORE_ROOM;
 			} else if (equalsHashmap(firstMap, getHashmap(0, 1, 0, 1, 0, 0, 0, 0))) {
-				return "Front door";
+				return SampleConstants.FRONT_DOOR;
 			} else if (equalsHashmap(firstMap, getHashmap(0, 1, 0, 0, 1, 0, 0, 0))) {
-				return "Stairway";
+				return SampleConstants.STAIR_WAY;
 			} else if (equalsHashmap(firstMap, getHashmap(0, 1, 0, 0, 0, 0, 0, 0))) {
-				return "Room";
+				return SampleConstants.ROOM;
 			} else if (equalsHashmap(firstMap, getHashmap(0, 0, 1, 1, 1, 0, 0, 0))) {
-				return "Passageway";
+				return SampleConstants.PASSAGEWAY;
 			} else if (equalsHashmap(firstMap, getHashmap(0, 0, 1, 1, 0, 0, 0, 0))) {
-				return "Washroom/changing room";
+				return SampleConstants.WASH_CHANGING_ROOM;
 			} else if (equalsHashmap(firstMap, getHashmap(0, 0, 1, 0, 1, 0, 0, 0))) {
-				return "Lavatory";
+				return SampleConstants.LAVATORY;
 			} else if (equalsHashmap(firstMap, getHashmap(0, 0, 1, 0, 0, 0, 0, 0))) {
-				return "Bathroom";
+				return SampleConstants.BATHROOM;
 			} else if (equalsHashmap(firstMap, getHashmap(0, 0, 0, 1, 1, 0, 0, 0))) {
-				return "Kitchen";
+				return SampleConstants.KITCHEN;
 			} else if (equalsHashmap(firstMap, getHashmap(0, 0, 0, 1, 0, 0, 0, 0))) {
-				return "Dining room";
+				return SampleConstants.DINING_ROOM;
 			} else if (equalsHashmap(firstMap, getHashmap(0, 0, 0, 0, 1, 0, 0, 0))) {
-				return "Living room";
+				return SampleConstants.LIVING_ROOM;
 			} else {
-				return "Free definition";
+				return SampleConstants.FREE_DEFINITION;
 			}
 		}
 	}
@@ -657,56 +715,49 @@ public class EchonetDataConverter {
 		return rs;
 	}
 	public static ObjectData installLocationtoDataObj(String installation) {
-		ObjectData data = null;
-		switch (installation.trim().toLowerCase()) {
-		case "living room":
+		ObjectData data = new ObjectData((byte)0x78);
+		if(installation.trim().equalsIgnoreCase(SampleConstants.LIVING_ROOM)) {
 			data = new ObjectData((byte)0x08);
-			break;
-		case "dining room":
+		}
+		
+		if(installation.trim().equalsIgnoreCase(SampleConstants.DINING_ROOM)) {
 			data = new ObjectData((byte)0x10);
-			break;
-		case "kitchen":
+		}
+		if(installation.trim().equalsIgnoreCase(SampleConstants.KITCHEN)) {
 			data = new ObjectData((byte)0x18);
-			break;
-		case "bathroom":
+		}
+		if(installation.trim().equalsIgnoreCase(SampleConstants.BATHROOM)) {
 			data = new ObjectData((byte)0x20);
-			break;
-		case "lavatory":
+		}
+		if(installation.trim().equalsIgnoreCase(SampleConstants.LAVATORY)) {
 			data = new ObjectData((byte)0x28);
-			break;
-		case "washroom":		
-		case "changing room":
+		}
+		if(installation.trim().equalsIgnoreCase(SampleConstants.WASH_CHANGING_ROOM)) {
 			data = new ObjectData((byte)0x30);
-			break;
-		case "passageway":
+		}
+		if(installation.trim().equalsIgnoreCase(SampleConstants.PASSAGEWAY)) {
 			data = new ObjectData((byte)0x38);
-			break;
-		case "room":
+		}
+		if(installation.trim().equalsIgnoreCase(SampleConstants.ROOM)) {
 			data = new ObjectData((byte)0x40);
-			break;
-		case "stairway":
+		}
+		if(installation.trim().equalsIgnoreCase(SampleConstants.STAIR_WAY)) {
 			data = new ObjectData((byte)0x48);
-			break;
-		case "front door":
+		}
+		if(installation.trim().equalsIgnoreCase(SampleConstants.FRONT_DOOR)) {
 			data = new ObjectData((byte)0x50);
-			break;
-		case "storeroom":
+		}
+		if(installation.trim().equalsIgnoreCase(SampleConstants.STORE_ROOM)) {
 			data = new ObjectData((byte)0x58);
-			break;
-		case "garden":			
-		case "perimeter":
+		}
+		if(installation.trim().equalsIgnoreCase(SampleConstants.GARDEN_PERIMETER)) {
 			data = new ObjectData((byte)0x60);
-			break;	
-		case "garage":
+		}
+		if(installation.trim().equalsIgnoreCase(SampleConstants.GARAGE)) {
 			data = new ObjectData((byte)0x68);
-			break;
-		case "veranda":
-		case "balcony":
+		}
+		if(installation.trim().equalsIgnoreCase(SampleConstants.VERANDA_BALCONY)) {
 			data = new ObjectData((byte)0x70);
-			break;
-		default:
-			data = new ObjectData((byte)0x78);
-			break;
 		}
 		return data;
 	}

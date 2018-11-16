@@ -1,5 +1,5 @@
 Manifest-Version: 1.0
-Bnd-LastModified: 1539673952688
+Bnd-LastModified: 1542016091446
 Build-Jdk: 1.8.0_131
 Built-By: elite
 Bundle-Activator: main.Activator
@@ -10,44 +10,39 @@ Bundle-SymbolicName: uAALGateway
 Bundle-Version: 1.0.0
 Created-By: Apache Maven Bundle Plugin
 Export-Package: echonet.Objects;uses:="echowand.common,echowand.service,
- echowand.net,org.apache.log4j,echowand.object,org.universAAL.ontology.e
- chonetontology.airconditionerRelatedDevices,org.universAAL.ontology.ech
- onetontology.sensorRelatedDevices,org.universAAL.ontology.echonetontolo
- gy.managementOperationRelatedDevices,utils,org.universAAL.ontology.echo
+ utils,echowand.net,org.apache.log4j,echowand.object,org.universAAL.onto
+ logy.echonetontology.airconditionerRelatedDevices,org.universAAL.ontolo
+ gy.echonetontology.sensorRelatedDevices,org.universAAL.ontology.echonet
+ ontology.managementOperationRelatedDevices,org.universAAL.ontology.echo
  netontology.housingFacilitiesRelatedDevices,main,echowand.service.resul
  t";version="1.0.0",echonet.Services;uses:="echowand.logic,echowand.serv
  ice,echonet.Objects,echowand.service.result,echowand.net,echowand.objec
- t,echowand.common";version="1.0.0",main;uses:="org.osgi.framework,org.a
- pache.log4j,echowand.common,echowand.service,echonet.Objects,echowand.n
- et,echowand.monitor,echowand.object,org.universAAL.ontology.echonetonto
- logy.managementOperationRelatedDevices,org.universAAL.ontology.echoneto
- ntology,org.universAAL.middleware.container,utils,echonet.Services,uAAL
- .ServiceBus,org.universAAL.ontology.phThing,org.universAAL.ontology.ech
- onetontology.sensorRelatedDevices,org.universAAL.ontology.echonetontolo
- gy.airconditionerRelatedDevices,org.universAAL.middleware.context,org.u
- niversAAL.middleware.owl,echowand.logic,org.universAAL.ontology.echonet
- ontology.housingFacilitiesRelatedDevices,org.universAAL.middleware.cont
- ainer.osgi,uAAL.ContextBus,org.universAAL.middleware.rdf";version="1.0.
- 0",uAAL.ContextBus;uses:="org.universAAL.middleware.owl,org.universAAL.
- middleware.context.owl,org.universAAL.middleware.context,org.universAAL
- .middleware.container";version="1.0.0",uAAL.ServiceBus;uses:="org.unive
- rsAAL.ontology.echonetontology.sensorRelatedDevices,echowand.common,org
- .universAAL.ontology.echonetontology.airconditionerRelatedDevices,org.u
- niversAAL.ontology.echonetontology.managementOperationRelatedDevices,ec
- howand.service,org.universAAL.ontology.echonetontology.values,org.unive
- rsAAL.middleware.service,main,echowand.net,org.universAAL.middleware.co
- ntainer,org.universAAL.middleware.service.owls.process,echowand.logic,u
- tils,echonet.Services,org.universAAL.ontology.echonetontology.housingFa
- cilitiesRelatedDevices,org.universAAL.middleware.service.owls.profile,e
- chowand.object,org.universAAL.middleware.rdf,org.universAAL.middleware.
- owl,org.universAAL.ontology.phThing";version="1.0.0",utils;uses:="echow
- and.common,echowand.service.result,org.universAAL.ontology.echonetontol
- ogy.values,echowand.object,org.universAAL.ontology.echonetontology.sens
- orRelatedDevices,org.universAAL.ontology.echonetontology.airconditioner
- RelatedDevices,org.universAAL.ontology.echonetontology.managementOperat
- ionRelatedDevices,org.universAAL.ontology.device,echonet.Objects,org.un
- iversAAL.ontology.echonetontology.housingFacilitiesRelatedDevices,echow
- and.net,org.apache.log4j";version="1.0.0"
+ t";version="1.0.0",main;uses:="org.osgi.framework,org.apache.log4j,echo
+ wand.common,echowand.service,echonet.Objects,echowand.net,echowand.moni
+ tor,echowand.object,org.universAAL.ontology.echonetontology.managementO
+ perationRelatedDevices,org.universAAL.ontology.echonetontology,org.univ
+ ersAAL.middleware.container,utils,echonet.Services,uAAL.ServiceBus,org.
+ universAAL.ontology.phThing,org.universAAL.ontology.echonetontology.sen
+ sorRelatedDevices,org.universAAL.ontology.echonetontology.airconditione
+ rRelatedDevices,org.universAAL.middleware.context,org.universAAL.middle
+ ware.owl,echowand.logic,org.universAAL.ontology.echonetontology.housing
+ FacilitiesRelatedDevices,org.universAAL.middleware.container.osgi,uAAL.
+ ContextBus,org.universAAL.middleware.rdf";version="1.0.0",uAAL.ContextB
+ us;uses:="org.universAAL.middleware.owl,org.universAAL.middleware.conte
+ xt.owl,org.universAAL.middleware.context,org.universAAL.middleware.cont
+ ainer";version="1.0.0",uAAL.ServiceBus;uses:="org.universAAL.middleware
+ .service.owls.process,echonet.Objects,utils,org.universAAL.ontology.ech
+ onetontology.values,org.universAAL.middleware.service.owls.profile,org.
+ universAAL.middleware.service,main,org.universAAL.middleware.container,
+ org.universAAL.middleware.rdf,org.universAAL.middleware.owl,org.apache.
+ log4j,org.universAAL.ontology.phThing";version="1.0.0",utils;uses:="ech
+ owand.common,echowand.service.result,org.universAAL.ontology.echonetont
+ ology.values,echowand.object,org.universAAL.ontology.echonetontology.se
+ nsorRelatedDevices,org.universAAL.ontology.echonetontology.aircondition
+ erRelatedDevices,org.universAAL.ontology.echonetontology.managementOper
+ ationRelatedDevices,org.universAAL.ontology.device,echonet.Objects,org.
+ universAAL.ontology.echonetontology.housingFacilitiesRelatedDevices,ech
+ owand.net,org.apache.log4j";version="1.0.0"
 Import-Package: echowand.common,echowand.logic,echowand.monitor,echowand
  .net,echowand.object,echowand.service,echowand.service.result,org.apach
  e.log4j;version="[1.2,2)",org.osgi.framework;version="[1,2)",org.univer

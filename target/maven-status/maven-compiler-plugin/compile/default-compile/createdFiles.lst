@@ -2,6 +2,10 @@ echonet/Objects/eElectricConsent$3.class
 echonet/Objects/eLighting$3.class
 utils/EchonetDataConverter$1.class
 echonet/Objects/eTemperatureSensor$3.class
+echonet/Objects/eTV$3.class
+echonet/Objects/eRadio$3.class
 echonet/Objects/eSuperClass$3.class
+echonet/Objects/eWindow$3.class
 echonet/Objects/eCurtain$3.class
 echonet/Objects/eAirConditioner$3.class
+echonet/Objects/eSwitch$3.class

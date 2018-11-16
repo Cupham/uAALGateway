@@ -10,6 +10,7 @@ import echowand.net.Node;
 import echowand.object.EchonetObjectException;
 import echowand.service.Service;
 import main.Activator;
+import utils.SampleConstants;
 
 public class EchonetLiteDevice {
 	private static final Logger LOGGER = Logger.getLogger(EchonetLiteDevice.class.getName());
@@ -54,8 +55,16 @@ public class EchonetLiteDevice {
 				//TODO: implement humidity sensor class
 				break;
 			case (byte) (0x22):
-				System.out.println("   			Creating Electric Consent object from ECHONET frame...");
-				dataObj = new eElectricConsent(eoj,node);
+				if(SampleConstants.tv.contains(node.getNodeInfo().toString())&& eoj.getInstanceCode() == (byte)0x02) {
+					System.out.println("   			Creating TV object from ECHONET frame...");
+					dataObj = new eTV(eoj,node);
+				} else if (SampleConstants.radio.contains(node.getNodeInfo().toString()) && eoj.getInstanceCode() == (byte)0x03){
+					System.out.println("   			Creating Radio object from ECHONET frame...");
+					dataObj = new eRadio(eoj,node);
+				}else {
+					System.out.println("   			Creating Electric Consent object from ECHONET frame...");
+					dataObj = new eElectricConsent(eoj,node);
+				}	
 				break;
 			default:
 				return false;
@@ -89,16 +98,25 @@ public class EchonetLiteDevice {
 			switch (classCode) {
 			case (byte)(0xfd):
 				if(eoj.getInstanceCode() == (byte) 0x01) {
-					//System.out.println("   			Creating Curtain object from ECHONET frame...");
-					//dataObj = new eCurtain(eoj, node);
+					if(SampleConstants.curtainDomain.contains(node.getNodeInfo().toString())) {
+						System.out.println("   			Creating Curtain object from ECHONET frame...");
+						dataObj = new eCurtain(eoj, node);
+					} else if(SampleConstants.windowDomain.contains(node.getNodeInfo().toString())){
+						System.out.println("   			Creating Window object from ECHONET frame...");
+						dataObj = new eWindow(eoj, node);
+					} else if(SampleConstants.awning.contains(node.getNodeInfo().toString())){
+					} else if(SampleConstants.hotWater.contains(node.getNodeInfo().toString())){
+					} else if(SampleConstants.entranceLock.contains(node.getNodeInfo().toString())){
+					} else {
+						System.out.println("   			Creating switch object from ECHONET frame...");
+						dataObj = new eSwitch(eoj, node);
+					}
 				}
 				break;
 			default:
 				return false;
 			}	
 		break;
-		
-			//TODO: implement other device class here
 		default:
 			return false;
 			
@@ -139,7 +157,7 @@ public class EchonetLiteDevice {
 
 		for (eDataObject dataObj : dataObjList) {
 			rs.append("\r\n\t####################\r\n");
-			rs.append("\t"+ dataObj.ToString()+"\r\n");
+			rs.append("\t"+ dataObj.toString()+"\r\n");
 			rs.append("\t####################\r\n");
 		}
 		rs.append("*********************************************\r\n");

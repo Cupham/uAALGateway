@@ -30,6 +30,14 @@ import org.universAAL.ontology.echonetontology.values.MeasuredValue;
 import echonet.Objects.EchonetLiteDevice;
 import echonet.Objects.HomeResourceObserver;
 import echonet.Objects.NodeProfileObject;
+import echonet.Objects.eAirConditioner;
+import echonet.Objects.eCurtain;
+import echonet.Objects.eDataObject;
+import echonet.Objects.eLighting;
+import echonet.Objects.eRadio;
+import echonet.Objects.eTV;
+import echonet.Objects.eTemperatureSensor;
+import echonet.Objects.eWindow;
 import echonet.Services.EchonetDeviceScanner;
 import echonet.Services.EchonetDeviceUpdater;
 import echowand.common.EOJ;
@@ -50,7 +58,7 @@ import utils.SetUtilities;
 
 
 public class Activator implements BundleActivator {
-	 private static final Logger LOGGER = Logger.getLogger(Activator.class.getName());
+	private static final Logger LOGGER = Logger.getLogger(Activator.class.getName());
 	
 	private CaressesOntology caresses_ontology = new CaressesOntology();
 	public static  EchonetOntology echonet_ontology = new EchonetOntology();
@@ -129,8 +137,8 @@ public class Activator implements BundleActivator {
 				counter+=1;
 				LOGGER.info("Run: " + counter + " Published: " + changedOntologies.size());
 				System.out.println("------------------RUN: " + counter + ", Number of Device : " + echonetDevices.size()+" ------------------");
-				publishChangedOntology();
-				
+				//publishChangedOntology();
+				printtheList();
 			}
 		}, 2000, 10000);	 
 	}
@@ -143,7 +151,35 @@ public class Activator implements BundleActivator {
 		i_SmartFacility.setOutput(i_Consent);
 		
 	}
-	
+	public void printtheList() {
+		for(EchonetLiteDevice dev: Activator.echonetDevices) {
+			for(eDataObject obj: dev.getDataObjList()) {
+				if(obj.getClass().equals(eLighting.class)) {
+					eLighting light = (eLighting) obj;
+					System.out.println("Light: " +light.getNode().toString() + " " + light.getInstallLocation());
+				} else if(obj.getClass().equals(eTemperatureSensor.class)) {
+					eTemperatureSensor light = (eTemperatureSensor) obj;
+					System.out.println("Temperature Sensor: " +light.getNode().toString() + " " + light.getInstallLocation());
+				}else if(obj.getClass().equals(eAirConditioner.class)) {
+					eAirConditioner light = (eAirConditioner) obj;
+					System.out.println("HomeAirConditioner: " +light.getNode().toString() + " " + light.getInstallLocation());
+				}else if(obj.getClass().equals(eCurtain.class)) {
+					eCurtain light = (eCurtain) obj;
+					System.out.println("eCurtain: " +light.getNode().toString() + " " + light.getInstallLocation());
+				}else if(obj.getClass().equals(eWindow.class)) {
+					eWindow light = (eWindow) obj;
+					System.out.println("eWindow: " +light.getNode().toString() + " " + light.getInstallLocation());
+				}else if(obj.getClass().equals(eTV.class)) {
+					eTV light = (eTV) obj;
+					System.out.println("eTV: " +light.getNode().toString() + " " + light.getInstallLocation());
+				}else if(obj.getClass().equals(eRadio.class)) {
+					eRadio light = (eRadio) obj;
+					System.out.println("eRadio: " +light.getNode().toString() + " " + light.getInstallLocation());
+				}
+				
+			}
+		}
+	}
 	public void publishChangedOntology() {
 		if(changedOntologies.size() == 0) {
 			System.out.println("Ontology is up to date");

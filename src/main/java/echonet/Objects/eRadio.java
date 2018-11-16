@@ -21,24 +21,24 @@ import echowand.service.result.ResultFrame;
 import main.Activator;
 import utils.EchonetDataConverter;
 
-public class eElectricConsent extends eDataObject{
-	private static final Logger LOGGER = Logger.getLogger(eElectricConsent.class.getName());
+public class eRadio extends eDataObject{
+	private static final Logger LOGGER = Logger.getLogger(eRadio.class.getName());
 	private boolean operationStatus;
 	private Timer timer;
 	
 
-	public eElectricConsent() {
+	public eRadio() {
 		super();
 		this.groupCode= (byte) 0x00;
 		this.classCode = (byte) 0x22;
 	}
-	public eElectricConsent(byte instanceCode) {
+	public eRadio(byte instanceCode) {
 		super();
 		this.groupCode= (byte) 0x00;
 		this.classCode = (byte) 0x22;
 		this.instanceCode = instanceCode;
 	}
-	public eElectricConsent(EOJ eoj, Node node) {
+	public eRadio(EOJ eoj, Node node) {
 		super(node, eoj);
 		this.groupCode= (byte) 0x00;
 		this.classCode = (byte) 0x22;
@@ -75,7 +75,7 @@ public class eElectricConsent extends eDataObject{
 						} else {
 							setOperationStatus(false);
 						}
-						String setOperationStatusLog = String.format("Electric Consent:%s {EPC:0x80, EDT: 0x%02X}=={OperationStatus:%s}",
+						String setOperationStatusLog = String.format("Radio:%s {EPC:0x80, EDT: 0x%02X}=={OperationStatus:%s}",
 								 getNode().getNodeInfo().toString(),resultData.toBytes()[0],isOperationStatus());	
 						break;
 						
@@ -124,7 +124,7 @@ public class eElectricConsent extends eDataObject{
 	public boolean setOn() {
 		boolean rs = false;
 		if(isOperationStatus()) {
-			LOGGER.info("Consent is already ON! nothing to do");
+			LOGGER.info("Radio is already ON! nothing to do");
 			rs = true;
 		} else {
 			if(executeCommand(EPC.x80, new ObjectData((byte) 0x30))) {
@@ -139,7 +139,7 @@ public class eElectricConsent extends eDataObject{
 	public boolean setOff() {
 		boolean rs = false;
 		if(!isOperationStatus()) {
-			LOGGER.info("Consent is already OFF! nothing to do");
+			LOGGER.info("Radio is already OFF! nothing to do");
 			rs = true;
 		} else {
 			if(executeCommand(EPC.x80, new ObjectData((byte) 0x31))) {

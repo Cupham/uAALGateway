@@ -21,8 +21,8 @@ import echowand.service.result.ResultFrame;
 import main.Activator;
 import utils.EchonetDataConverter;
 
-public class eCurtain extends eDataObject{
-	private static final Logger LOGGER = Logger.getLogger(eCurtain.class.getName());
+public class eSwitch extends eDataObject{
+	private static final Logger LOGGER = Logger.getLogger(eSwitch.class.getName());
 	private boolean status;
 	Timer timer;
 	
@@ -32,15 +32,14 @@ public class eCurtain extends eDataObject{
 	public void setStatus(boolean operationStatus) {
 		if(operationStatus != isStatus()) {
 			this.status = operationStatus;
-			notifyDataChanged(this, CurtainController.PROP_HAS_VALUE);
 		}
 	}
-	public eCurtain() {
+	public eSwitch() {
 		super();
 		this.groupCode= (byte)0x05;
 		this.classCode=(byte)0xfd;
 	}
-	public eCurtain(EOJ eoj, Node node) {
+	public eSwitch(EOJ eoj, Node node) {
 		super(node,eoj);
 		this.groupCode= (byte) 0x05;
 		this.classCode = (byte) 0xfd;
@@ -66,8 +65,8 @@ public class eCurtain extends eDataObject{
 						} else if(EchonetDataConverter.dataToInteger(resultData) != 48) {
 							setStatus(false);
 						}
-						String setStatusLog = String.format("Curtain:%s {EPC:0x80, EDT: 0x%02X}=={Status:%s}",
-								 getNode().getNodeInfo().toString(),resultData.toBytes()[0],isStatus()? "OPEN":"CLOSE");	
+						String setStatusLog = String.format("Switch:%s {EPC:0x80, EDT: 0x%02X}=={Status:%s}",
+								 getNode().getNodeInfo().toString(),resultData.toBytes()[0],isStatus()? "ON":"OFF");	
 						break;
 					default:
 						System.out.println("Something happended!!");
@@ -92,7 +91,8 @@ public class eCurtain extends eDataObject{
 	}
 	@Override
 	public String TouAALReponse() {
-		return String.format("%s", getOperationStatus());
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 	private boolean executeCommand(EPC epc,EOJ eoj, ObjectData data) {
@@ -111,10 +111,10 @@ public class eCurtain extends eDataObject{
 		}
 		return rs;
 	}
-	public boolean open() {
+	public boolean setOn() {
 		boolean rs = false;
 		if(getOperationStatus()) {
-			LOGGER.info("Curtain is already Open! nothing to do");
+			LOGGER.info("SWITCH is already ON! nothing to do");
 			rs = true;
 		} else {
 			EOJ eoj = new EOJ((byte)0x05,(byte)0xfd,(byte)0x01);
@@ -130,7 +130,7 @@ public class eCurtain extends eDataObject{
 	public boolean close() {
 		boolean rs = false;
 		if(!getOperationStatus()) {
-			LOGGER.info("Curtain is already close! nothing to do");
+			LOGGER.info("SWITCH is already OFF! nothing to do");
 			rs = true;
 		} else {
 			EOJ eoj = new EOJ((byte)0x05,(byte)0xfd,(byte)0x02);

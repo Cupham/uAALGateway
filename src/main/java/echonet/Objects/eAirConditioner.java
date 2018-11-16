@@ -6,20 +6,26 @@ import java.util.LinkedList;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import org.apache.log4j.Logger;
 import org.universAAL.ontology.echonetontology.airconditionerRelatedDevices.HomeAirConditioner;
 
 import echowand.common.EOJ;
 import echowand.common.EPC;
 import echowand.net.Node;
 import echowand.net.SubnetException;
+import echowand.object.EchonetObjectException;
+import echowand.object.ObjectData;
+import echowand.object.RemoteObject;
 import echowand.service.Service;
 import echowand.service.result.GetListener;
 import echowand.service.result.GetResult;
 import echowand.service.result.ResultData;
 import echowand.service.result.ResultFrame;
+import main.Activator;
 import utils.EchonetDataConverter;
 
 public class eAirConditioner extends eDataObject{
+	private static final Logger LOGGER = Logger.getLogger(eAirConditioner.class.getName());
 	private boolean operationStatus;
 	private boolean operationPowerSaving;
 	private String operationModeSetting;
@@ -96,8 +102,77 @@ public class eAirConditioner extends eDataObject{
 		}
 		
 	}
+	public boolean setOn() {
+		boolean rs = false;
+		if(isOperationStatus()) {
+			LOGGER.info("Airconditioner is already ON! nothing to do");
+			rs = true;
+		} else {
+			if(executeCommand(EPC.x80, new ObjectData((byte) 0x30))) {
+				setOperationStatus(true);
+				rs= true;
+			} else {
+				rs = false;
+			}
+		}
+		return rs;
+	}
+	public boolean setOff() {
+		boolean rs = false;
+		if(!isOperationStatus()) {
+			LOGGER.info("Airconditioner is already OFF! nothing to do");
+			rs = true;
+		} else {
+			if(executeCommand(EPC.x80, new ObjectData((byte) 0x31))) {
+				setOperationStatus(false);
+				rs= true;
+			} else {
+				rs = false;
+			}
+		}
+		return rs;
+	}
 	public boolean isOperationPowerSaving() {
 		return operationPowerSaving;
+	}
+	public boolean setPowerSavingMode(boolean mode) {
+		if(mode) {
+			return turnOnPowerSavingMode();
+		} else {
+			return turnOffPowerSavingMode();
+		}
+		
+	}
+	public boolean turnOnPowerSavingMode() {
+		boolean rs = false;
+		if(isOperationPowerSaving()) {
+			LOGGER.info("Airconditioner is already in power saving mode nothing to do");
+			rs = true;
+		} else {
+			if(executeCommand(EPC.x8F, new ObjectData((byte) 0x41))) {
+				setOperationPowerSaving(true);
+				rs= true;
+			} else {
+				rs = false;
+			}
+		}
+		return rs;
+		
+	}
+	public boolean turnOffPowerSavingMode() {
+		boolean rs = false;
+		if(!isOperationPowerSaving()) {
+			LOGGER.info("Airconditioner is already in normal mode nothing to do");
+			rs = true;
+		} else {
+			if(executeCommand(EPC.x8F, new ObjectData((byte) 0x42))) {
+				setOperationPowerSaving(false);
+				rs= true;
+			} else {
+				rs = false;
+			}
+		}
+		return rs;
 	}
 	public void setOperationPowerSaving(boolean operationPowerSaving) {
 		this.operationPowerSaving = operationPowerSaving;
@@ -206,6 +281,22 @@ public class eAirConditioner extends eDataObject{
 	}
 	public void setAirFlowRate(String airFlowRate) {
 		this.airFlowRate = airFlowRate;
+	}
+	public boolean setDeviceAirFlowRate(String airFlowrate) {
+		boolean rs = false;
+		if(airFlowrate.equals(getAirFlowRate())) {
+			LOGGER.info(String.format("Airconditioner flowrate is already in %s nothing to do", airFlowrate));
+			rs = true;
+		} else {
+			if(executeCommand(EPC.xA0, EchonetDataConverter.dataFromAirConditionerFlowRate(airFlowrate.trim()))) {
+				setAirFlowRate(airFlowrate);
+				rs= true;
+			} else {
+				rs = false;
+			}
+		}
+		return rs;
+		
 	}
 	public String getAirFlowDirectionSetting() {
 		return airFlowDirectionSetting;
@@ -427,7 +518,7 @@ public class eAirConditioner extends eDataObject{
 					case xA0:
 						setAirFlowRate(EchonetDataConverter.dataToAirConditionerFlowRate(resultData));
 						String setAirFlowRateLog = String.format("AirConditioner:"+node.getNodeInfo().toString()+ 
-								" {EPC:0xA0, EDT: 0x%02X}=={OperationMode:%s}",resultData.toBytes()[0],getAirFlowRate());
+								" {EPC:0xA0, EDT: 0x%02X}=={AirFlowRate:%s}",resultData.toBytes()[0],getAirFlowRate());
 						break;		
 					default:
 						break;
@@ -438,14 +529,7 @@ public class eAirConditioner extends eDataObject{
 			e.printStackTrace();
 		}
 	}
-	@Override
-	public String ToString() {
-		StringBuilder rs = new StringBuilder();
-		rs.append("IP:" + getNode().toString() +"/n");
-		rs.append("Mode:" + getOperationModeSetting() +"/n");
-		rs.append("Current Temperature: " + getCurrentSettingTemperature());
-		return rs.toString();
-	}
+
 	@Override
 	public void ParseDataFromEOJ(Service service) {
 		timer = new Timer(true);
@@ -457,6 +541,72 @@ public class eAirConditioner extends eDataObject{
 			}
 		}, 3000, 20000);	
 	}
-		
+	@Override
+	public String TouAALReponse() {
+		return String.format("%s;%s;%s;%d;%d;%s",isOperationStatus(), isOperationPowerSaving(),
+				              getOperationModeSetting(), getCurrentSettingTemperature(), getRoomTemperature(),getAirFlowRate());
+	}
+	
+	private boolean executeCommand(EPC epc, ObjectData data) {
+		boolean rs = false;
+		Activator.echonetService.registerRemoteEOJ(this.node, this.eoj);
+		RemoteObject remoteObject = Activator.echonetService.getRemoteObject(node, eoj);
+		LOGGER.info(String.format("Execute command [IP:%s, EOJ:%s, Data:%s]",this.node.getNodeInfo().toString(),this.eoj,data));
+		try {
+			if (remoteObject.setData(epc, data)) {
+				rs= true;
+				LOGGER.info(String.format("Completed: [IP:%s, EOJ:%s, Data:%s]",this.node.getNodeInfo().toString(),this.eoj,data));
+			}
+		} catch (EchonetObjectException e) {
+			LOGGER.error("Can not find object: " +e.toString());
+			rs= false;
+		}
+		return rs;
+	}
+	public boolean setDeviceLocation(String location) {
+		boolean rs = false;
+		if(location.equals(getInstallLocation())) {
+			LOGGER.info(String.format("Airconditioner is already at %s nothing to do", location));
+			rs = true;
+		} else {
+			if(executeCommand(EPC.x81, EchonetDataConverter.installLocationtoDataObj(location))) {
+				refreshInstallLocation(location);
+				rs= true;
+			} else {
+				rs = false;
+			}
+		}
+		return rs;
+	}
+	public boolean setOperationMode(String mode) {
+		boolean rs = false;
+		if(mode.equals(getOperationModeSetting())) {
+			LOGGER.info(String.format("Airconditioner is already in %s mode nothing to do", mode));
+			rs = true;
+		} else {
+			if(executeCommand(EPC.xB0, EchonetDataConverter.dataFromAirConditionerOperationMode(mode.trim()))) {
+				setOperationMode(mode);
+				rs= true;
+			} else {
+				rs = false;
+			}
+		}
+		return rs;
+	}
+	public boolean setSettingTemperature(int temperature) {
+		boolean rs = false;
+		if(getCurrentSettingTemperature() == temperature) {
+			LOGGER.info(String.format("Airconditioner temperature is already set to %d mode nothing to do", temperature));
+			rs = true;
+		} else {
+			if(executeCommand(EPC.xB3, new ObjectData(new Integer(temperature).byteValue()))) {
+				setCurrentSettingTemperature(temperature);
+				rs= true;
+			} else {
+				rs = false;
+			}
+		}
+		return rs;
+	}
 	
 }

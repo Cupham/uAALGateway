@@ -29,6 +29,6 @@ public abstract class eDataObject extends eSuperClass{
 	 * TODO: parse this data to string
 	 * @return
 	 */
-	public abstract String ToString();
+	public abstract String TouAALReponse();
 	
 }

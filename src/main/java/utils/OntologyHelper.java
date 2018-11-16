@@ -61,11 +61,11 @@ public class OntologyHelper {
 		ont.changeProperty(TemperatureSensor.PROPERTY_HAS_MEASURED_CUMULATIVE_POWER_CONSUMPTION,dev.getCumulativePower());
 		ont.changeProperty(TemperatureSensor.PROPERTY_HAS_MEASURED_INSTANTANEOUS_POWER_CONSUMPTION,dev.getInstantaneousPower());
 		ont.changeProperty(TemperatureSensor.PROPERTY_HAS_POWER_LIMIT_SETTING,dev.getPowerLimit());
-		ont.changeProperty(TemperatureSensor.PROPERTY_HAS_POWER_SAVING_OPERATION_SETTING,dev.isPowerSaving());
+		ont.changeProperty(TemperatureSensor.PROPERTY_HAS_POWER_SAVING_OPERATION_SETTING,dev.getPowerSaving());
 		ont.changeProperty(TemperatureSensor.PROPERTY_HAS_PRODUCT_CODE,dev.getProductCode());
 		ont.changeProperty(TemperatureSensor.PROPERTY_HAS_PRODUCTION_DATE,dev.getProductDate());
 		ont.changeProperty(TemperatureSensor.PROPERTY_HAS_PRODUCTION_NUMBER,dev.getProductNumber());
-		ont.changeProperty(TemperatureSensor.PROPERTY_HAS_REMOTE_CONTROL_SETTING,dev.isThroughPublicNetwork());
+		ont.changeProperty(TemperatureSensor.PROPERTY_HAS_REMOTE_CONTROL_SETTING,dev.getThroughPublicNetwork());
 		ont.changeProperty(TemperatureSensor.PROPERTY_STANDARD_VERSION_INFORMATION, dev.getStandardVersionInfo());
 	}
 	public static void  updateTemperatureOntologyProperty(eTemperatureSensor dev, TemperatureSensor ont,String property) {
@@ -140,7 +140,7 @@ public class OntologyHelper {
 			ont.changeProperty(TemperatureSensor.PROPERTY_HAS_POWER_LIMIT_SETTING,dev.getPowerLimit());
 		}
 		if(property.equals(EchonetSuperDevice.PROPERTY_HAS_POWER_SAVING_OPERATION_SETTING)) {
-			ont.changeProperty(TemperatureSensor.PROPERTY_HAS_POWER_SAVING_OPERATION_SETTING,dev.isPowerSaving());
+			ont.changeProperty(TemperatureSensor.PROPERTY_HAS_POWER_SAVING_OPERATION_SETTING,dev.getPowerSaving());
 		}
 		if(property.equals(EchonetSuperDevice.PROPERTY_HAS_PRODUCT_CODE)) {
 			ont.changeProperty(TemperatureSensor.PROPERTY_HAS_PRODUCT_CODE,dev.getProductCode());
@@ -152,7 +152,7 @@ public class OntologyHelper {
 			ont.changeProperty(TemperatureSensor.PROPERTY_HAS_PRODUCTION_NUMBER,dev.getProductNumber());
 		}
 		if(property.equals(EchonetSuperDevice.PROPERTY_HAS_REMOTE_CONTROL_SETTING)) {
-			ont.changeProperty(TemperatureSensor.PROPERTY_HAS_REMOTE_CONTROL_SETTING,dev.isThroughPublicNetwork());
+			ont.changeProperty(TemperatureSensor.PROPERTY_HAS_REMOTE_CONTROL_SETTING,dev.getThroughPublicNetwork());
 		}
 		long time = System.currentTimeMillis() -start;
 		LOGGER.info("Update TEMP_TIME " + time);
@@ -203,11 +203,11 @@ public class OntologyHelper {
 		ont.changeProperty(HomeAirConditioner.PROPERTY_HAS_MEASURED_CUMULATIVE_POWER_CONSUMPTION,dev.getCumulativePower());
 		ont.changeProperty(HomeAirConditioner.PROPERTY_HAS_MEASURED_INSTANTANEOUS_POWER_CONSUMPTION,dev.getInstantaneousPower());
 		ont.changeProperty(HomeAirConditioner.PROPERTY_HAS_POWER_LIMIT_SETTING,dev.getPowerLimit());
-		ont.changeProperty(HomeAirConditioner.PROPERTY_HAS_POWER_SAVING_OPERATION_SETTING,dev.isPowerSaving());
+		ont.changeProperty(HomeAirConditioner.PROPERTY_HAS_POWER_SAVING_OPERATION_SETTING,dev.getPowerSaving());
 		ont.changeProperty(HomeAirConditioner.PROPERTY_HAS_PRODUCT_CODE,dev.getProductCode());
 		ont.changeProperty(HomeAirConditioner.PROPERTY_HAS_PRODUCTION_DATE,dev.getProductDate());
 		ont.changeProperty(HomeAirConditioner.PROPERTY_HAS_PRODUCTION_NUMBER,dev.getProductNumber());
-		ont.changeProperty(HomeAirConditioner.PROPERTY_HAS_REMOTE_CONTROL_SETTING,dev.isThroughPublicNetwork());
+		ont.changeProperty(HomeAirConditioner.PROPERTY_HAS_REMOTE_CONTROL_SETTING,dev.getThroughPublicNetwork());
 		ont.changeProperty(HomeAirConditioner.PROPERTY_STANDARD_VERSION_INFORMATION, dev.getStandardVersionInfo());
 		long time = System.currentTimeMillis() -start;
 		LOGGER.info("Init AIR_TIME " + time);
@@ -297,7 +297,7 @@ public class OntologyHelper {
 			ont.changeProperty(HomeAirConditioner.PROPERTY_HAS_POWER_LIMIT_SETTING,dev.getPowerLimit());
 		}
 		if(property.equals(EchonetSuperDevice.PROPERTY_HAS_POWER_SAVING_OPERATION_SETTING)) {
-			ont.changeProperty(HomeAirConditioner.PROPERTY_HAS_POWER_SAVING_OPERATION_SETTING,dev.isPowerSaving());
+			ont.changeProperty(HomeAirConditioner.PROPERTY_HAS_POWER_SAVING_OPERATION_SETTING,dev.getPowerSaving());
 		}
 		if(property.equals(EchonetSuperDevice.PROPERTY_HAS_PRODUCT_CODE)) {
 			ont.changeProperty(HomeAirConditioner.PROPERTY_HAS_PRODUCT_CODE,dev.getProductCode());
@@ -309,7 +309,7 @@ public class OntologyHelper {
 			ont.changeProperty(HomeAirConditioner.PROPERTY_HAS_PRODUCTION_NUMBER,dev.getProductNumber());
 		}
 		if(property.equals(EchonetSuperDevice.PROPERTY_HAS_REMOTE_CONTROL_SETTING)) {
-			ont.changeProperty(HomeAirConditioner.PROPERTY_HAS_REMOTE_CONTROL_SETTING,dev.isThroughPublicNetwork());
+			ont.changeProperty(HomeAirConditioner.PROPERTY_HAS_REMOTE_CONTROL_SETTING,dev.getThroughPublicNetwork());
 		}
 		long time = System.currentTimeMillis() -start;
 		LOGGER.info("Update AIR_TIME " + time);
@@ -347,11 +347,11 @@ public class OntologyHelper {
 		ont.changeProperty(GeneralLighting.PROPERTY_HAS_MEASURED_CUMULATIVE_POWER_CONSUMPTION,dev.getCumulativePower());
 		ont.changeProperty(GeneralLighting.PROPERTY_HAS_MEASURED_INSTANTANEOUS_POWER_CONSUMPTION,dev.getInstantaneousPower());
 		ont.changeProperty(GeneralLighting.PROPERTY_HAS_POWER_LIMIT_SETTING,dev.getPowerLimit());
-		ont.changeProperty(GeneralLighting.PROPERTY_HAS_POWER_SAVING_OPERATION_SETTING,dev.isPowerSaving());
+		ont.changeProperty(GeneralLighting.PROPERTY_HAS_POWER_SAVING_OPERATION_SETTING,dev.getPowerSaving());
 		ont.changeProperty(GeneralLighting.PROPERTY_HAS_PRODUCT_CODE,dev.getProductCode());
 		ont.changeProperty(GeneralLighting.PROPERTY_HAS_PRODUCTION_DATE,dev.getProductDate());
 		ont.changeProperty(GeneralLighting.PROPERTY_HAS_PRODUCTION_NUMBER,dev.getProductNumber());
-		ont.changeProperty(GeneralLighting.PROPERTY_HAS_REMOTE_CONTROL_SETTING,dev.isThroughPublicNetwork());
+		ont.changeProperty(GeneralLighting.PROPERTY_HAS_REMOTE_CONTROL_SETTING,dev.getThroughPublicNetwork());
 		ont.changeProperty(GeneralLighting.PROPERTY_STANDARD_VERSION_INFORMATION, dev.getStandardVersionInfo());
 	}
 	public static void  updateLightingOntologyProperty(eLighting dev, GeneralLighting ont,String property) {
@@ -422,7 +422,7 @@ public class OntologyHelper {
 			ont.changeProperty(GeneralLighting.PROPERTY_HAS_POWER_LIMIT_SETTING,dev.getPowerLimit());
 		}
 		if(property.equals(EchonetSuperDevice.PROPERTY_HAS_POWER_SAVING_OPERATION_SETTING)) {
-			ont.changeProperty(GeneralLighting.PROPERTY_HAS_POWER_SAVING_OPERATION_SETTING,dev.isPowerSaving());
+			ont.changeProperty(GeneralLighting.PROPERTY_HAS_POWER_SAVING_OPERATION_SETTING,dev.getPowerSaving());
 		}
 		if(property.equals(EchonetSuperDevice.PROPERTY_HAS_PRODUCT_CODE)) {
 			ont.changeProperty(GeneralLighting.PROPERTY_HAS_PRODUCT_CODE,dev.getProductCode());
@@ -434,7 +434,7 @@ public class OntologyHelper {
 			ont.changeProperty(GeneralLighting.PROPERTY_HAS_PRODUCTION_NUMBER,dev.getProductNumber());
 		}
 		if(property.equals(EchonetSuperDevice.PROPERTY_HAS_REMOTE_CONTROL_SETTING)) {
-			ont.changeProperty(GeneralLighting.PROPERTY_HAS_REMOTE_CONTROL_SETTING,dev.isThroughPublicNetwork());
+			ont.changeProperty(GeneralLighting.PROPERTY_HAS_REMOTE_CONTROL_SETTING,dev.getThroughPublicNetwork());
 		}
 			
 	}
@@ -462,11 +462,11 @@ public class OntologyHelper {
 		ont.setMeasuredCumulativePowerConsumption(dev.getCumulativePower());
 		ont.setMeasuredInstantaneousPowerConsumption(dev.getInstantaneousPower());
 		ont.setPowerLimitSetting(dev.getPowerLimit());
-		ont.setPowerSavingOperationSetting(dev.isPowerSaving());
+		ont.setPowerSavingOperationSetting(dev.getPowerSaving());
 		ont.setProductCode(dev.getProductCode());
 		ont.setProductionDate(dev.getProductDate());
 		ont.setProductionNumber(dev.getProductNumber());
-		ont.setRemoteControlSetting(dev.isThroughPublicNetwork());
+		ont.setRemoteControlSetting(dev.getThroughPublicNetwork());
 		*/
 	}
 	public static void  updateCurtainOntologyProperty(eCurtain dev, CurtainController ont,String property) {
@@ -524,7 +524,7 @@ public class OntologyHelper {
 			ont.setPowerLimitSetting(dev.getPowerLimit());
 		}
 		if(property.equals(EchonetDevice.PROPERTY_HAS_POWER_SAVING_OPERATION_SETTING)) {
-			ont.setPowerSavingOperationSetting(dev.isPowerSaving());
+			ont.setPowerSavingOperationSetting(dev.getPowerSaving());
 		}
 		if(property.equals(EchonetDevice.PROPERTY_HAS_PRODUCT_CODE)) {
 			ont.setProductCode(dev.getProductCode());
@@ -536,7 +536,7 @@ public class OntologyHelper {
 			ont.setProductionNumber(dev.getProductNumber());
 		}
 		if(property.equals(EchonetDevice.PROPERTY_HAS_REMOTE_CONTROL_SETTING)) {
-			ont.setRemoteControlSetting(dev.isThroughPublicNetwork());
+			ont.setRemoteControlSetting(dev.getThroughPublicNetwork());
 		}	
 		*/
 	}
@@ -571,11 +571,11 @@ public class OntologyHelper {
 		ont.changeProperty(Switch.PROPERTY_HAS_MEASURED_CUMULATIVE_POWER_CONSUMPTION,dev.getCumulativePower());
 		ont.changeProperty(Switch.PROPERTY_HAS_MEASURED_INSTANTANEOUS_POWER_CONSUMPTION,dev.getInstantaneousPower());
 		ont.changeProperty(Switch.PROPERTY_HAS_POWER_LIMIT_SETTING,dev.getPowerLimit());
-		ont.changeProperty(Switch.PROPERTY_HAS_POWER_SAVING_OPERATION_SETTING,dev.isPowerSaving());
+		ont.changeProperty(Switch.PROPERTY_HAS_POWER_SAVING_OPERATION_SETTING,dev.getPowerSaving());
 		ont.changeProperty(Switch.PROPERTY_HAS_PRODUCT_CODE,dev.getProductCode());
 		ont.changeProperty(Switch.PROPERTY_HAS_PRODUCTION_DATE,dev.getProductDate());
 		ont.changeProperty(Switch.PROPERTY_HAS_PRODUCTION_NUMBER,dev.getProductNumber());
-		ont.changeProperty(Switch.PROPERTY_HAS_REMOTE_CONTROL_SETTING,dev.isThroughPublicNetwork());
+		ont.changeProperty(Switch.PROPERTY_HAS_REMOTE_CONTROL_SETTING,dev.getThroughPublicNetwork());
 		ont.changeProperty(Switch.PROPERTY_STANDARD_VERSION_INFORMATION, dev.getStandardVersionInfo());
 	}
 	public static void  updateConsentOntologyProperty(eElectricConsent dev, Switch ont,String property) {
@@ -638,7 +638,7 @@ public class OntologyHelper {
 			ont.changeProperty(Switch.PROPERTY_HAS_POWER_LIMIT_SETTING,dev.getPowerLimit());
 		}
 		if(property.equals(EchonetSuperDevice.PROPERTY_HAS_POWER_SAVING_OPERATION_SETTING)) {
-			ont.changeProperty(Switch.PROPERTY_HAS_POWER_SAVING_OPERATION_SETTING,dev.isPowerSaving());
+			ont.changeProperty(Switch.PROPERTY_HAS_POWER_SAVING_OPERATION_SETTING,dev.getPowerSaving());
 		}
 		if(property.equals(EchonetSuperDevice.PROPERTY_HAS_PRODUCT_CODE)) {
 			ont.changeProperty(Switch.PROPERTY_HAS_PRODUCT_CODE,dev.getProductCode());
@@ -650,7 +650,7 @@ public class OntologyHelper {
 			ont.changeProperty(Switch.PROPERTY_HAS_PRODUCTION_NUMBER,dev.getProductNumber());
 		}
 		if(property.equals(EchonetSuperDevice.PROPERTY_HAS_REMOTE_CONTROL_SETTING)) {
-			ont.changeProperty(Switch.PROPERTY_HAS_REMOTE_CONTROL_SETTING,dev.isThroughPublicNetwork());
+			ont.changeProperty(Switch.PROPERTY_HAS_REMOTE_CONTROL_SETTING,dev.getThroughPublicNetwork());
 		}	
 	}
 
