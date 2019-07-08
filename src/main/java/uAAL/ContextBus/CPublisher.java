@@ -21,16 +21,18 @@ import main.CaressesOntology;
 public class CPublisher {
 	private static final Logger LOGGER = Logger.getLogger(CPublisher.class.getName());
 	private ContextPublisher contextPublisher;
-	int counter ;
+	static int counter ;
 
 	public CPublisher(ModuleContext context) {
 		ContextProvider cProvider = new ContextProvider(Activator.echonet_ontology.NAMESPACE+"EchonetResourcePublisher");
 		
 		cProvider.setType(ContextProviderType.gauge);
-		ContextEventPattern temperatureSensorEvent = new ContextEventPattern();
-		temperatureSensorEvent.addRestriction(MergedRestriction.getFixedValueRestriction(ContextEvent.PROP_RDF_SUBJECT, TemperatureSensor.MY_URI));
+		//ContextEventPattern temperatureSensorEvent = new ContextEventPattern();
+		//temperatureSensorEvent.addRestriction(MergedRestriction.getAllValuesRestriction(ContextEvent.PROP_RDF_SUBJECT, TemperatureSensor.MY_URI));
+		ContextEventPattern echonet = new ContextEventPattern();
+		echonet.addRestriction(MergedRestriction.getAllValuesRestriction(ContextEvent.PROP_RDF_SUBJECT, EchonetSuperDevice.MY_URI));
 	
-		cProvider.setProvidedEvents(new ContextEventPattern[] {temperatureSensorEvent});
+		cProvider.setProvidedEvents(new ContextEventPattern[] {echonet});
 		
 		contextPublisher = new DefaultContextPublisher(context, cProvider);
 		if(contextPublisher != null) {
@@ -42,12 +44,16 @@ public class CPublisher {
 	}
 	public boolean publicContextEvent(ContextEvent ce) {
 		boolean rs = false;
-		if(contextPublisher != null) {	
-			contextPublisher.publish(ce);
-			counter++;
-			System.out.println("Published: " + counter + " URI: "+ ce.getURI().substring(ContextEvent.CONTEXT_EVENT_URI_PREFIX.length()));
-			//printCEDetail(ce);
-			rs = true;
+		if(Activator.enable_ContextBus) {		
+			if(contextPublisher != null) {	
+				contextPublisher.publish(ce);
+				//counter++;
+				//System.out.println("Published: " + counter + " URI: "+ ce.getURI().substring(ContextEvent.CONTEXT_EVENT_URI_PREFIX.length()));
+				printCEDetail(ce);
+				rs = true;
+			}
+		} else {
+			// do nothing
 		}
 		return rs;	
 	}
@@ -58,6 +64,8 @@ public class CPublisher {
 	}
 	public static void printCEDetail(ContextEvent ce) {
 		StringBuilder msg = new StringBuilder();
+		counter++;
+		msg.append("Published " + counter);
 		msg.append("   *********************\n");
 		msg.append("       SUBJECT URI: " + ce.getSubjectURI()+ "\n");
 		msg.append("       SUBJECT TYPE URI: " + ce.getSubjectTypeURI() + "\n");

@@ -36,6 +36,9 @@ public class EchonetLiteDevice {
 		this.dataObjList.add(dataObj);
 		return true;
 	}
+	public static int count_temperature_sensor = 0;
+	public static int count_light = 0;
+	public static int count_air_conditioner = 0;
 	public boolean parseDataObject(EOJ eoj, Node node, Service service) throws EchonetObjectException{
 		byte classGroupCode = eoj.getClassGroupCode();
 		byte classCode = eoj.getClassCode();
@@ -49,7 +52,8 @@ public class EchonetLiteDevice {
 				System.out.println("   			Creating TemperatureSensor object from ECHONET frame...");
 				
 				dataObj = new eTemperatureSensor(eoj, node);
-				
+				count_temperature_sensor ++;
+				System.out.println("Timelog: New_Temperature_Sensor " + count_temperature_sensor + " " + System.currentTimeMillis() + "                                                 \n" );
 				break;
 			case (byte) (0x12): //humidity sensor
 				//TODO: implement humidity sensor class
@@ -76,7 +80,8 @@ public class EchonetLiteDevice {
 			case (byte)(0x30):
 				System.out.println("   			Creating Air-Conditioner object from ECHONET frame...");
 				dataObj = new eAirConditioner(eoj, node);
-
+				count_air_conditioner ++;
+				System.out.println("Timelog: New_air_conditioner " + count_air_conditioner + " " + System.currentTimeMillis() + "                                                 \n");
 				break;
 			default:
 				return false;
@@ -87,7 +92,9 @@ public class EchonetLiteDevice {
 			switch (classCode) {
 			case (byte)(0x90):
 				//System.out.println("   			Creating Lighting object from ECHONET frame...");
-				dataObj = new eLighting(eoj, node);
+				dataObj = new eGeneralLighting(eoj, node);
+				count_light ++;
+				System.out.println("Timelog: New_light " + count_light + " " + System.currentTimeMillis()+ "                                                 \n");
 				break;
 			default:
 				return false;

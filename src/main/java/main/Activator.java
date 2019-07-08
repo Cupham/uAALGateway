@@ -13,33 +13,29 @@ import java.util.concurrent.CopyOnWriteArraySet;
 
 
 import org.universAAL.middleware.context.ContextEvent;
-import org.apache.log4j.Logger;
+import java.util.logging.Logger;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 import org.universAAL.middleware.container.ModuleContext;
 import org.universAAL.middleware.container.osgi.uAALBundleContainer;
 import org.universAAL.middleware.owl.OntologyManagement;
-import org.universAAL.middleware.rdf.RDFClassInfo;
 import org.universAAL.ontology.echonetontology.EchonetOntology;
 import org.universAAL.ontology.echonetontology.airconditionerRelatedDevices.HomeAirConditioner;
 import org.universAAL.ontology.echonetontology.housingFacilitiesRelatedDevices.GeneralLighting;
 import org.universAAL.ontology.echonetontology.managementOperationRelatedDevices.Switch;
 import org.universAAL.ontology.echonetontology.sensorRelatedDevices.TemperatureSensor;
-import org.universAAL.ontology.echonetontology.values.MeasuredValue;
 
 import echonet.Objects.EchonetLiteDevice;
-import echonet.Objects.HomeResourceObserver;
 import echonet.Objects.NodeProfileObject;
 import echonet.Objects.eAirConditioner;
 import echonet.Objects.eCurtain;
 import echonet.Objects.eDataObject;
-import echonet.Objects.eLighting;
+import echonet.Objects.eGeneralLighting;
 import echonet.Objects.eRadio;
 import echonet.Objects.eTV;
 import echonet.Objects.eTemperatureSensor;
 import echonet.Objects.eWindow;
-import echonet.Services.EchonetDeviceScanner;
-import echonet.Services.EchonetDeviceUpdater;
+import echonet.Services.CommandExcutor;
 import echowand.common.EOJ;
 import echowand.logic.TooManyObjectsException;
 import echowand.monitor.Monitor;
@@ -52,7 +48,7 @@ import echowand.service.Core;
 import echowand.service.Service;
 import uAAL.ContextBus.CPublisher;
 import uAAL.ServiceBus.SCallee_SmartEnvironment;
-import utils.OntologyHelper;
+
 import utils.SetUtilities;
 
 
@@ -62,14 +58,14 @@ public class Activator implements BundleActivator {
 	
 	private CaressesOntology caresses_ontology = new CaressesOntology();
 	public static  EchonetOntology echonet_ontology = new EchonetOntology();
-	public static int counter = 0;
 	public static BundleContext osgiContext = null;
 	public static ModuleContext context = null;	
+	public static boolean enable_ContextBus;
+	private String NIF = "eno1";
 
 	public static Core echonetCore;
 	public static Service echonetService = null;
-	public static EchonetDeviceUpdater deviceUpdater = null;
-	public static EchonetDeviceScanner deviceScanner = null;
+	public static CommandExcutor commandExecutor = null;
 
 	public static SCallee_SmartEnvironment scalle_SF = null;
 	
@@ -81,7 +77,7 @@ public class Activator implements BundleActivator {
 
 	protected static boolean using_socket;
 	// : Declare one individual for each DataMessage sub-sub-class
-	
+	public static int counter = 0;
 	public static TemperatureSensor i_TemperatureSensor;
 	public static HomeAirConditioner i_HomeAirConditoner;
 	public static GeneralLighting i_Lighting;
@@ -99,10 +95,11 @@ public class Activator implements BundleActivator {
 		
 		// : Set to which component this bundle refer (Component.CAHRIM, Component.CKB, Component.CSPEM)
 		Component.setThisComponentAs(Component.SMART_FACILITY);
+		enable_ContextBus = false;
 		//Component.setThisComponentAs(Component.CKB); 
 		Activator.osgiContext = bcontext;
 		Activator.context = uAALBundleContainer.THE_CONTAINER.registerModule(new Object[] { bcontext });
-		LOGGER.debug("Application Started");
+		LOGGER.info("Application Started");
 		// initialize echonet interface
 		
 		
@@ -135,12 +132,11 @@ public class Activator implements BundleActivator {
 			@Override
 			public void run() {
 				counter+=1;
-				LOGGER.info("Run: " + counter + " Published: " + changedOntologies.size());
 				System.out.println("------------------RUN: " + counter + ", Number of Device : " + echonetDevices.size()+" ------------------");
 				//publishChangedOntology();
 				printtheList();
 			}
-		}, 2000, 10000);	 
+		}, 2000, 60000);	 
 	}
 
 	public void setObjectPropertiesRelations(){
@@ -154,8 +150,8 @@ public class Activator implements BundleActivator {
 	public void printtheList() {
 		for(EchonetLiteDevice dev: Activator.echonetDevices) {
 			for(eDataObject obj: dev.getDataObjList()) {
-				if(obj.getClass().equals(eLighting.class)) {
-					eLighting light = (eLighting) obj;
+				if(obj.getClass().equals(eGeneralLighting.class)) {
+					eGeneralLighting light = (eGeneralLighting) obj;
 					System.out.println("Light: " +light.getNode().toString() + " " + light.getInstallLocation());
 				} else if(obj.getClass().equals(eTemperatureSensor.class)) {
 					eTemperatureSensor light = (eTemperatureSensor) obj;
@@ -180,69 +176,41 @@ public class Activator implements BundleActivator {
 			}
 		}
 	}
-	public void publishChangedOntology() {
-		if(changedOntologies.size() == 0) {
-			System.out.println("Ontology is up to date");
-		} else {
-			for(String URI :changedOntologies) {
-				String suffix = URI.substring(echonet_ontology.NAMESPACE.length());
-				if(URI.contains(TemperatureSensor.MY_URI)) {
-					Activator.i_TemperatureSensor = temperatureSensorOntologies.get(URI);
-					ContextEvent sensor  = new ContextEvent(ContextEvent.CONTEXT_EVENT_URI_PREFIX + suffix);
-					sensor.setRDFObject(Activator.i_TemperatureSensor);
-					cPublisher.publicContextEvent(sensor);
-					SetUtilities.removeIfExistFromSet(Activator.changedOntologies, URI);
-				} else if(URI.contains(HomeAirConditioner.MY_URI)) {
-					Activator.i_HomeAirConditoner = homeAirconditionerOntologies.get(URI);
-					ContextEvent aircon  = new ContextEvent(ContextEvent.CONTEXT_EVENT_URI_PREFIX + suffix);
-					aircon.setRDFObject(Activator.i_HomeAirConditoner);
-					cPublisher.publicContextEvent(aircon);
-					SetUtilities.removeIfExistFromSet(Activator.changedOntologies, URI);
-				} else if(URI.contains(GeneralLighting.MY_URI)) {
-					Activator.i_Lighting = lightingOntologies.get(URI);
-					ContextEvent lighting  = new ContextEvent(ContextEvent.CONTEXT_EVENT_URI_PREFIX + suffix);
-					lighting.setRDFObject(Activator.i_Lighting);
-					cPublisher.publicContextEvent(lighting);
-					SetUtilities.removeIfExistFromSet(Activator.changedOntologies, URI);
-				}else if(URI.contains(Switch.MY_URI)) {
-					Activator.i_Consent = consentOntologies.get(URI);
-					ContextEvent consent  = new ContextEvent(ContextEvent.CONTEXT_EVENT_URI_PREFIX + suffix);
-					consent.setRDFObject(Activator.i_Consent);
-					cPublisher.publicContextEvent(consent);
-					SetUtilities.removeIfExistFromSet(Activator.changedOntologies, URI);
-				}
-			}
-		}
-	}
+	
+	public static int count_node = 0;
+	public static int count_EOJ = 0;
+	public static int count_profile_object = 0;
 	public boolean initialEchonetInterface() throws SocketException, SubnetException, TooManyObjectsException {
 		boolean isSuccessed = false;
 		
 		if(echonetService == null) {
 			
-			NetworkInterface nif = NetworkInterface.getByName("vpn_ihouse");
+			NetworkInterface nif = NetworkInterface.getByName(NIF);
 			echonetCore = new Core(Inet4Subnet.startSubnet(nif));
 			echonetCore.startService();
 			echonetService = new Service(echonetCore);
 			// deviceScanner = new EchonetDeviceScanner(Activator.echonetService);
-			deviceUpdater = new EchonetDeviceUpdater(echonetService);
+			commandExecutor = new CommandExcutor(echonetService);
 			
 			Monitor monitor = new Monitor(echonetCore);
 			monitor.addMonitorListener(new MonitorListener() {
 	            @Override
-	            public void detectEOJsJoined(Monitor monitor, Node node, List<EOJ> eojs) {	            	
+	            public void detectEOJsJoined(Monitor monitor, Node node, List<EOJ> eojs) {
+	            	count_node++;
 	            	System.out.println("initialEchonetInterface: detectEOJsJoined: " + node + " " + eojs);
 	                EchonetLiteDevice eDevice = new EchonetLiteDevice(node);
 	                NodeProfileObject profile = null;        
 	                for(EOJ eoj :  eojs) {        	       
 	            	    if(eoj.isProfileObject()) {
+	            	    	count_profile_object ++;
+	            	    	System.out.println("Timelog: count_profile_object " + count_profile_object + " " + System.currentTimeMillis() + "                                                 \n");
 	                		profile = new NodeProfileObject(node, eoj);
 	                		profile.ParseProfileObjectFromEPC(echonetService);
 	                		eDevice.setProfileObj(profile);
 	                	} else if(eoj.isDeviceObject()) {
 	                		try {
-
+	                			count_EOJ += 1;
 								eDevice.parseDataObject(eoj,node,echonetService);
-								new HomeResourceObserver(eDevice);
 							} catch (EchonetObjectException e) {
 								// TODO Auto-generated catch block
 								e.printStackTrace();

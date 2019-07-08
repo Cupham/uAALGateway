@@ -1,5 +1,4 @@
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/main/OntologyUpdater.java
-/home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/utils/OntologyHelper.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echonet/Objects/EchonetLiteDevice.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/main/Component.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echonet/Objects/eDataObject.java
@@ -7,17 +6,16 @@
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/main/CaressesOntology.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echonet/Objects/eWindow.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/utils/ListenableSet.java
+/home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echonet/Services/CommandExcutor.java
+/home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echonet/Objects/eGeneralLighting.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/utils/SampleConstants.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/utils/InputValidator.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echonet/Objects/NodeProfileObject.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/uAAL/ContextBus/CPublisher.java
-/home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echonet/Objects/DataChangeObserver.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echonet/Objects/eTV.java
-/home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echonet/Services/EchonetDeviceScanner.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/main/CaressesComponent.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echonet/Services/EchonetDeviceUpdater.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echonet/Objects/eCurtain.java
-/home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echonet/Objects/eLighting.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/main/CaressesFactory.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/utils/ListenableHashset.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/uAAL/ServiceBus/SCallee_SmartEnvironment.java
@@ -30,6 +28,5 @@
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echonet/Objects/eRadio.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echonet/Objects/eAirConditioner.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/utils/EchonetDataConverter.java
-/home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echonet/Objects/HomeResourceObserver.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/main/SubscriptionHandler.java
 /home/elite/Documents/Code/uAAL/trainning/uAALGateway/src/main/java/echonet/Objects/eElectricConsent.java

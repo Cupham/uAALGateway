@@ -13,6 +13,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.universAAL.ontology.echonetontology.values.EchonetDeviceGroupCodeValue;
+import org.universAAL.ontology.echonetontology.values.FaultDesciptionValue;
+import org.universAAL.ontology.echonetontology.values.IdentificationNumberValue;
 import org.universAAL.ontology.echonetontology.values.InstallationLocationValue;
 
 import echowand.common.EPC;
@@ -621,6 +623,63 @@ public class EchonetDataConverter {
 		}
 		return rs;
 	}
+	public static InstallationLocationValue installationLocationToEnum(String location) {
+		InstallationLocationValue rs = null;
+		if(location.equals(SampleConstants.LIVING_ROOM)) {
+			rs = InstallationLocationValue.LivingRoom;
+		}
+		if(location.equals(SampleConstants.BATHROOM)) {
+			rs = InstallationLocationValue.Bathroom;
+		}
+		if(location.equals(SampleConstants.DINING_ROOM)) {
+			rs = InstallationLocationValue.DinningRoom;
+		}
+		if(location.equals(SampleConstants.FRONT_DOOR)) {
+			rs = InstallationLocationValue.FrontDoor;
+		}		
+		if(location.equals(SampleConstants.GARAGE)) {
+			rs = InstallationLocationValue.Garare;
+		}
+		if(location.equals(SampleConstants.GARDEN_PERIMETER)) {
+			rs = InstallationLocationValue.Garden_Perimeter;
+		}
+		if(location.equals(SampleConstants.LOCATION_UNDEFINED)) {
+			rs = InstallationLocationValue.InstallationLocationIndefinited;
+		}
+		if(location.equals(SampleConstants.LOCATION_NOT_SPECIFIC)) {
+			rs = InstallationLocationValue.InstallationLocationNotSpecified;
+		}	
+		if(location.equals(SampleConstants.KITCHEN)) {
+			rs = InstallationLocationValue.Kitchen;
+		}
+		if(location.equals(SampleConstants.LAVATORY)) {
+			rs = InstallationLocationValue.Lavatory;
+		}
+		if(location.equals(SampleConstants.OTHER)) {
+			rs = InstallationLocationValue.Others;
+		}
+		if(location.equals(SampleConstants.PASSAGEWAY)) {
+			rs = InstallationLocationValue.Passageway;
+		}
+		if(location.equals(SampleConstants.ROOM)) {
+			rs = InstallationLocationValue.Room;
+		}
+		if(location.equals(SampleConstants.STAIR_WAY)) {
+			rs = InstallationLocationValue.Stairway;
+		}
+		if(location.equals(SampleConstants.STORE_ROOM)) {
+			rs = InstallationLocationValue.Storeroom;
+		}
+		if(location.equals(SampleConstants.VERANDA_BALCONY)) {
+			rs = InstallationLocationValue.Veranda_Balcony;
+		}
+		if(location.equals(SampleConstants.WASH_CHANGING_ROOM)) {
+			rs = InstallationLocationValue.Washroom_ChangingRoom;
+		}if(location.equals(SampleConstants.FREE_DEFINITION)) {
+			rs = InstallationLocationValue.FreeDefinition;
+		}
+		return rs;
+	}
 	public static String dataToInstallLocation(ResultData rdata) {
 		byte data[] = rdata.toBytes();
 		byte firstByte = data[0];
@@ -984,6 +1043,47 @@ public class EchonetDataConverter {
 			return comProtocol + ((number.trim().length() > 1) ? " " + number : "");
 		}
 	}
+	public static IdentificationNumberValue stringToIdentificationNumber(String identification) {
+		IdentificationNumberValue rs = null;
+		if(identification.equals(SampleConstants.PLC_A_D)) {
+			rs = IdentificationNumberValue.PowerLineCommunicationProtocol_A_D;
+		}
+		if(identification.equals(SampleConstants.PLC_C)) {
+			rs = IdentificationNumberValue.PowerLineCommunicationProtocol_C;
+		}
+		if(identification.equals(SampleConstants.LOW_POWER_RADIO_COMMUNICATION_PROTOCOL)) {
+			rs = IdentificationNumberValue.LowPowerRadioCommunicationProtocol;
+		}
+		if(identification.equals(SampleConstants.EXTENDED_HBS)) {
+			rs = IdentificationNumberValue.ExtendedHBS;
+		}
+		if(identification.equals(SampleConstants.IrDA)) {
+			rs = IdentificationNumberValue.IrDA;
+		}
+		if(identification.equals(SampleConstants.LONTALK)) {
+			rs = IdentificationNumberValue.LonTalk;
+		}
+		if(identification.equals(SampleConstants.BLUETOOTH)) {
+			rs = IdentificationNumberValue.Bluetooth;
+		}
+		
+		if(identification.equals(SampleConstants.ETHERNET)) {
+			rs = IdentificationNumberValue.Ethernet;
+		}
+		if(identification.equals(SampleConstants.IEEE802_11_11_B)) {
+			rs = IdentificationNumberValue.IEEE802_11_11B;
+		}
+		if(identification.equals(SampleConstants.IPV6_ETHERNET)) {
+			rs = IdentificationNumberValue.IPV6_Ethernet;
+		}
+		if(identification.equals(SampleConstants.IPV6_6LOWPAN)) {
+			rs = IdentificationNumberValue.IPV6_6LoWPAN;
+		}
+		if(identification.equals(SampleConstants.UNDEFINED)) {
+			rs = IdentificationNumberValue.IdentificationNotSet;
+		}
+		return rs;
+	}
 	public static String dataToIdentifiCationNumber(ResultData rdata) {
 		byte data[] = rdata.toBytes();
 		byte firstByte = data[0];
@@ -1022,7 +1122,7 @@ public class EchonetDataConverter {
 			case (byte) 0x1D:
 			case (byte) 0x1E:
 			case (byte) 0x1F:
-				comProtocol = "Power line Communication Protocol a and d systems";
+				comProtocol = SampleConstants.PLC_A_D;
 				break;
 			case (byte) 0x31:
 			case (byte) 0x32:
@@ -1039,7 +1139,7 @@ public class EchonetDataConverter {
 			case (byte) 0x3D:
 			case (byte) 0x3E:
 			case (byte) 0x3F:
-				comProtocol = "Low-Power Radio Communication Protocol";
+				comProtocol = SampleConstants.LOW_POWER_RADIO_COMMUNICATION_PROTOCOL;
 				break;
 			case (byte) 0x41:
 			case (byte) 0x42:
@@ -1056,7 +1156,7 @@ public class EchonetDataConverter {
 			case (byte) 0x4D:
 			case (byte) 0x4E:
 			case (byte) 0x4F:
-				comProtocol = "Extended HBS";
+				comProtocol = SampleConstants.EXTENDED_HBS;
 				break;
 			case (byte) 0x51:
 			case (byte) 0x52:
@@ -1073,7 +1173,7 @@ public class EchonetDataConverter {
 			case (byte) 0x5D:
 			case (byte) 0x5E:
 			case (byte) 0x5F:
-				comProtocol = "IrDA";
+				comProtocol = SampleConstants.IrDA;
 				break;
 			case (byte) 0x61:
 			case (byte) 0x62:
@@ -1090,7 +1190,7 @@ public class EchonetDataConverter {
 			case (byte) 0x6D:
 			case (byte) 0x6E:
 			case (byte) 0x6F:
-				comProtocol = "LonTalk";
+				comProtocol = SampleConstants.LONTALK;
 				break;
 			case (byte) 0x71:
 			case (byte) 0x72:
@@ -1107,7 +1207,7 @@ public class EchonetDataConverter {
 			case (byte) 0x7D:
 			case (byte) 0x7E:
 			case (byte) 0x7F:
-				comProtocol = "Bluetooth";
+				comProtocol = SampleConstants.BLUETOOTH;
 				break;
 			case (byte) 0x81:
 			case (byte) 0x82:
@@ -1124,7 +1224,7 @@ public class EchonetDataConverter {
 			case (byte) 0x8D:
 			case (byte) 0x8E:
 			case (byte) 0x8F:
-				comProtocol = "Ethernet";
+				comProtocol = SampleConstants.ETHERNET;
 				break;
 			case (byte) 0x91:
 			case (byte) 0x92:
@@ -1141,19 +1241,19 @@ public class EchonetDataConverter {
 			case (byte) 0x9D:
 			case (byte) 0x9E:
 			case (byte) 0x9F:
-				comProtocol = "IEEE802.11/11b";
+				comProtocol = SampleConstants.IEEE802_11_11_B;
 				break;
 			case (byte) 0xA1:
-				comProtocol = "Power line Communication Protocol c systems";
+				comProtocol = SampleConstants.PLC_C;
 				break;
 			case (byte) 0xB1:
-				comProtocol = "IPv6/Ethernet";
+				comProtocol = SampleConstants.IPV6_ETHERNET;
 				break;
 			case (byte) 0xB2:
-				comProtocol = "IPv6/6LoWPAN";
+				comProtocol = SampleConstants.IPV6_6LOWPAN;
 				break;
 			default:
-				comProtocol = "Undefined";
+				comProtocol = SampleConstants.UNDEFINED;
 				break;
 
 			}
@@ -1170,49 +1270,48 @@ public class EchonetDataConverter {
 		if (allData[1] != (byte) 0x00) {
 			if (allData[0] == (byte) 0xFF) {
 				faultType = FaultType.Undefined;
-				contentSpecification = "A fault has occurred but the recovery"
-						+ " method or fault location cannot be determined.";
+				contentSpecification = SampleConstants.SPECIAL_FAULT;
 			} else {
 				faultType = FaultType.Undefined;
-				contentSpecification = "The fault undefined.";
+				contentSpecification = SampleConstants.FAULT_UNDEFINED;
 			}
 		} else {
 			switch (allData[0]) {
 			case (byte) 0x00:
-				contentSpecification = "No fault";
+				contentSpecification = SampleConstants.NO_FAULT;
 				faultType = null;
 				break;
 			case (byte) 0x01:
-				contentSpecification = "Faults that can be recovered from by turning off the power switch and turning it on again or withdrawing and re-inserting the power plug.";
+				contentSpecification = SampleConstants.RECOVERABLE_TYPE_1;
 				faultType = FaultType.Recoverable_Faults;
 				break;
 			case (byte) 0x02:
-				contentSpecification = "Faults that can be recovered from by pressing the reset button.";
+				contentSpecification = SampleConstants.RECOVERABLE_TYPE_2;
 				faultType = FaultType.Recoverable_Faults;
 				break;
 			case (byte) 0x03:
-				contentSpecification = "Faults that can be recovered from by changing the way the device is mounted or opening/closing a lid or door.";
+				contentSpecification = SampleConstants.RECOVERABLE_TYPE_3;
 				faultType = FaultType.Recoverable_Faults;
 				break;
 			case (byte) 0x04:
-				contentSpecification = "Faults that can be recovered from by supplying fuel, water, air, etc.";
+				contentSpecification = SampleConstants.RECOVERABLE_TYPE_4;
 				faultType = FaultType.Recoverable_Faults;
 				break;
 			case (byte) 0x05:
-				contentSpecification = "Faults that can be recovered from by cleaning the device (filter etc.)";
+				contentSpecification = SampleConstants.RECOVERABLE_TYPE_5;
 				faultType = FaultType.Recoverable_Faults;
 				break;
 			case (byte) 0x06:
-				contentSpecification = "Faults that can be recovered from by changing the battery or cell.";
+				contentSpecification = SampleConstants.RECOVERABLE_TYPE_6;
 				faultType = FaultType.Recoverable_Faults;
 				break;
 			case (byte) 0x07:
 			case (byte) 0x08:
-				contentSpecification = "Undefined";
+				contentSpecification = SampleConstants.FAULT_UNDEFINED;
 				faultType = FaultType.Recoverable_Faults;
 				break;
 			case (byte) 0x09:
-				contentSpecification = "User-definable domain";
+				contentSpecification = SampleConstants.RECOVERABLE_TYPE_7;
 				faultType = FaultType.Recoverable_Faults;
 				break;
 			case (byte) 0x0A:
@@ -1224,7 +1323,7 @@ public class EchonetDataConverter {
 			case (byte) 0x11:
 			case (byte) 0x12:
 			case (byte) 0x13:
-				contentSpecification = "Abnormal event or the tripping of a safety device.";
+				contentSpecification = SampleConstants.REPAIR_REQUIRED_TYPE_1;
 				faultType = FaultType.Require_Repair_Faults;
 				break;
 			case (byte) 0x14:
@@ -1237,7 +1336,7 @@ public class EchonetDataConverter {
 			case (byte) 0x1B:
 			case (byte) 0x1C:
 			case (byte) 0x1D:
-				contentSpecification = "Fault in a switch.";
+				contentSpecification = SampleConstants.REPAIR_REQUIRED_TYPE_2;
 				faultType = FaultType.Require_Repair_Faults;
 				break;
 			case (byte) 0x1E:
@@ -1268,7 +1367,7 @@ public class EchonetDataConverter {
 			case (byte) 0x39:
 			case (byte) 0x3A:
 			case (byte) 0x3B:
-				contentSpecification = "Fault in the sensor system.";
+				contentSpecification = SampleConstants.REPAIR_REQUIRED_TYPE_3;
 				faultType = FaultType.Require_Repair_Faults;
 				break;
 			case (byte) 0x3C:
@@ -1299,7 +1398,7 @@ public class EchonetDataConverter {
 			case (byte) 0x57:
 			case (byte) 0x58:
 			case (byte) 0x59:
-				contentSpecification = "Fault in a component such as an actuator.";
+				contentSpecification = SampleConstants.REPAIR_REQUIRED_TYPE_4;
 				faultType = FaultType.Require_Repair_Faults;
 				break;
 			case (byte) 0x5A:
@@ -1322,23 +1421,75 @@ public class EchonetDataConverter {
 			case (byte) 0x6C:
 			case (byte) 0x6D:
 			case (byte) 0x6E:
-				contentSpecification = "Fault in a control circuit board.";
+				contentSpecification = SampleConstants.REPAIR_REQUIRED_TYPE_5;
 				faultType = FaultType.Require_Repair_Faults;
 				break;
 			default:
 				if (EchonetDataConverter.dataToInteger(allData) <= (byte) 0x03E8
 						&& EchonetDataConverter.dataToInteger(allData) >= (byte) 0x006F) {
-					contentSpecification = "User-definable domain";
+					contentSpecification = SampleConstants.REPAIR_REQUIRED_TYPE_6;
 					faultType = FaultType.Require_Repair_Faults;
 				} else {
 					faultType = FaultType.Undefined;
-					contentSpecification = "The fault undefined.";
+					contentSpecification = SampleConstants.UNKNOWN_FAULT;
 				}
 				break;
 			}
 		}
 
-		return (faultType == null) ? notFaultDescription : faultType.toString() + ":" + contentSpecification;
+		//return (faultType == null) ? notFaultDescription : faultType.toString() + ":" + contentSpecification;
+		return contentSpecification;
+	}
+	public static FaultDesciptionValue stringToFaultDescription(String fault) {
+		FaultDesciptionValue rs = FaultDesciptionValue.NoFault;
+		
+		if(fault.equals(SampleConstants.NO_FAULT)) {
+			rs = FaultDesciptionValue.NoFault;
+		}
+		if(fault.equals(SampleConstants.SPECIAL_FAULT) || fault.equals(SampleConstants.FAULT_UNDEFINED)
+		  ||fault.equals(SampleConstants.UNKNOWN_FAULT)) {
+			rs = FaultDesciptionValue.UnknownFault;
+		}
+		if(fault.equals(SampleConstants.RECOVERABLE_TYPE_1)) {
+			rs = FaultDesciptionValue.RecoverableFaultType1;
+		}
+		if(fault.equals(SampleConstants.RECOVERABLE_TYPE_2)) {
+			rs = FaultDesciptionValue.RecoverableFaultType2;
+		}
+		if(fault.equals(SampleConstants.RECOVERABLE_TYPE_3)) {
+			rs = FaultDesciptionValue.RecoverableFaultType3;
+		}
+		if(fault.equals(SampleConstants.RECOVERABLE_TYPE_4)) {
+			rs = FaultDesciptionValue.RecoverableFaultType4;
+		}
+		if(fault.equals(SampleConstants.RECOVERABLE_TYPE_5)) {
+			rs = FaultDesciptionValue.RecoverableFaultType5;
+		}
+		if(fault.equals(SampleConstants.RECOVERABLE_TYPE_6)) {
+			rs = FaultDesciptionValue.RecoverableFaultType6;
+		}
+		if(fault.equals(SampleConstants.RECOVERABLE_TYPE_7)) {
+			rs = FaultDesciptionValue.RecoverableFaultType7;
+		}
+		if(fault.equals(SampleConstants.REPAIR_REQUIRED_TYPE_1)) {
+			rs = FaultDesciptionValue.RequireRepairFaultType1;
+		}
+		if(fault.equals(SampleConstants.REPAIR_REQUIRED_TYPE_2)) {
+			rs = FaultDesciptionValue.RequireRepairFaultType2;
+		}
+		if(fault.equals(SampleConstants.REPAIR_REQUIRED_TYPE_3)) {
+			rs = FaultDesciptionValue.RequireRepairFaultType3;
+		}
+		if(fault.equals(SampleConstants.REPAIR_REQUIRED_TYPE_4)) {
+			rs = FaultDesciptionValue.RequireRepairFaultType4;
+		}
+		if(fault.equals(SampleConstants.REPAIR_REQUIRED_TYPE_5)) {
+			rs = FaultDesciptionValue.RequireRepairFaultType5;
+		}
+		if(fault.equals(SampleConstants.REPAIR_REQUIRED_TYPE_6)) {
+			rs = FaultDesciptionValue.RequireRepairFaultType6;
+		}
+		return rs;
 	}
 	public static String getFaultDetail(ResultData rdata) throws EchonetObjectException {
 		FaultType faultType = null;
@@ -1348,49 +1499,48 @@ public class EchonetDataConverter {
 		if (allData[1] != (byte) 0x00) {
 			if (allData[0] == (byte) 0xFF) {
 				faultType = FaultType.Undefined;
-				contentSpecification = "A fault has occurred but the recovery"
-						+ " method or fault location cannot be determined.";
+				contentSpecification = SampleConstants.SPECIAL_FAULT;
 			} else {
 				faultType = FaultType.Undefined;
-				contentSpecification = "The fault undefined.";
+				contentSpecification = SampleConstants.FAULT_UNDEFINED;
 			}
 		} else {
 			switch (allData[0]) {
 			case (byte) 0x00:
-				contentSpecification = "No fault";
+				contentSpecification = SampleConstants.NO_FAULT;
 				faultType = null;
 				break;
 			case (byte) 0x01:
-				contentSpecification = "Faults that can be recovered from by turning off the power switch and turning it on again or withdrawing and re-inserting the power plug.";
+				contentSpecification = SampleConstants.RECOVERABLE_TYPE_1;
 				faultType = FaultType.Recoverable_Faults;
 				break;
 			case (byte) 0x02:
-				contentSpecification = "Faults that can be recovered from by pressing the reset button.";
+				contentSpecification = SampleConstants.RECOVERABLE_TYPE_2;
 				faultType = FaultType.Recoverable_Faults;
 				break;
 			case (byte) 0x03:
-				contentSpecification = "Faults that can be recovered from by changing the way the device is mounted or opening/closing a lid or door.";
+				contentSpecification = SampleConstants.RECOVERABLE_TYPE_3;
 				faultType = FaultType.Recoverable_Faults;
 				break;
 			case (byte) 0x04:
-				contentSpecification = "Faults that can be recovered from by supplying fuel, water, air, etc.";
+				contentSpecification = SampleConstants.RECOVERABLE_TYPE_4;
 				faultType = FaultType.Recoverable_Faults;
 				break;
 			case (byte) 0x05:
-				contentSpecification = "Faults that can be recovered from by cleaning the device (filter etc.)";
+				contentSpecification = SampleConstants.RECOVERABLE_TYPE_5;
 				faultType = FaultType.Recoverable_Faults;
 				break;
 			case (byte) 0x06:
-				contentSpecification = "Faults that can be recovered from by changing the battery or cell.";
+				contentSpecification = SampleConstants.RECOVERABLE_TYPE_6;
 				faultType = FaultType.Recoverable_Faults;
 				break;
 			case (byte) 0x07:
 			case (byte) 0x08:
-				contentSpecification = "Undefined";
+				contentSpecification = SampleConstants.FAULT_UNDEFINED;
 				faultType = FaultType.Recoverable_Faults;
 				break;
 			case (byte) 0x09:
-				contentSpecification = "User-definable domain";
+				contentSpecification = SampleConstants.RECOVERABLE_TYPE_7;
 				faultType = FaultType.Recoverable_Faults;
 				break;
 			case (byte) 0x0A:
@@ -1402,7 +1552,7 @@ public class EchonetDataConverter {
 			case (byte) 0x11:
 			case (byte) 0x12:
 			case (byte) 0x13:
-				contentSpecification = "Abnormal event or the tripping of a safety device.";
+				contentSpecification = SampleConstants.REPAIR_REQUIRED_TYPE_1;
 				faultType = FaultType.Require_Repair_Faults;
 				break;
 			case (byte) 0x14:
@@ -1415,7 +1565,7 @@ public class EchonetDataConverter {
 			case (byte) 0x1B:
 			case (byte) 0x1C:
 			case (byte) 0x1D:
-				contentSpecification = "Fault in a switch.";
+				contentSpecification = SampleConstants.REPAIR_REQUIRED_TYPE_2;
 				faultType = FaultType.Require_Repair_Faults;
 				break;
 			case (byte) 0x1E:
@@ -1446,7 +1596,7 @@ public class EchonetDataConverter {
 			case (byte) 0x39:
 			case (byte) 0x3A:
 			case (byte) 0x3B:
-				contentSpecification = "Fault in the sensor system.";
+				contentSpecification = SampleConstants.REPAIR_REQUIRED_TYPE_3;
 				faultType = FaultType.Require_Repair_Faults;
 				break;
 			case (byte) 0x3C:
@@ -1477,7 +1627,7 @@ public class EchonetDataConverter {
 			case (byte) 0x57:
 			case (byte) 0x58:
 			case (byte) 0x59:
-				contentSpecification = "Fault in a component such as an actuator.";
+				contentSpecification = SampleConstants.REPAIR_REQUIRED_TYPE_4;
 				faultType = FaultType.Require_Repair_Faults;
 				break;
 			case (byte) 0x5A:
@@ -1500,24 +1650,26 @@ public class EchonetDataConverter {
 			case (byte) 0x6C:
 			case (byte) 0x6D:
 			case (byte) 0x6E:
-				contentSpecification = "Fault in a control circuit board.";
+				contentSpecification = SampleConstants.REPAIR_REQUIRED_TYPE_5;
 				faultType = FaultType.Require_Repair_Faults;
 				break;
 			default:
 				if (EchonetDataConverter.dataToInteger(allData) <= (byte) 0x03E8
 						&& EchonetDataConverter.dataToInteger(allData) >= (byte) 0x006F) {
-					contentSpecification = "User-definable domain";
+					contentSpecification = SampleConstants.REPAIR_REQUIRED_TYPE_6;
 					faultType = FaultType.Require_Repair_Faults;
 				} else {
 					faultType = FaultType.Undefined;
-					contentSpecification = "The fault undefined.";
+					contentSpecification = SampleConstants.UNKNOWN_FAULT;
 				}
 				break;
 			}
 		}
 
-		return (faultType == null) ? notFaultDescription : faultType.toString() + ":" + contentSpecification;
+		//return (faultType == null) ? notFaultDescription : faultType.toString() + ":" + contentSpecification;
+		return contentSpecification;
 	}
+	
 
 	/**
 	 * Convert data to real

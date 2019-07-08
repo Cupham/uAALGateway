@@ -5,6 +5,7 @@
 import java.awt.List;
 import java.util.ArrayList;
 
+import org.apache.log4j.Logger;
 /* More on how to use this class at: 
  * http://forge.universaal.org/wiki/support:Developer_Handbook_6#Providing_services_on_the_bus */
 import org.universAAL.middleware.container.ModuleContext;
@@ -20,7 +21,7 @@ import echonet.Objects.eAirConditioner;
 import echonet.Objects.eCurtain;
 import echonet.Objects.eDataObject;
 import echonet.Objects.eElectricConsent;
-import echonet.Objects.eLighting;
+import echonet.Objects.eGeneralLighting;
 import echonet.Objects.eRadio;
 import echonet.Objects.eTV;
 import echonet.Objects.eTemperatureSensor;
@@ -30,7 +31,7 @@ import utils.EchonetDataConverter;
 import utils.SampleConstants;
 
 public class SCallee_SmartEnvironment extends ServiceCallee {
-
+	private static final Logger LOGGER = Logger.getLogger(SCallee_SmartEnvironment.class.getName());
 	public SCallee_SmartEnvironment(ModuleContext context) {
 		super(context, SCallee_SmartEnvironmentProvidedService.profiles);
 		System.out.println("Initialized ServiceCallee Successfully");
@@ -41,6 +42,7 @@ public class SCallee_SmartEnvironment extends ServiceCallee {
 
 	}
 	public ServiceResponse handleCall(ServiceCall call) {
+		System.out.println("Timelog: START handlecall " + System.currentTimeMillis());
 		ServiceResponse sr = null;
 		String operation = call.getProcessURI();
 		InstallationLocationValue inputLocation = (InstallationLocationValue) call.getInputValue(SCallee_SmartEnvironmentProvidedService.INPUT_LOCATION);
@@ -48,7 +50,10 @@ public class SCallee_SmartEnvironment extends ServiceCallee {
 			return null;
 		System.out.println("Called received " +operation  + "  " +EchonetDataConverter.eNumtoInstallationLocation(inputLocation));
 		if(operation.startsWith(SCallee_SmartEnvironmentProvidedService.SERVICE_GET_TEMPERATURE_SENSORS)) {
+			System.out.println("Timelog: START SERVICE_GET_TEMPERATURE_SENSORS " + System.currentTimeMillis());
+			System.out.println("Timelog: START getTemperatureSensors " + System.currentTimeMillis());
 			ArrayList<eTemperatureSensor> sensors = getTemperatureSensors(inputLocation);
+			System.out.println("Timelog: END getTemperatureSensors " + System.currentTimeMillis());
 			if(sensors.size() != 0) {
 				sr = new ServiceResponse(CallStatus.succeeded);
 				System.out.println("SCallee_SmartEnvironment:	returned temperature value");
@@ -57,6 +62,7 @@ public class SCallee_SmartEnvironment extends ServiceCallee {
 				System.out.println("SCallee_SmartEnvironment:	Can not get temperature sensors from iHouse");
 				sr = new ServiceResponse(CallStatus.denied);
 			}
+			System.out.println("Timelog: END SERVICE_GET_TEMPERATURE_SENSORS " + System.currentTimeMillis());
 		}else if(operation.startsWith(SCallee_SmartEnvironmentProvidedService.SERVICE_SET_TEMPERATURE_SENSOR_LOCATION)){
 			String location = call.getInputValue(SCallee_SmartEnvironmentProvidedService.INPUT_TEMPERATURE_SENSOR_LOCATION).toString();
 			ArrayList<eTemperatureSensor> sensors = getTemperatureSensors(inputLocation);
@@ -76,8 +82,10 @@ public class SCallee_SmartEnvironment extends ServiceCallee {
 			}
 
 		}else if(operation.startsWith(SCallee_SmartEnvironmentProvidedService.SERVICE_GET_AIRCONDITIONERS)){
-			
-			ArrayList<eAirConditioner> airconditioners = getAirconditioners(inputLocation);	
+			System.out.println("Timelog: START SERVICE_GET_AIRCONDITIONERS " + System.currentTimeMillis());
+			System.out.println("Timelog: START getAirconditioners " + System.currentTimeMillis());
+			ArrayList<eAirConditioner> airconditioners = getAirconditioners(inputLocation);
+			System.out.println("Timelog: END getAirconditioners " + System.currentTimeMillis());
 			if(airconditioners.size()!= 0) {
 				sr = new ServiceResponse(CallStatus.succeeded);
 				System.out.println("SCallee_SmartEnvironment:	returned airconditioner");
@@ -86,13 +94,19 @@ public class SCallee_SmartEnvironment extends ServiceCallee {
 				System.out.println("SCallee_SmartEnvironment:	Can not get any airconditioner from iHouse");
 				sr = new ServiceResponse(CallStatus.denied);
 			}
+			System.out.println("Timelog: END SERVICE_GET_AIRCONDITIONERS " + System.currentTimeMillis());
 		}else if(operation.startsWith(SCallee_SmartEnvironmentProvidedService.SERVICE_TURN_ON_AIRCONDITIONER)){
-			ArrayList<eAirConditioner> airconditioners = getAirconditioners(inputLocation);	
+			System.out.println("Timelog: START SERVICE_TURN_ON_AIRCONDITIONER " + System.currentTimeMillis());
+			System.out.println("Timelog: START getAirconditioners " + System.currentTimeMillis());
+			ArrayList<eAirConditioner> airconditioners = getAirconditioners(inputLocation);
+			System.out.println("Timelog: END getAirconditioners " + System.currentTimeMillis());
 			if(airconditioners.size() != 0) {
 				for(eAirConditioner airconditioner : airconditioners) {
+					System.out.println("Timelog: START setOn " + System.currentTimeMillis());
 					if(airconditioner.setOn()) {
 						sr = new ServiceResponse(CallStatus.succeeded);
 						System.out.println("SCallee_SmartEnvironment:	Turned airconditioner ON successfully");
+						System.out.println("Timelog: END setOn " + System.currentTimeMillis());
 					} else {
 						sr = new ServiceResponse(CallStatus.denied);
 						System.out.println("SCallee_SmartEnvironment:	Can not turn ON the specific airconditioner");
@@ -102,7 +116,7 @@ public class SCallee_SmartEnvironment extends ServiceCallee {
 				System.out.println("SCallee_SmartEnvironment:	can not locate the airconditioner from iHouse");
 				sr = new ServiceResponse(CallStatus.denied);
 			}
-			
+			System.out.println("Timelog: END SERVICE_TURN_ON_AIRCONDITIONER " + System.currentTimeMillis());
 		}else if(operation.startsWith(SCallee_SmartEnvironmentProvidedService.SERVICE_TURN_OFF_AIRCONDITIONER)){
 			ArrayList<eAirConditioner> airconditioners = getAirconditioners(inputLocation);	
 			if(airconditioners.size() != 0) {
@@ -125,12 +139,22 @@ public class SCallee_SmartEnvironment extends ServiceCallee {
 			ArrayList<eAirConditioner> airconditioners = getAirconditioners(inputLocation);	
 			if(airconditioners.size() != 0) {
 				for(eAirConditioner airconditioner : airconditioners) {
-					if(airconditioner.setPowerSavingMode(status)) {
-						sr = new ServiceResponse(CallStatus.succeeded);
-						System.out.println("SCallee_SmartEnvironment:	set operation power-saving of the airconditioner successfully");
+					if(status.booleanValue()) {
+						if(airconditioner.turnOnPowerSavingMode()) {
+							sr = new ServiceResponse(CallStatus.succeeded);
+							System.out.println("SCallee_SmartEnvironment:	turn on operation power-saving of the airconditioner successfully");
+						} else {
+							sr = new ServiceResponse(CallStatus.denied);
+							System.out.println("SCallee_SmartEnvironment:	Can not turn on operation power-saving for this device");
+						}
 					} else {
-						sr = new ServiceResponse(CallStatus.denied);
-						System.out.println("SCallee_SmartEnvironment:	Can not set operation power-saving for this device");
+						if(airconditioner.turnOffPowerSavingMode()) {
+							sr = new ServiceResponse(CallStatus.succeeded);
+							System.out.println("SCallee_SmartEnvironment:	turn off operation power-saving of the airconditioner successfully");
+						} else {
+							sr = new ServiceResponse(CallStatus.denied);
+							System.out.println("SCallee_SmartEnvironment:	Can not turn off operation power-saving for this device");
+						}
 					}
 				}
 			} else {
@@ -195,7 +219,7 @@ public class SCallee_SmartEnvironment extends ServiceCallee {
 			ArrayList<eAirConditioner> airconditioners = getAirconditioners(inputLocation);	
 			if(airconditioners.size() != 0) {
 				for(eAirConditioner airconditioner : airconditioners) {
-					if(airconditioner.setDeviceAirFlowRate(airFlowRate)) {
+					if(airconditioner.setAirFlowRate(airFlowRate)) {
 						sr = new ServiceResponse(CallStatus.succeeded);
 						System.out.println("SCallee_SmartEnvironment:	Set airflow rate for airconditioner successfully");
 					} else {
@@ -208,7 +232,10 @@ public class SCallee_SmartEnvironment extends ServiceCallee {
 				sr = new ServiceResponse(CallStatus.denied);
 			}
 		}else if(operation.startsWith(SCallee_SmartEnvironmentProvidedService.SERVICE_GET_LIGHTING_DEVICES)) {
-			ArrayList<eLighting> lights = getLights(inputLocation);
+			System.out.println("Timelog: START SERVICE_GET_LIGHTING_DEVICES " + System.currentTimeMillis());
+			System.out.println("Timelog: START getLights " + System.currentTimeMillis());
+			ArrayList<eGeneralLighting> lights = getLights(inputLocation);
+			System.out.println("Timelog: END getLights " + System.currentTimeMillis());
 			if(lights.size() != 0) {
 				System.out.println("SCallee_SmartEnvironment:	returned light");
 				sr = new ServiceResponse(CallStatus.succeeded);
@@ -217,13 +244,19 @@ public class SCallee_SmartEnvironment extends ServiceCallee {
 				System.out.println("SCallee_SmartEnvironment:	Can not get any lighting device from iHouse");
 				sr = new ServiceResponse(CallStatus.denied);
 			}
+			System.out.println("Timelog: END SERVICE_GET_LIGHTING_DEVICES " + System.currentTimeMillis());
 		}else if(operation.startsWith(SCallee_SmartEnvironmentProvidedService.SERVICE_TURN_ON_LIGHTING_DEVICE)) {
-			ArrayList<eLighting> lights = getLights(inputLocation);
+			System.out.println("Timelog: START SERVICE_TURN_ON_LIGHTING_DEVICE " + System.currentTimeMillis());
+			System.out.println("Timelog: START getLights " + System.currentTimeMillis());
+			ArrayList<eGeneralLighting> lights = getLights(inputLocation);
+			System.out.println("Timelog: END getLights " + System.currentTimeMillis());
 			if(lights.size() != 0) {
-				for(eLighting light : lights) {
+				for(eGeneralLighting light : lights) {
+					System.out.println("Timelog: START setOn " + System.currentTimeMillis());
 					if(light.setOn()) {
 						sr = new ServiceResponse(CallStatus.succeeded);
 						System.out.println("SCallee_SmartEnvironment:	Turned light ON successfully");
+						System.out.println("Timelog: END setOn " + System.currentTimeMillis());
 					} else {
 						sr = new ServiceResponse(CallStatus.denied);
 						System.out.println("SCallee_SmartEnvironment:	Can not turn ON the specific light");
@@ -233,11 +266,12 @@ public class SCallee_SmartEnvironment extends ServiceCallee {
 				System.out.println("SCallee_SmartEnvironment:	can not locate any light from iHouse");
 				sr = new ServiceResponse(CallStatus.denied);
 			}
+			System.out.println("Timelog: END SERVICE_TURN_ON_LIGHTING_DEVICE " + System.currentTimeMillis());
 			
 		}else if(operation.startsWith(SCallee_SmartEnvironmentProvidedService.SERVICE_TURN_OFF_LIGHTING_DEVICE)) {
-			ArrayList<eLighting> lights = getLights(inputLocation);
+			ArrayList<eGeneralLighting> lights = getLights(inputLocation);
 			if(lights.size() != 0) {
-				for(eLighting light : lights) {
+				for(eGeneralLighting light : lights) {
 					if(light.setOff()) {
 						sr = new ServiceResponse(CallStatus.succeeded);
 						System.out.println("SCallee_SmartEnvironment:	Turned light OFF successfully");
@@ -252,9 +286,9 @@ public class SCallee_SmartEnvironment extends ServiceCallee {
 			}
 		}else if(operation.startsWith(SCallee_SmartEnvironmentProvidedService.SERVICE_SET_LIGHTING_ILLUMINATION_LEVEL)) {
 			int brightness = Integer.parseInt(call.getInputValue(SCallee_SmartEnvironmentProvidedService.INPUT_LIGHTING_ILLUMINATION_LEVEL).toString());
-			ArrayList<eLighting> lights = getLights(inputLocation);
+			ArrayList<eGeneralLighting> lights = getLights(inputLocation);
 			if(lights.size() != 0) {
-				for(eLighting light : lights) {
+				for(eGeneralLighting light : lights) {
 					if(light.setDeviceBrightness(brightness)) {
 						sr = new ServiceResponse(CallStatus.succeeded);
 						System.out.println("SCallee_SmartEnvironment:	Set device brightness successfully");
@@ -493,6 +527,7 @@ public class SCallee_SmartEnvironment extends ServiceCallee {
 		else {
 			System.out.println("The required service is not yet supported!!");
 		}
+		System.out.println("Timelog: END handlecall " + System.currentTimeMillis());
 		return sr;
 	}
 	private ArrayList<eTemperatureSensor> getTemperatureSensors(InstallationLocationValue inPutLocation) {
@@ -513,16 +548,16 @@ public class SCallee_SmartEnvironment extends ServiceCallee {
 		}
 		return list;
 	}
-	private ArrayList<eLighting> getLights(InstallationLocationValue inPutLocation) {
+	private ArrayList<eGeneralLighting> getLights(InstallationLocationValue inPutLocation) {
 		String location = SampleConstants.LOCATION_UNDEFINED;
 		if(inPutLocation!= null) {
 			location = EchonetDataConverter.eNumtoInstallationLocation(inPutLocation);
 		}
-		ArrayList<eLighting> list = new ArrayList<eLighting>();
+		ArrayList<eGeneralLighting> list = new ArrayList<eGeneralLighting>();
 		for(EchonetLiteDevice dev: Activator.echonetDevices) {
 			for(eDataObject obj: dev.getDataObjList()) {
-				if(obj.getClass().equals(eLighting.class)) {
-					eLighting light = (eLighting) obj;
+				if(obj.getClass().equals(eGeneralLighting.class)) {
+					eGeneralLighting light = (eGeneralLighting) obj;
 					if(light.getInstallLocation().equals(location)) {
 						list.add(light);
 					} 

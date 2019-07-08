@@ -30,7 +30,6 @@ public class eSuperClass {
 	private static final Logger LOGGER = Logger.getLogger(eSuperClass.class.getName());
 	private Timer timer;
 	private String deviceID;
-	private List<DataChangeObserver> observers = new ArrayList<DataChangeObserver>();
 	/**
 	 * Device IP
 	 */
@@ -158,31 +157,11 @@ public class eSuperClass {
 	public eSuperClass(Node node, EOJ eoj) {
 		this.node = node;
 		this.eoj = eoj;
-		this.deviceID = node.getNodeInfo().toString()+"_"+eoj.getInstanceCode();
+		this.deviceID = node.getNodeInfo().toString().replace(".", "_")+"_"+eoj.getInstanceCode();
 	}
 	private void getData(Service service){
 		LinkedList<EPC> epcs = new LinkedList<EPC>();
-		epcs.add(EPC.x80);
-		epcs.add(EPC.x81);
-		epcs.add(EPC.x82);	
-		epcs.add(EPC.x83);
-		epcs.add(EPC.x84);
-		epcs.add(EPC.x85);
-		epcs.add(EPC.x86);
-		epcs.add(EPC.x87);
-		epcs.add(EPC.x88);
-		epcs.add(EPC.x89);
-		epcs.add(EPC.x8A);
-		epcs.add(EPC.x8B);
-		epcs.add(EPC.x8C);
-		epcs.add(EPC.x8D);
-		epcs.add(EPC.x8E);
-		epcs.add(EPC.x8F);
-		epcs.add(EPC.x93);
-		epcs.add(EPC.x97);
-		epcs.add(EPC.x98);
-		epcs.add(EPC.x99);
-		epcs.add(EPC.x9A);
+		epcs.addAll(SampleConstants.defaultEPCs);
 		
 		try {
 			service.doGet(node,eoj,epcs,5000, new GetListener() {
@@ -345,7 +324,7 @@ public class eSuperClass {
 			public void run() {
 				getData(service);
 			}
-		}, SampleConstants.DELAY_INTERVAL, SampleConstants.REFRESH_INTERVAL);	
+		},SampleConstants.getDelayInterval(), SampleConstants.getRefreshInterval());	
 	}
 	
 	
@@ -386,15 +365,6 @@ public class eSuperClass {
 	}
 
 	
-	
-	public void attach(DataChangeObserver observer) {
-		observers.add(observer);
-	}
-	public void notifyDataChanged(Object obj, String property) {
-		for(DataChangeObserver ob : observers) {
-			ob.dataUpdated(obj, property);
-		}
-	}
 	public String getDeviceID() {
 		return deviceID;
 	}
@@ -434,7 +404,6 @@ public class eSuperClass {
 	public void refreshOperationStatus(boolean operationStatus) {
 		if(this.getOperationStatus() != operationStatus) {
 			this.operationStatus = operationStatus;
-			notifyDataChanged(this, EchonetSuperDevice.PROPERTY_HAS_OPERATION_STATUS);
 		}
 		
 	}
@@ -444,7 +413,6 @@ public class eSuperClass {
 	public void refreshInstallLocation(String installLocation) {
 		if(!installLocation.equals(this.getInstallLocation())) {
 			this.installLocation = installLocation;
-			notifyDataChanged(this, EchonetSuperDevice.PROPERTY_HAS_INSTALLATION_LOCATION);
 		}
 		
 	}
@@ -454,7 +422,6 @@ public class eSuperClass {
 	public void refreshStandardVersionInfo(String standardVersionInfo) {
 		if(!standardVersionInfo.equals(this.getStandardVersionInfo())) {
 			this.standardVersionInfo = standardVersionInfo;
-			notifyDataChanged(this, EchonetSuperDevice.PROPERTY_STANDARD_VERSION_INFORMATION);
 		}		
 	}
 	public String getIdentificationNumber() {
@@ -463,7 +430,6 @@ public class eSuperClass {
 	public void refreshIdentificationNumber(String identificationNumber) {
 		if(!identificationNumber.equals(this.getIdentificationNumber())) {
 			this.identificationNumber = identificationNumber;
-			notifyDataChanged(this, EchonetSuperDevice.PROPERTY_HAS_IDENTIFICATION_NUMBER);
 		}
 		
 	}
@@ -473,7 +439,6 @@ public class eSuperClass {
 	public void refreshInstantaneousPower(short instantaneousPower) {
 		if(this.getInstantaneousPower() != instantaneousPower) {
 			this.instantaneousPower = instantaneousPower;
-			notifyDataChanged(this, EchonetSuperDevice.PROPERTY_HAS_MEASURED_INSTANTANEOUS_POWER_CONSUMPTION);
 		}
 		
 	}
@@ -483,7 +448,6 @@ public class eSuperClass {
 	public void refreshCumulativePower(long cumulativePower) {
 		if(this.getCumulativePower() != cumulativePower) {
 			this.cumulativePower = cumulativePower;
-			notifyDataChanged(this, EchonetSuperDevice.PROPERTY_HAS_MEASURED_CUMULATIVE_POWER_CONSUMPTION);
 		}
 		
 	}
@@ -493,7 +457,6 @@ public class eSuperClass {
 	public void refreshManufactureerFaultCode(String manufactureerFaultCode) {
 		if(!manufactureerFaultCode.equals(this.getManufacturerFaultCode())) {
 			this.manufacturerFaultCode = manufactureerFaultCode;
-			notifyDataChanged(this, EchonetSuperDevice.PROPERTY_HAS_MANUFACTURER_FAULT_CODE);
 		}
 		
 	}
@@ -503,7 +466,6 @@ public class eSuperClass {
 	public void refreshCurrentLimitSetting(int currentLimitSetting) {
 		if(this.getCurrentLimitSetting()!=currentLimitSetting) {
 			this.currentLimitSetting = currentLimitSetting;
-			notifyDataChanged(this, EchonetSuperDevice.PROPERTY_HAS_CURRENT_LIMIT_SETTING);
 		}
 		
 	}
@@ -513,7 +475,6 @@ public class eSuperClass {
 	public void refreshFaultStatus(boolean faultStatus) {
 		if(this.isFaultStatus() != faultStatus) {
 			this.faultStatus = faultStatus;
-			notifyDataChanged(this, EchonetSuperDevice.PROPERTY_HAS_FAULT_STATUS);
 		}
 		
 	}
@@ -523,7 +484,6 @@ public class eSuperClass {
 	public void refreshFaultDescription(String faultDescription) {
 		if(!faultDescription.equals(this.getFaultDescription())) {
 			this.faultDescription = faultDescription;
-			notifyDataChanged(this, EchonetSuperDevice.PROPERTY_HAS_FAULT_DESCRIPTION);
 		}
 		
 	}
@@ -533,7 +493,6 @@ public class eSuperClass {
 	public void refreshManufacturerCode(String manufacturerCode) {
 		if(!manufacturerCode.equals(this.getManufacturerCode())) {
 			this.manufacturerCode = manufacturerCode;
-			notifyDataChanged(this, EchonetSuperDevice.PROPERTY_HAS_MANUFACTURER_CODE);
 		}		
 	}
 	public String getBusinessFacilityCode() {
@@ -542,7 +501,6 @@ public class eSuperClass {
 	public void refreshBusinessFacilityCode(String businessFacilityCode) {
 		if(!businessFacilityCode.equals(this.getBusinessFacilityCode())) {
 			this.businessFacilityCode = businessFacilityCode;
-			notifyDataChanged(this, EchonetSuperDevice.PROPERTY_HAS_BUSINESS_FACILITY_CODE);
 		}	
 	}
 	public String getProductCode() {
@@ -551,7 +509,6 @@ public class eSuperClass {
 	public void refreshProductCode(String productCode) {
 		if(!productCode.equals(this.getProductCode())) {
 			this.productCode = productCode;
-			notifyDataChanged(this, EchonetSuperDevice.PROPERTY_HAS_PRODUCT_CODE);
 		}	
 	}
 	public String getProductNumber() {
@@ -560,7 +517,6 @@ public class eSuperClass {
 	public void refreshProductNumber(String productNumber) {
 		if(!productNumber.equals(this.getProductNumber())) {
 			this.productNumber = productNumber;
-			notifyDataChanged(this, EchonetSuperDevice.PROPERTY_HAS_PRODUCTION_NUMBER);
 		}
 		
 	}
@@ -570,7 +526,6 @@ public class eSuperClass {
 	public void refreshProductDate(Date productDate) {
 		if(!productDate.equals(this.getProductDate())) {
 			this.productDate = productDate;
-			notifyDataChanged(this, EchonetSuperDevice.PROPERTY_HAS_PRODUCTION_DATE);
 		}
 		
 	}
@@ -580,7 +535,6 @@ public class eSuperClass {
 	public void refreshPowerSaving(boolean powerSaving) {
 		if(this.getPowerSaving()!=powerSaving) {
 			this.powerSaving = powerSaving;
-			notifyDataChanged(this, EchonetSuperDevice.PROPERTY_HAS_POWER_SAVING_OPERATION_SETTING);
 		}
 		
 	}
@@ -590,7 +544,6 @@ public class eSuperClass {
 	public void refreshThroughPublicNetwork(boolean throughPublicNetwork) {
 		if(this.getThroughPublicNetwork()!=throughPublicNetwork) {
 			this.throughPublicNetwork = throughPublicNetwork;
-			notifyDataChanged(this, EchonetSuperDevice.PROPERTY_HAS_REMOTE_CONTROL_SETTING);
 		}
 		
 	}
@@ -600,7 +553,6 @@ public class eSuperClass {
 	public void refreshCurrentTimeSetting(String currentTimeSetting) {
 		if(!currentTimeSetting.equals(this.getCurrentTimeSetting())) {
 			this.currentTimeSetting = currentTimeSetting;
-			notifyDataChanged(this, EchonetSuperDevice.PROPERTY_HAS_CURRENT_TIME_SETTING);
 		}
 		
 	}
@@ -610,7 +562,6 @@ public class eSuperClass {
 	public void refreshCurrentDateSetting(Date currentDateSetting) {
 		if(!currentDateSetting.equals(this.getCurrentDateSetting())) {
 			this.currentDateSetting = currentDateSetting;
-			notifyDataChanged(this, EchonetSuperDevice.PROPERTY_HAS_CURRENT_DATE_SETTING);
 		}	
 	}
 	public int getPowerLimit() {
@@ -619,7 +570,6 @@ public class eSuperClass {
 	public void refreshPowerLimit(int powerLimit) {
 		if(this.getPowerLimit()!=powerLimit) {
 			this.powerLimit = powerLimit;
-			notifyDataChanged(this, EchonetSuperDevice.PROPERTY_HAS_POWER_LIMIT_SETTING);
 		}
 		
 	}
@@ -629,7 +579,6 @@ public class eSuperClass {
 	public void refreshCumulativeTime(String cumulativeTime) {
 		if(!cumulativeTime.equals(this.getCumulativeTime())) {
 			this.cumulativeTime = cumulativeTime;
-			notifyDataChanged(this, EchonetSuperDevice.PROPERTY_HAS_CUMULATIVE_OPERATING_TIME);
 		}
 	}
 

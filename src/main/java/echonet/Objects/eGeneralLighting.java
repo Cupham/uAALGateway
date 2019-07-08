@@ -1,5 +1,7 @@
 package echonet.Objects;
 
+
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Timer;
@@ -7,7 +9,7 @@ import java.util.TimerTask;
 
 import org.apache.log4j.Logger;
 import org.universAAL.middleware.context.ContextEvent;
-import org.universAAL.ontology.echonetontology.managementOperationRelatedDevices.Switch;
+import org.universAAL.ontology.echonetontology.housingFacilitiesRelatedDevices.GeneralLighting;
 import org.universAAL.ontology.echonetontology.values.OccurenceStatusValue;
 import org.universAAL.ontology.echonetontology.values.OperationModeSettingValue;
 import org.universAAL.ontology.echonetontology.values.OperationStatusValue;
@@ -30,192 +32,223 @@ import main.Activator;
 import utils.EchonetDataConverter;
 import utils.SampleConstants;
 
-public class eCurtain extends eDataObject{
-	private static final Logger LOGGER = Logger.getLogger(eCurtain.class.getName());
-	Timer timer;
-	Switch sw;
+public class eGeneralLighting extends eDataObject{
+	private static final Logger LOGGER = Logger.getLogger(eGeneralLighting.class.getName());
+	/**
+	 * EPC: 0xE0 Measured temperature value in units of 0.1 Celcius Value
+	 * between: 0xF554–0x7FFE (-2732–32766)~(-273.2–3276.6 Celcius)
+	 */
+	private Timer timer;
+	private GeneralLighting lighting;
+	private int illuminanceLevel;
+	private String lightColorSetting;
 	
-	public eCurtain() {
-		super();
-		this.groupCode= (byte)0x05;
-		this.classCode=(byte)0xfd;
-	}
-	public eCurtain(EOJ eoj, Node node) {
-		super(node,eoj);
-		this.groupCode= (byte) 0x05;
-		this.classCode = (byte) 0xfd;
+
+	public eGeneralLighting(EOJ eoj, Node node) {
+		super(node, eoj);
+		this.groupCode= (byte) 0x02;
+		this.classCode = (byte) 0x90;
 		this.instanceCode = eoj.getInstanceCode();
-		this.setDeviceID("Curtain" + node.getNodeInfo().toString().replace(".", "_")+"_"+eoj.getInstanceCode());
-		sw = new Switch(Switch.MY_URI+getDeviceID());
+		setDeviceID("Lighting"+getDeviceID());
+		
+		// init ontology
+		lighting = new GeneralLighting(GeneralLighting.MY_URI+getDeviceID());
 		Activator.cPublisher.publicContextEvent(new ContextEvent(ContextEvent.CONTEXT_EVENT_URI_PREFIX+getDeviceID()));
 	}
 	
+
 	
+
 	// Provided Services
-				public boolean setDeviceLocation(String location) {
-					boolean rs = false;
-					if(location.equals(getInstallLocation())) {
-						LOGGER.info(String.format("Curtain is already in %s nothing to do", location));
-						rs = true;
-					} else {
-						if(Activator.commandExecutor.executeCommand(this.node,this.eoj,EPC.x81, EchonetDataConverter.installLocationtoDataObj(location))) {
-							refreshInstallLocation(location);
-							rs= true;
-						} else {
-							rs = false;
-						}
-					}
-					return rs;
+		public boolean setDeviceLocation(String location) {
+			boolean rs = false;
+			if(location.equals(getInstallLocation())) {
+				LOGGER.info(String.format("Lighting is already in %s nothing to do", location));
+				rs = true;
+			} else {
+				if(Activator.commandExecutor.executeCommand(this.node,this.eoj,EPC.x81, EchonetDataConverter.installLocationtoDataObj(location))) {
+					refreshInstallLocation(location);
+					rs= true;
+				} else {
+					rs = false;
 				}
-	public boolean open() {
-		boolean rs = false;
-		if(getOperationStatus()) {
-			LOGGER.info("Curtain is already Open! nothing to do");
-			rs = true;
-		} else {
-			EOJ eoj = new EOJ((byte)0x05,(byte)0xfd,(byte)0x01);
-			if(Activator.commandExecutor.executeCommand(this.node,eoj,EPC.x80,new ObjectData((byte) 0x30))) {
-				refreshOperationStatus(true);
-				rs= true;
-			} else {
-				rs = false;
 			}
+			return rs;
 		}
-		return rs;
-	}
-	public boolean close() {
-		boolean rs = false;
-		if(!getOperationStatus()) {
-			LOGGER.info("Curtain is already close! nothing to do");
-			rs = true;
-		} else {
-			EOJ eoj = new EOJ((byte)0x05,(byte)0xfd,(byte)0x02);
-			if(Activator.commandExecutor.executeCommand(this.node,eoj,EPC.x80, new ObjectData((byte) 0x30))) {
-				refreshOperationStatus(false);
-				rs= true;
+		
+		public boolean setOn() {
+			boolean rs = false;
+			if(getOperationStatus()) {
+				LOGGER.info("Light is already ON! nothing to do");
+				rs = true;
 			} else {
-				rs = false;
+				System.out.println("Timelog: START executeCommand " + System.currentTimeMillis());
+				if(Activator.commandExecutor.executeCommand(this.node,this.eoj,EPC.x80, new ObjectData((byte) 0x30))) {
+					refreshOperationStatus(true);
+					rs= true;
+					System.out.println("Timelog: END executeCommand " + System.currentTimeMillis());
+				} else {
+					rs = false;
+				}
 			}
+			return rs;
 		}
-		return rs;
-	}
+		public boolean setOff() {
+			boolean rs = false;
+			if(!getOperationStatus()) {
+				LOGGER.info("Light is already OFF! nothing to do");
+				rs = true;
+			} else {
+				System.out.println("Timelog: START executeCommand " + System.currentTimeMillis());
+				if(Activator.commandExecutor.executeCommand(this.node,this.eoj,EPC.x80, new ObjectData((byte) 0x31))) {
+					refreshOperationStatus(false);
+					rs= true;
+					System.out.println("Timelog: END executeCommand " + System.currentTimeMillis());
+				} else {
+					rs = false;
+				}
+			}
+			return rs;
+		}
+		public boolean setDeviceBrightness(int brightness) {
+			boolean rs = false;
+			if(this.getIlluminanceLevel() == brightness) {
+				LOGGER.info(String.format("Light brightness is already set to %d ! nothing to do", brightness));
+				rs = true;
+			} else {
+				if(Activator.commandExecutor.executeCommand(this.node,this.eoj,EPC.xB0, new ObjectData(new Integer(brightness).byteValue()))) {
+					refreshIlluminanceLevel(brightness);
+					rs= true;
+				} else {
+					rs = false;
+				}
+			}
+			return rs;
+		}
+		
 	// Device Property Monitoring
-	
+	public void	refreshIlluminanceLevel (int illuminance) {
+		if(this.getIlluminanceLevel() != illuminance) {
+			this.illuminanceLevel = illuminance;
+			lighting.setIlluminanceLevel(new Float(illuminance));
+			Activator.cPublisher.publicContextEvent(new ContextEvent(lighting,GeneralLighting.PROPERTY_HAS_ILLUMINANCE_LEVEL));
+		}
+	}
 	public void refreshOperationStatus(boolean operationStatus) {
 		if(this.getOperationStatus() != operationStatus) {
 			this.operationStatus = operationStatus;
 			
 			if(operationStatus) {
-				sw.setOperationStatus(OperationStatusValue.On);
+				lighting.setOperationStatus(OperationStatusValue.On);
 			} else {
-				sw.setOperationStatus(OperationStatusValue.Off);
+				lighting.setOperationStatus(OperationStatusValue.Off);
 			}
-			Activator.cPublisher.publicContextEvent(new ContextEvent(sw,Switch.PROPERTY_HAS_OPERATION_STATUS));
+			Activator.cPublisher.publicContextEvent(new ContextEvent(lighting,GeneralLighting.PROPERTY_HAS_OPERATION_STATUS));
 		}
 		
 	}
 	public void refreshInstallLocation(String installLocation) {
 		if(!installLocation.equals(this.getInstallLocation())) {
 			this.installLocation = installLocation;
-			sw.setInstallationLocation(EchonetDataConverter.installationLocationToEnum(installLocation));
-			Activator.cPublisher.publicContextEvent(new ContextEvent(sw,Switch.PROPERTY_HAS_INSTALLATION_LOCATION));
+			lighting.setInstallationLocation(EchonetDataConverter.installationLocationToEnum(installLocation));
+			Activator.cPublisher.publicContextEvent(new ContextEvent(lighting,GeneralLighting.PROPERTY_HAS_INSTALLATION_LOCATION));
 		}
 	}
 	public void refreshStandardVersionInfo(String standardVersionInfo) {
 		if(!standardVersionInfo.equals(this.getStandardVersionInfo())) {
 			this.standardVersionInfo = standardVersionInfo;
-			sw.setStandardVersionInformation(standardVersionInfo);
-			Activator.cPublisher.publicContextEvent(new ContextEvent(sw,Switch.PROPERTY_STANDARD_VERSION_INFORMATION));
+			lighting.setStandardVersionInformation(standardVersionInfo);
+			Activator.cPublisher.publicContextEvent(new ContextEvent(lighting,GeneralLighting.PROPERTY_STANDARD_VERSION_INFORMATION));
 		}		
 	}
 	public void refreshIdentificationNumber(String identificationNumber) {
 		if(!identificationNumber.equals(this.getIdentificationNumber())) {
 			this.identificationNumber = identificationNumber;
-			sw.setIdentificationNumber(EchonetDataConverter.stringToIdentificationNumber(identificationNumber));
-			Activator.cPublisher.publicContextEvent(new ContextEvent(sw,Switch.PROPERTY_HAS_IDENTIFICATION_NUMBER));
+			lighting.setIdentificationNumber(EchonetDataConverter.stringToIdentificationNumber(identificationNumber));
+			Activator.cPublisher.publicContextEvent(new ContextEvent(lighting,GeneralLighting.PROPERTY_HAS_IDENTIFICATION_NUMBER));
 		}
 		
 	}
 	public void refreshInstantaneousPower(short instantaneousPower) {
 		if(this.getInstantaneousPower() != instantaneousPower) {
 			this.instantaneousPower = instantaneousPower;
-			sw.setMeasuredInstantaneousPowerConsumption(new Integer(instantaneousPower));
-			Activator.cPublisher.publicContextEvent(new ContextEvent(sw,Switch.PROPERTY_HAS_MEASURED_INSTANTANEOUS_POWER_CONSUMPTION));
+			lighting.setMeasuredInstantaneousPowerConsumption(new Integer(instantaneousPower));
+			Activator.cPublisher.publicContextEvent(new ContextEvent(lighting,GeneralLighting.PROPERTY_HAS_MEASURED_INSTANTANEOUS_POWER_CONSUMPTION));
 		}
 		
 	}
 	public void refreshCumulativePower(long cumulativePower) {
 		if(this.getCumulativePower() != cumulativePower) {
 			this.cumulativePower = cumulativePower;
-			sw.setMeasuredCumulativePowerConsumption(new Float(cumulativePower));
-			Activator.cPublisher.publicContextEvent(new ContextEvent(sw,Switch.PROPERTY_HAS_MEASURED_CUMULATIVE_POWER_CONSUMPTION));
+			lighting.setMeasuredCumulativePowerConsumption(new Float(cumulativePower));
+			Activator.cPublisher.publicContextEvent(new ContextEvent(lighting,GeneralLighting.PROPERTY_HAS_MEASURED_CUMULATIVE_POWER_CONSUMPTION));
 		}	
 	}
 	public void refreshManufactureerFaultCode(String manufactureerFaultCode) {
 		if(!manufactureerFaultCode.equals(this.getManufacturerFaultCode())) {
 			this.manufacturerFaultCode = manufactureerFaultCode;
-			sw.setManufacturerFaultCode(manufactureerFaultCode);
-			Activator.cPublisher.publicContextEvent(new ContextEvent(sw,Switch.PROPERTY_HAS_MANUFACTURER_FAULT_CODE));
+			lighting.setManufacturerFaultCode(manufactureerFaultCode);
+			Activator.cPublisher.publicContextEvent(new ContextEvent(lighting,GeneralLighting.PROPERTY_HAS_MANUFACTURER_FAULT_CODE));
 		}	
 	}
 	public void refreshCurrentLimitSetting(int currentLimitSetting) {
 		if(this.getCurrentLimitSetting()!=currentLimitSetting) {
 			this.currentLimitSetting = currentLimitSetting;
-			sw.setCurrentLimitSetting(new Integer(currentLimitSetting));
-			Activator.cPublisher.publicContextEvent(new ContextEvent(sw,Switch.PROPERTY_HAS_CURRENT_LIMIT_SETTING));
+			lighting.setCurrentLimitSetting(new Integer(currentLimitSetting));
+			Activator.cPublisher.publicContextEvent(new ContextEvent(lighting,GeneralLighting.PROPERTY_HAS_CURRENT_LIMIT_SETTING));
 		}	
 	}
 	public void refreshFaultStatus(boolean faultStatus) {
 		if(this.isFaultStatus() != faultStatus) {
 			this.faultStatus = faultStatus;
 			if(faultStatus) {
-				sw.setFaultStatus(OccurenceStatusValue.OccurenceStatusFound);
+				lighting.setFaultStatus(OccurenceStatusValue.OccurenceStatusFound);
 			} else {
-				sw.setFaultStatus(OccurenceStatusValue.OccurenceStatusNotFound);
+				lighting.setFaultStatus(OccurenceStatusValue.OccurenceStatusNotFound);
 			}	
-			Activator.cPublisher.publicContextEvent(new ContextEvent(sw,Switch.PROPERTY_HAS_FAULT_STATUS));
+			Activator.cPublisher.publicContextEvent(new ContextEvent(lighting,GeneralLighting.PROPERTY_HAS_FAULT_STATUS));
 		}	
 	}
 	public void refreshFaultDescription(String faultDescription) {
 		if(!faultDescription.equals(this.getFaultDescription())) {
 			this.faultDescription = faultDescription;
-			sw.setFaultDesciptionValue(EchonetDataConverter.stringToFaultDescription(faultDescription));
-			Activator.cPublisher.publicContextEvent(new ContextEvent(sw,Switch.PROPERTY_HAS_FAULT_DESCRIPTION));
+			lighting.setFaultDesciptionValue(EchonetDataConverter.stringToFaultDescription(faultDescription));
+			Activator.cPublisher.publicContextEvent(new ContextEvent(lighting,GeneralLighting.PROPERTY_HAS_FAULT_DESCRIPTION));
 		}
 	}
 	public void refreshManufacturerCode(String manufacturerCode) {
 		if(!manufacturerCode.equals(this.getManufacturerCode())) {
 			this.manufacturerCode = manufacturerCode;
-			sw.setManufacturerCode(manufacturerCode);
-			Activator.cPublisher.publicContextEvent(new ContextEvent(sw,Switch.PROPERTY_HAS_MANUFACTURER_CODE));
+			lighting.setManufacturerCode(manufacturerCode);
+			Activator.cPublisher.publicContextEvent(new ContextEvent(lighting,GeneralLighting.PROPERTY_HAS_MANUFACTURER_CODE));
 		}		
 	}
 	public void refreshBusinessFacilityCode(String businessFacilityCode) {
 		if(!businessFacilityCode.equals(this.getBusinessFacilityCode())) {
 			this.businessFacilityCode = businessFacilityCode;
-			sw.setBusinessFacilityCode(businessFacilityCode);
-			Activator.cPublisher.publicContextEvent(new ContextEvent(sw,Switch.PROPERTY_HAS_BUSINESS_FACILITY_CODE));
+			lighting.setBusinessFacilityCode(businessFacilityCode);
+			Activator.cPublisher.publicContextEvent(new ContextEvent(lighting,GeneralLighting.PROPERTY_HAS_BUSINESS_FACILITY_CODE));
 		}	
 	}
 	public void refreshProductCode(String productCode) {
 		if(!productCode.equals(this.getProductCode())) {
 			this.productCode = productCode;
-			sw.setProductCode(productCode);
-			Activator.cPublisher.publicContextEvent(new ContextEvent(sw,Switch.PROPERTY_HAS_PRODUCT_CODE));
+			lighting.setProductCode(productCode);
+			Activator.cPublisher.publicContextEvent(new ContextEvent(lighting,GeneralLighting.PROPERTY_HAS_PRODUCT_CODE));
 		}	
 	}
 	public void refreshProductNumber(String productNumber) {
 		if(!productNumber.equals(this.getProductNumber())) {
 			this.productNumber = productNumber;
-			sw.setProductionNumber(productNumber);
-			Activator.cPublisher.publicContextEvent(new ContextEvent(sw,Switch.PROPERTY_HAS_PRODUCTION_NUMBER));
+			lighting.setProductionNumber(productNumber);
+			Activator.cPublisher.publicContextEvent(new ContextEvent(lighting,GeneralLighting.PROPERTY_HAS_PRODUCTION_NUMBER));
 		}	
 	}
 	public void refreshProductDate(Date productDate) {
 		if(!productDate.equals(this.getProductDate())) {
 			this.productDate = productDate;
-			sw.setProductionString(productDate.toString());
-			Activator.cPublisher.publicContextEvent(new ContextEvent(sw,Switch.PROPERTY_HAS_PRODUCTION_DATE));
+			lighting.setProductionString(productDate.toString());
+			Activator.cPublisher.publicContextEvent(new ContextEvent(lighting,GeneralLighting.PROPERTY_HAS_PRODUCTION_DATE));
 		}
 		
 	}
@@ -223,11 +256,11 @@ public class eCurtain extends eDataObject{
 		if(this.getPowerSaving()!=powerSaving) {
 			this.powerSaving = powerSaving;
 			if(powerSaving) {
-				sw.setPowerSavingOperationSetting(OperationModeSettingValue.PowerSavingMode);
+				lighting.setPowerSavingOperationSetting(OperationModeSettingValue.PowerSavingMode);
 			} else {
-				sw.setPowerSavingOperationSetting(OperationModeSettingValue.NormalMode);
+				lighting.setPowerSavingOperationSetting(OperationModeSettingValue.NormalMode);
 			}
-			Activator.cPublisher.publicContextEvent(new ContextEvent(sw,Switch.PROPERTY_HAS_POWER_SAVING_OPERATION_SETTING));
+			Activator.cPublisher.publicContextEvent(new ContextEvent(lighting,GeneralLighting.PROPERTY_HAS_POWER_SAVING_OPERATION_SETTING));
 		}
 		
 	}
@@ -235,44 +268,121 @@ public class eCurtain extends eDataObject{
 		if(this.getThroughPublicNetwork()!=throughPublicNetwork) {
 			this.throughPublicNetwork = throughPublicNetwork;
 			if(throughPublicNetwork) {
-				sw.setRemoteControlSetting(RemoteControlSettingValue.ThroughPublicNetwork);
+				lighting.setRemoteControlSetting(RemoteControlSettingValue.ThroughPublicNetwork);
 			} else {
-				sw.setRemoteControlSetting(RemoteControlSettingValue.NotThroughPublicNetwork);
+				lighting.setRemoteControlSetting(RemoteControlSettingValue.NotThroughPublicNetwork);
 			}
-			Activator.cPublisher.publicContextEvent(new ContextEvent(sw,Switch.PROPERTY_HAS_REMOTE_CONTROL_SETTING));
+			Activator.cPublisher.publicContextEvent(new ContextEvent(lighting,GeneralLighting.PROPERTY_HAS_REMOTE_CONTROL_SETTING));
 		}
 		
 	}
 	public void refreshCurrentTimeSetting(String currentTimeSetting) {
 		if(!currentTimeSetting.equals(this.getCurrentTimeSetting())) {
 			this.currentTimeSetting = currentTimeSetting;
-			sw.setCurrentTimeSetting(currentTimeSetting);
-			Activator.cPublisher.publicContextEvent(new ContextEvent(sw,Switch.PROPERTY_HAS_CURRENT_TIME_SETTING));
+			lighting.setCurrentTimeSetting(currentTimeSetting);
+			Activator.cPublisher.publicContextEvent(new ContextEvent(lighting,GeneralLighting.PROPERTY_HAS_CURRENT_TIME_SETTING));
 		}
 	}
 	public void refreshCurrentDateSetting(Date currentDateSetting) {
 		if(!currentDateSetting.equals(this.getCurrentDateSetting())) {
 			this.currentDateSetting = currentDateSetting;
-			sw.setCurrentStringSetting(currentDateSetting.toString());
-			Activator.cPublisher.publicContextEvent(new ContextEvent(sw,Switch.PROPERTY_HAS_CURRENT_DATE_SETTING));
+			lighting.setCurrentStringSetting(currentDateSetting.toString());
+			Activator.cPublisher.publicContextEvent(new ContextEvent(lighting,GeneralLighting.PROPERTY_HAS_CURRENT_DATE_SETTING));
 		}	
 	}
 	public void refreshPowerLimit(int powerLimit) {
 		if(this.getPowerLimit()!=powerLimit) {
 			this.powerLimit = powerLimit;
-			sw.setPowerLimitSetting(new Integer(powerLimit));
-			Activator.cPublisher.publicContextEvent(new ContextEvent(sw,Switch.PROPERTY_HAS_POWER_LIMIT_SETTING));
+			lighting.setPowerLimitSetting(new Integer(powerLimit));
+			Activator.cPublisher.publicContextEvent(new ContextEvent(lighting,GeneralLighting.PROPERTY_HAS_POWER_LIMIT_SETTING));
 		}
 	}
 	public void refreshCumulativeTime(String cumulativeTime) {
 		if(!cumulativeTime.equals(this.getCumulativeTime())) {
 			this.cumulativeTime = cumulativeTime;
-			sw.setCumulativeOperatingTime(cumulativeTime);
-			Activator.cPublisher.publicContextEvent(new ContextEvent(sw,Switch.PROPERTY_HAS_CUMULATIVE_OPERATING_TIME));
+			lighting.setCumulativeOperatingTime(cumulativeTime);
+			Activator.cPublisher.publicContextEvent(new ContextEvent(lighting,GeneralLighting.PROPERTY_HAS_CUMULATIVE_OPERATING_TIME));
 		}
 	}
 	
-	public void getData(Service service){
+	// Override functions
+	@Override
+	public void ParseDataFromEOJ(Service service){
+		observeData(service);
+		timer = new Timer(true);
+		timer.schedule(new TimerTask() {
+			
+			@Override
+			public void run() {
+				getData(service);
+				
+			}
+		}, SampleConstants.getDelayInterval(), SampleConstants.getRefreshInterval());	
+	}
+	@Override
+	public String TouAALReponse() {
+		return String.format("%s;%d", getOperationStatus()?"ON":"OFF", getIlluminanceLevel());
+	}
+	public int getIlluminanceLevel() {
+		return illuminanceLevel;
+	}
+	public void setIlluminanceLevel(int illuminanceLevel) {
+		this.illuminanceLevel = illuminanceLevel;
+	}
+	public void observeData(Service service) {
+		ArrayList<EPC> epcs = new ArrayList<EPC>();
+		epcs.add(EPC.x80);
+		epcs.add(EPC.x81);
+		epcs.add(EPC.x88);
+		try {
+			service.doObserve(node, eoj, epcs, new ObserveListener() {
+				@Override
+			    public void receive(ObserveResult result, ResultFrame resultFrame, ResultData resultData) {
+					if (resultData.isEmpty()) {
+						return;
+					}
+					switch (resultData.getEPC()) 
+					{
+					case x80:
+						if(EchonetDataConverter.dataToInteger(resultData) == 48) {
+							refreshOperationStatus(true);
+						} else {
+							refreshOperationStatus(false);
+						}
+						LOGGER.info(String.format("OBSERVER: Node:%s@EOJ:%s {EPC:0x80, EDT: 0x%02X}=={OperationStatus:%s}",
+								 getNode().getNodeInfo().toString(),eoj.toString(),resultData.toBytes()[0],getOperationStatus()));
+						break;
+					case x81:
+						String rsLocation = EchonetDataConverter.dataToInstallLocation(resultData);	
+						if (rsLocation == null) {
+							rsLocation = "The installation location has not been set";
+						}
+						refreshInstallLocation(rsLocation);		
+						
+						LOGGER.info(String.format("OBSERVER: Node:%s@EOJ:%s {EPC:0x81, EDT: 0x%02X}=={InstallationLocation:%s}",
+								 getNode().getNodeInfo().toString(),eoj.toString(),resultData.toBytes()[0],getInstallLocation()));
+						break;
+					case x88:
+						if(EchonetDataConverter.dataToInteger(resultData) == 65) {
+							refreshFaultStatus(true);
+						} else {
+							refreshFaultStatus(false);
+						}
+						LOGGER.info(String.format("OBSERVER: Node:%s@EOJ:%s {EPC:0x88, EDT: 0x%02X}=={Fault Status:%s}",
+								 getNode().getNodeInfo().toString(),eoj.toString(),resultData.toBytes()[0],isFaultStatus()));
+						break;
+						
+					default:
+						break;
+					}	
+				}	
+			});
+		} catch (SubnetException e) {
+			e.printStackTrace();
+		}
+		
+	}
+	private void getData(Service service){
 		ArrayList<EPC> epcs = new ArrayList<EPC>();
 		epcs.addAll(SampleConstants.defaultEPCs);
 		epcs.add(EPC.xE0);
@@ -419,71 +529,12 @@ public class eCurtain extends eDataObject{
 						refreshCumulativeTime(EchonetDataConverter.dataToCummalativeTime(resultData));
 						LOGGER.info(String.format("Node:%s@EOJ:%s {EPC:0x9A, EDT: 0x%02X}=={Up Time:%s}",
 								getNode().getNodeInfo().toString(),eoj.toString(),resultData.toBytes()[0],getCumulativeTime()));
-						break;			
-					default:
 						break;
-					}	
-				}	
-			});
-		} catch (SubnetException e) {
-			e.printStackTrace();
-		}
-	}
-	@Override
-	public void ParseDataFromEOJ(Service service){
-		observeData(service);
-		timer = new Timer(true);
-		timer.schedule(new TimerTask() {
-			
-			@Override
-			public void run() {
-				getData(service);
-				
-			}
-		}, SampleConstants.getDelayInterval(), SampleConstants.getRefreshInterval());	
-	}
-	
-	public void observeData(Service service) {
-		ArrayList<EPC> epcs = new ArrayList<EPC>();
-		epcs.add(EPC.x80);
-		epcs.add(EPC.x81);
-		epcs.add(EPC.x88);
-		try {
-			service.doObserve(node, eoj, epcs, new ObserveListener() {
-				@Override
-			    public void receive(ObserveResult result, ResultFrame resultFrame, ResultData resultData) {
-					if (resultData.isEmpty()) {
-						return;
-					}
-					switch (resultData.getEPC()) 
-					{
-					case x80:
-						if(EchonetDataConverter.dataToInteger(resultData) == 48) {
-							refreshOperationStatus(true);
-						} else {
-							refreshOperationStatus(false);
-						}
-						LOGGER.info(String.format("OBSERVER: Node:%s@EOJ:%s {EPC:0x80, EDT: 0x%02X}=={OperationStatus:%s}",
-								 getNode().getNodeInfo().toString(),eoj.toString(),resultData.toBytes()[0],getOperationStatus()));
-						break;
-					case x81:
-						String rsLocation = EchonetDataConverter.dataToInstallLocation(resultData);	
-						if (rsLocation == null) {
-							rsLocation = "The installation location has not been set";
-						}
-						refreshInstallLocation(rsLocation);		
-						
-						LOGGER.info(String.format("OBSERVER: Node:%s@EOJ:%s {EPC:0x81, EDT: 0x%02X}=={InstallationLocation:%s}",
-								 getNode().getNodeInfo().toString(),eoj.toString(),resultData.toBytes()[0],getInstallLocation()));
-						break;
-					case x88:
-						if(EchonetDataConverter.dataToInteger(resultData) == 65) {
-							refreshFaultStatus(true);
-						} else {
-							refreshFaultStatus(false);
-						}
-						LOGGER.info(String.format("OBSERVER: Node:%s@EOJ:%s {EPC:0x88, EDT: 0x%02X}=={Fault Status:%s}",
-								 getNode().getNodeInfo().toString(),eoj.toString(),resultData.toBytes()[0],isFaultStatus()));
+					case xB0:
+						int illuminance = EchonetDataConverter.dataToInteger(resultData);
+						refreshIlluminanceLevel(illuminance);
+						LOGGER.info(String.format("Node:%s@EOJ:%s {EPC:0xE0, EDT: 0x%02X}=={IlluminanceLevel:%d}",
+								 getNode().getNodeInfo().toString(),resultData.toBytes()[0],resultData.toBytes()[1],getIlluminanceLevel()));	
 						break;
 						
 					default:
@@ -494,10 +545,5 @@ public class eCurtain extends eDataObject{
 		} catch (SubnetException e) {
 			e.printStackTrace();
 		}
-		
-	}
-	@Override
-	public String TouAALReponse() {
-		return String.format("%s", getOperationStatus()?"OPEN":"CLOSE");
 	}
 }
