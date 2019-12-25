@@ -37,7 +37,7 @@ Some libraries (ont.echonetontology-3.4.0.jar,echowand-1.1.jar) are not availabl
 
 Refer to the universAAL github to know how to deploy a library!
 
-## Contributing
+## Authors
 	1. PHAM, Van Cu (cupham@jaist.ac.jp) (Japan Advanced Institute of Science and Technology (JAIST)) : initial and create the project
 	
 	2. Yuto LIM (JAIST): advisor 
@@ -47,15 +47,18 @@ Refer to the universAAL github to know how to deploy a library!
 ## Credits
 The ECHONET Lite middleware library is developed by Yoshiki Makino
 
+## Contributing
+Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
+
 ## License 
 Apache 2.0 
 
 ## Acknowledgments
 This work is a part of the CARESSES project (http://caressesrobot.org/en/)
+<a href="http://caressesrobot.org/en/"><img src="http://caressesrobot.org/en/wp-content/themes/caresses/assets/media/logo-caresses.gif" title="CARESSES Project" alt="CARESSES Project"></a>
 
 Contact information:
 
 	1. Chong Nak-Young (JAIST, Japan) : Japan  Coodinator 
 	
 	2. Antonio Sgorbissa (University of Genoa, Italy) : EU Coodinator
-
