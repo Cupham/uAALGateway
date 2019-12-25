@@ -51,5 +51,8 @@ Apache 2.0
 This work is a part of the CARESSES project (http://caressesrobot.org/en/)
 
 Contact information:
+
 	1. Chong Nak-Young (JAIST, Japan) : Japan  Coodinator 
+	
 	2. Antonio Sgorbissa (University of Genoa, Italy) : EU Coodinator
+
