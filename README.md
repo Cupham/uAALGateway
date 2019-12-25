@@ -7,8 +7,7 @@ Some libraries (ont.echonetontology-3.4.0.jar,echowand-1.1.jar) are not availabl
 
 	1. The ECHONET Ontology
 		1.1 Install the JAR file into local maven directory (E.G
-			mvn install:install-file -Dfile=ont.echonetontology-3.4.0.jar -							  	DgroupId=org.universAAL.ontology -DartifactId=echonetontology 
-			Dversion=3.4.0 -Dpackaging=jar
+			mvn install:install-file -Dfile=ont.echonetontology-3.4.0.jar -DgroupId=org.universAAL.ontology -DartifactId=echonetontology Dversion=3.4.0 -Dpackaging=jar
 		1.2 Import the installed library as maven dependency in the pom.xml (E.G
 			<dependency>
 				<groupId>org.universAAL.ontology</groupId>
@@ -19,7 +18,7 @@ Some libraries (ont.echonetontology-3.4.0.jar,echowand-1.1.jar) are not availabl
 			root@karaf> bundle:install wrap:mvn:org.universAAL.ontology/echonetontology/3.4.0
 	2. The ECHONET Lite Middleware
 		2.1 Install the JAR file into local maven directory (E.G
-			mvn install:install-file -Dfile=echowand-1.1.jar -DgroupId=jaist.tanlab -					DartifactId=echowand -Dpackaging=jar -Dversion=1.1
+			mvn install:install-file -Dfile=echowand-1.1.jar -DgroupId=jaist.tanlab -DartifactId=echowand -Dpackaging=jar -Dversion=1.1
 		2.2 Import the installed library as maven dependency in the pom.xml (E.G
 			<dependency>
 				<groupId>jaist.tanlab</groupId>
@@ -44,3 +43,5 @@ The ECHONET Lite middleware library is developed by Yoshiki Makino
 ## License 
 
 Apache 2.0 
+
+
