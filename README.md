@@ -54,8 +54,8 @@ Pull requests are welcome. For major changes, please open an issue first to disc
 Apache 2.0 
 
 ## Acknowledgments
-This work is a part of the CARESSES project (http://caressesrobot.org/en/)
-<a href="http://caressesrobot.org/en/"><img src="http://caressesrobot.org/en/wp-content/uploads/sites/2/2017/10/LOGO_full_big.png" title="CARESSES Project" alt="CARESSES Project"></a>
+This work is a part of the
+<a href="http://caressesrobot.org/en/">title="CARESSES Project" alt="CARESSES Project"></a>
 
 Contact information:
 
