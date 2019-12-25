@@ -40,7 +40,7 @@ Refer to the universAAL github to know how to deploy a library!
 ## Authors
 	1. PHAM, Van Cu (cupham@jaist.ac.jp) (Japan Advanced Institute of Science and Technology (JAIST)) : initial and create the project
 	
-	2. Yuto LIM (JAIST): advisor 
+	2. Yuto LIM (JAIST): coodinator 
 	
 	3. Yasuo TAN (JAIST): advisor
 
