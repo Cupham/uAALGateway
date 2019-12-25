@@ -55,7 +55,7 @@ Apache 2.0
 
 ## Acknowledgments
 This work is a part of the CARESSES project (http://caressesrobot.org/en/)
-<a href="http://caressesrobot.org/en/"><img src="http://caressesrobot.org/en/wp-content/themes/caresses/assets/media/logo-caresses.gif" title="CARESSES Project" alt="CARESSES Project"></a>
+<a href="http://caressesrobot.org/en/"><img src="http://caressesrobot.org/en/wp-content/uploads/sites/2/2017/10/LOGO_full_big.png" title="CARESSES Project" alt="CARESSES Project"></a>
 
 Contact information:
 
