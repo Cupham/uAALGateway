@@ -45,7 +45,7 @@ Refer to the universAAL github to know how to deploy a library!
 	3. Yasuo TAN (JAIST): advisor
 
 ## Credits
-The ECHONET Lite middleware library is developed by Yoshiki Makino
+The ECHONET Lite middleware library([echowand](https://github.com/ymakino/echowand)) is developed by Yoshiki Makino
 
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
