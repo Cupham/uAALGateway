@@ -36,10 +36,13 @@ Some libraries (ont.echonetontology-3.4.0.jar,echowand-1.1.jar) are not availabl
 5. Copy the generated jar file into the deployment folder (karaf/deploy)
 
 Refer to the universAAL github to know how to deploy a library!
+
 ##Contributing
-PHAM, Van Cu (cupham@jaist.ac.jp) (Japan Advanced Institute of Science and Technology (JAIST)) : initial and create the project
-Yuto LIM (JAIST): advisor 
-Yasuo TAN (JAIST): advisor
+	1. PHAM, Van Cu (cupham@jaist.ac.jp) (Japan Advanced Institute of Science and Technology (JAIST)) : initial and create the project
+	
+	2. Yuto LIM (JAIST): advisor 
+	
+	3. Yasuo TAN (JAIST): advisor
 
 ## Credits
 The ECHONET Lite middleware library is developed by Yoshiki Makino
