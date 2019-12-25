@@ -37,7 +37,7 @@ Some libraries (ont.echonetontology-3.4.0.jar,echowand-1.1.jar) are not availabl
 
 Refer to the universAAL github to know how to deploy a library!
 
-##Contributing
+## Contributing
 	1. PHAM, Van Cu (cupham@jaist.ac.jp) (Japan Advanced Institute of Science and Technology (JAIST)) : initial and create the project
 	
 	2. Yuto LIM (JAIST): advisor 
